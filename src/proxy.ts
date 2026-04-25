@@ -1,0 +1,55 @@
+// Refreshes the Supabase session on every navigation and hard-blocks
+// cross-role access by URL. Next.js 16 renamed `middleware` → `proxy`; the
+// contract (single named export, optional `config` with `matcher`) is the same.
+// Detailed RLS lives in src/lib/rls.ts.
+
+import { NextResponse, type NextRequest } from "next/server";
+import { createServerClient } from "@supabase/ssr";
+
+export async function proxy(req: NextRequest) {
+  const res = NextResponse.next({ request: req });
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
+    {
+      cookies: {
+        getAll: () => req.cookies.getAll(),
+        setAll: (cookiesToSet) => {
+          cookiesToSet.forEach(({ name, value, options }) =>
+            res.cookies.set(name, value, options),
+          );
+        },
+      },
+    },
+  );
+
+  const { data: { user } } = await supabase.auth.getUser();
+  const role = user?.app_metadata?.role as "admin" | "salesperson" | undefined;
+  const path = req.nextUrl.pathname;
+
+  if (path === "/login" || path.startsWith("/_next") || path.startsWith("/api/auth")) {
+    return res;
+  }
+
+  if (!user) {
+    const url = req.nextUrl.clone();
+    url.pathname = "/login";
+    return NextResponse.redirect(url);
+  }
+
+  if (path.startsWith("/admin") && role !== "admin") {
+    return new NextResponse("Forbidden", { status: 403 });
+  }
+  if (path.startsWith("/sales") && role !== "salesperson") {
+    return new NextResponse("Forbidden", { status: 403 });
+  }
+
+  return res;
+}
+
+export const config = {
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|logo.svg|logo-knockout.svg|logo.avif).*)",
+  ],
+};

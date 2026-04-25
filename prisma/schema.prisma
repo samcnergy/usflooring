@@ -1,0 +1,494 @@
+// U.S. Floor, Kitchen & Bath — Phase 1 schema.
+// Source of truth for the four documents (Invoice, Work Order, Daily Work Order,
+// Vendor Order). The downstream documents are projections of `Order` plus its
+// children; the same field is never stored twice.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Prisma 7 moved connection URLs out of schema.prisma. The migrate URL lives
+// in `prisma.config.ts`; the runtime URL is consumed by the pg driver adapter
+// passed to `new PrismaClient({ adapter })` (see src/lib/prisma.ts).
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------- Auth & people ----------
+
+enum Role {
+  admin
+  salesperson
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  // Supabase Auth owns the password hash in `auth.users`. We mirror the user
+  // here for FKs (Order.salespersonId, audit log) and role gating.
+  passwordHash String?
+  fullName     String
+  role         Role
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+
+  ordersAsSalesperson Order[]      @relation("SalespersonOrders")
+  auditEntries        AuditLog[]   @relation("AuditActor")
+}
+
+// ---------- Lookup tables ----------
+
+model AdvertisingSource {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  orders    Order[]
+}
+
+// ---------- Customers ----------
+
+model Customer {
+  id           String   @id @default(uuid())
+  firstName    String
+  lastName     String
+  addressLine1 String
+  city         String
+  state        String   @default("CA")
+  zip          String
+  phoneHome    String?
+  phoneWork    String?
+  phoneExt     String?
+  email        String?
+
+  // Ship-to often differs from sold-to (per the paper invoice both blocks exist)
+  shipFirstName    String?
+  shipLastName     String?
+  shipAddressLine1 String?
+  shipCity         String?
+  shipState        String?
+  shipZip          String?
+  shipPhone        String?
+
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
+
+  orders Order[]
+}
+
+// ---------- Order (the single source of truth) ----------
+
+enum OrderStatus {
+  draft
+  finalized
+  installed
+  paid
+  voided
+}
+
+enum BalanceTerm {
+  cash
+  cod
+  finance
+}
+
+enum SubfloorType {
+  wood
+  concrete
+  softConcrete
+  other
+}
+
+enum InstallMethod {
+  glueDown
+  nailDown
+  click
+  clip
+  other
+}
+
+model Order {
+  id            String      @id @default(uuid())
+  // Server-assigned from a Postgres SEQUENCE starting at 6515.
+  invoiceNumber Int         @unique
+  status        OrderStatus @default(draft)
+  dateOfSale    DateTime    @default(now())
+
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id])
+
+  salespersonId String
+  salesperson   User   @relation("SalespersonOrders", fields: [salespersonId], references: [id])
+
+  advertisingSourceId String?
+  advertisingSource   AdvertisingSource? @relation(fields: [advertisingSourceId], references: [id])
+
+  // Top-of-invoice category checkboxes
+  hasCabinet    Boolean @default(false)
+  hasCarpet     Boolean @default(false)
+  hasVinyl      Boolean @default(false)
+  hasWood       Boolean @default(false)
+  hasCeramic    Boolean @default(false)
+  hasCounterTop Boolean @default(false)
+  hasFireplace  Boolean @default(false)
+  hasShower     Boolean @default(false)
+
+  // Money in cents. subtotal/total/balance are server-recomputed on save.
+  taxCents      Int @default(0)
+  depositCents  Int @default(0)
+  subtotalCents Int @default(0)
+  totalCents    Int @default(0)
+  balanceCents  Int @default(0)
+
+  basedOn String? // "Square Yards" | "Square Feet" | "Total"
+  remarks String?
+
+  balanceTerm BalanceTerm?
+
+  // Work-order-only fields (filled in after the invoice exists)
+  availabilityDate   DateTime?
+  deliveryDate       DateTime?
+  installerName      String?
+  installationDate   DateTime?
+  orderTakenByUserId String?
+
+  // Floor condition (work order)
+  subfloorType    SubfloorType?
+  installSubfloor Boolean?
+  pullOldFloor    Boolean?
+  oldFloorType    String?  // tile | marble | wood | vinyl | carpet | other
+  oldFloorSize    String?
+
+  // Carpet-specific (work order)
+  removeOldCarpetAndPad Boolean?
+  removeOldTagStrip     Boolean?
+  newTackStripType      String?  // wood | concrete
+  hasSteps              Boolean?
+  numSteps              Int?
+  emptyHouse            Boolean?
+  heavyFurniture        Boolean?
+  heavyFurnitureType    String?
+
+  installMethod InstallMethod?
+
+  specialInstructions String?
+
+  areas        OrderArea[]
+  materials    OrderMaterial[]
+  moldings     OrderMolding[]
+  fixtures     OrderFixture[]
+  showerSpec   OrderShower?
+  tileSpec     OrderTileStone?
+  removals     OrderRemoval[]
+  vendorOrders VendorOrder[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@index([salespersonId, deletedAt])
+  @@index([advertisingSourceId])
+  @@index([status])
+}
+
+// ---------- Order children ----------
+
+enum AreaName {
+  livingRoom
+  diningRoom
+  familyRoom
+  hall
+  bedroom
+  closet
+  entrance
+  bathroom
+  den
+  kitchen
+  stairs
+  office
+  laundry
+  other
+}
+
+model OrderArea {
+  id             String   @id @default(uuid())
+  orderId        String
+  order          Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  areaName       AreaName
+  quantity       Int?
+  description    String?
+  lineTotalCents Int      @default(0)
+}
+
+enum CarpetType {
+  plush
+  berber
+  glueDown
+  plushWP
+  berberWP
+}
+
+model OrderMaterial {
+  id         String @id @default(uuid())
+  orderId    String
+  order      Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  lineNumber Int
+
+  // PHASE 2 HOOK — populated when the materials catalog ships.
+  materialId String?
+  // material Material? @relation(fields: [materialId], references: [id])
+
+  millStyle     String?
+  size          String?
+  color         String?
+  refNumber     String?
+  pad           String?
+  areas         String?
+  carpetType    CarpetType?
+  unitOfMeasure String?  // "sqft" | "sqyd" | "linft" | "each"
+  quantity      Float?
+  unitPriceCents  Int?
+  lineTotalCents  Int?
+
+  // Vendor PO additions
+  vendorName         String?
+  poNumber           String?
+  willCallDate       DateTime?
+  vendorDeliveryDate DateTime?
+
+  @@index([orderId, lineNumber])
+}
+
+enum MoldingType {
+  baseShoe
+  baseboard
+  rubberCover4in
+  quarterRound
+  endMolding
+  tMolding
+  reducer
+  wallBase
+  stairNosing
+  metalStrip
+  filmOnly
+  filmAndFoam
+  silentStep
+  bullNose
+}
+
+enum RubberCoverColor {
+  gold
+  silver
+  glue
+  none
+}
+
+model OrderMolding {
+  id                String            @id @default(uuid())
+  orderId           String
+  order             Order             @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  type              MoldingType
+  quantity          String?
+  isReplaceExisting Boolean           @default(false)
+  rubberCoverColor  RubberCoverColor?
+}
+
+enum FixtureType {
+  stove
+  fridge
+  washer
+  dryer
+  waterbed
+  piano
+  organ
+  stool
+  other
+}
+
+model OrderFixture {
+  id      String      @id @default(uuid())
+  orderId String
+  order   Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  type    FixtureType
+  notes   String?
+}
+
+model OrderShower {
+  id                      String  @id @default(uuid())
+  orderId                 String  @unique
+  order                   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  shower_walls_sqft       Float?
+  wall_material           String?
+  shower_pan              String?
+  shower_pan_material     String?
+  soap_box_material       String?
+  bench                   String?
+  bathroom_floor_sqft     Float?
+  bathroom_floor_material String?
+  schluter                String?
+  grout_color             String?
+  vertical                Boolean?
+  horizontal              Boolean?
+}
+
+model OrderTileStone {
+  id              String  @id @default(uuid())
+  orderId         String  @unique
+  order           Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  hasTile         Boolean @default(false)
+  hasMarble       Boolean @default(false)
+  hasTravertine   Boolean @default(false)
+  hasSlate        Boolean @default(false)
+  hasTumbleMarble Boolean @default(false)
+  hasBacksplash   Boolean @default(false)
+  hasFloor        Boolean @default(false)
+  hasFireplace    Boolean @default(false)
+  hasShowerTile   Boolean @default(false)
+  hasWalls        Boolean @default(false)
+  hasCounterTop   Boolean @default(false)
+  hasStone        Boolean @default(false)
+  hasSlab         Boolean @default(false)
+  wonderboard     Boolean?
+  slipSheet       Boolean?
+  seal            Boolean?
+  groutColor      String?
+}
+
+enum RemovalType {
+  tile
+  glueDownCarpet
+  poolTable
+  stone
+  stool
+  bigScreenTV
+  wood
+  refrigerator
+  piano
+  vinyl
+  washer
+  stove
+  laminate
+  dryer
+  other
+}
+
+model OrderRemoval {
+  id      String      @id @default(uuid())
+  orderId String
+  order   Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  type    RemovalType
+}
+
+// ---------- Vendor Orders ----------
+
+enum VendorOrderStatus {
+  draft
+  sent
+  received
+  cancelled
+}
+
+model VendorOrder {
+  id      String @id @default(uuid())
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  // PHASE 2 HOOK — vendor names auto-create rows in the Vendor table on first
+  // use, so by the time the catalog ships the vendor list is already clean.
+  vendorId String?
+  vendor   Vendor? @relation(fields: [vendorId], references: [id])
+
+  vendorName      String
+  poNumber        String
+  sidemark        String?
+  faxEmailDate    DateTime?
+  willCallDate    DateTime?
+  deliveryDate    DateTime?
+  deliveryAddress String?
+  // JSON snapshot of the OrderMaterial rows on this PO at the moment it was
+  // generated, so editing the master order doesn't silently mutate a sent PO.
+  lineItems       Json
+  status          VendorOrderStatus @default(draft)
+  createdAt       DateTime          @default(now())
+}
+
+// PHASE 2-READY STUB. Phase 1 only auto-creates rows when a salesperson types
+// a vendor name on a VendorOrder. Phase 2 adds CRUD, contacts, default delivery
+// addresses, and pricing terms. Keep this minimal so Phase 2 is purely additive.
+model Vendor {
+  id           String        @id @default(uuid())
+  name         String        @unique
+  isActive     Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+  vendorOrders VendorOrder[]
+}
+
+// ---------- Phase 2 feeder: passive, write-only in Phase 1 ----------
+// Every saved OrderMaterial line upserts into this table by `fingerprint`,
+// incrementing usageCount. Nothing reads from it in Phase 1; Phase 2 seeds the
+// materials catalog from the top-N rows.
+
+model MaterialSuggestion {
+  id                 String      @id @default(uuid())
+  fingerprint        String      @unique
+  millStyle          String?
+  color              String?
+  size               String?
+  carpetType         CarpetType?
+  unitOfMeasure      String?
+  usageCount         Int         @default(1)
+  lastVendorName     String?
+  lastUnitPriceCents Int?
+  firstSeenAt        DateTime    @default(now())
+  lastSeenAt         DateTime    @default(now())
+}
+
+// ---------- Audit log ----------
+
+model AuditLog {
+  id          String   @id @default(uuid())
+  actorUserId String?
+  actor       User?    @relation("AuditActor", fields: [actorUserId], references: [id])
+  action      String   // "create" | "update" | "void" | "delete" | "role_change" | ...
+  entityType  String   // "Order" | "OrderMaterial" | "User" | ...
+  entityId    String
+  diff        Json?
+  createdAt   DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@index([actorUserId])
+}
+
+// ---------- AI analysis runs ----------
+
+model AiAnalysisRun {
+  id              String   @id @default(uuid())
+  requestedById   String
+  rangeStart      DateTime
+  rangeEnd        DateTime
+  customQuestion  String?
+  snapshotJson    Json
+  responseMd      String   // streamed response, persisted at the end
+  modelId         String   // e.g. "claude-opus-4-7"
+  inputTokens     Int?
+  outputTokens    Int?
+  createdAt       DateTime @default(now())
+}
+
+// PHASE 2 — DO NOT UNCOMMENT IN PHASE 1
+// model Material {
+//   id                    String   @id @default(uuid())
+//   sku                   String?  @unique
+//   name                  String
+//   category              String   // "carpet" | "vinyl" | "wood" | "tile" | "stone" | "cabinet" | "countertop" | "molding" | "other"
+//   defaultVendorId       String?
+//   defaultVendor         Vendor?  @relation(fields: [defaultVendorId], references: [id])
+//   defaultUom            String   // "sqft" | "sqyd" | "linft" | "each"
+//   defaultUnitPriceCents Int?
+//   defaultCostCents      Int?
+//   isActive              Boolean  @default(true)
+//   notes                 String?
+//   createdAt             DateTime @default(now())
+//   updatedAt             DateTime @updatedAt
+//   orderMaterials        OrderMaterial[]
+// }

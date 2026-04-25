@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 340" role="img" aria-label="U.S. Floor Kitchen Bath">
+  <title>U.S. Floor, Kitchen &amp; Bath</title>
+  <path d="M 30 192 L 270 24 L 510 192 L 432 192 L 270 78 L 108 192 Z" fill="#FFFFFF"/>
+  <text x="48" y="305" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-weight="900" font-size="152" fill="#FFFFFF" letter-spacing="-6">U.S</text>
+  <g font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-weight="700" font-size="60" fill="#FFFFFF">
+    <text x="252" y="232">Floor</text>
+    <text x="252" y="288">Kitchen</text>
+    <text x="252" y="332">Bath</text>
+  </g>
+</svg>

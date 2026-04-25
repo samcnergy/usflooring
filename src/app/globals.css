@@ -1,26 +1,78 @@
 @import "tailwindcss";
 
+/*
+ * U.S. Floor, Kitchen & Bath — design tokens.
+ * Reference: docs/usfloorkb_design_system.md
+ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Primary brand greens */
+  --usfkb-green-900: #0E3F12;   /* deepest — primary CTA buttons */
+  --usfkb-green-700: #1B6B1F;   /* primary brand green — logo + headlines */
+  --usfkb-green-500: #2E8B2F;   /* bright accent — emphasis text only */
+  --usfkb-green-100: #E6F2E6;   /* tint — selected / hover backgrounds */
+
+  /* Warm stone neutrals (the "marble" feel of the live site) */
+  --usfkb-stone-50:  #FAFAF7;   /* page background */
+  --usfkb-stone-100: #F1F0EB;   /* card background */
+  --usfkb-stone-200: #DEDCD3;   /* dividers, table borders */
+  --usfkb-stone-700: #4A4A45;   /* secondary text, captions */
+  --usfkb-stone-900: #1A1A17;   /* body text — never pure #000 */
+
+  /* Semantic */
+  --usfkb-warning:     #B8860B;
+  --usfkb-danger:      #A52A2A;
+  --usfkb-invoice-red: #B91C1C; /* the handwritten "6514" red on the original */
+
+  /* Background / foreground */
+  --background: var(--usfkb-stone-50);
+  --foreground: var(--usfkb-stone-900);
 }
 
+/*
+ * Tailwind v4 theme registration. Use `marble-*` instead of overriding
+ * Tailwind's default `stone-*` so both palettes remain available.
+ */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  --color-brand-900: var(--usfkb-green-900);
+  --color-brand-700: var(--usfkb-green-700);
+  --color-brand-500: var(--usfkb-green-500);
+  --color-brand-100: var(--usfkb-green-100);
+
+  --color-marble-50:  var(--usfkb-stone-50);
+  --color-marble-100: var(--usfkb-stone-100);
+  --color-marble-200: var(--usfkb-stone-200);
+  --color-marble-700: var(--usfkb-stone-700);
+  --color-marble-900: var(--usfkb-stone-900);
+
+  --color-warning:     var(--usfkb-warning);
+  --color-danger:      var(--usfkb-danger);
+  --color-invoice-red: var(--usfkb-invoice-red);
+
+  --font-sans: var(--font-inter), system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
+html, body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+}
+
+/* Tabular figures for money / invoice numbers wherever we tag them. */
+.tabular-money {
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+/*
+ * Print stylesheet (§ 6 of the design system). Used by the four document
+ * preview pages so window.print() produces a clean paper layout.
+ */
+@media print {
+  :root { --background: #FFFFFF; }
+  body { background: #FFFFFF !important; }
+  .no-print { display: none !important; }
 }
