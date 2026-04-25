@@ -82,13 +82,42 @@ Brand & design system: [`docs/usfloorkb_design_system.md`](./docs/usfloorkb_desi
 | `npm run db:seed` | Run the seed script |
 | `npm run db:studio` | Open Prisma Studio |
 
-## Deployment
+## Deployment (Render)
 
-- **App**: Vercel (Vercel auto-detects Next.js).
-- **DB**: Supabase. Use Vercel's Supabase integration or set the env vars
-  manually in the Vercel project.
-- **Migrations**: run `npm run db:deploy` in a CI step before deploy, or apply
-  via Supabase migrations.
+- **App**: Render — **Web Service** (Node), pointed at `samcnergy/usflooring` `main`.
+- **DB**: Supabase (Postgres). Connection strings live in Render's environment
+  tab (never committed).
+
+### Render service settings
+
+| Field | Value |
+|---|---|
+| Service type | Web Service |
+| Runtime | Node |
+| Build command | `npm install && npx prisma generate && npm run build` |
+| Start command | `npm run start` |
+| Health check path | `/login` (always returns 200 for unauth users) |
+
+> If you want migrations to run automatically on deploy, append
+> `&& npx prisma migrate deploy` to the build command. Safer for a single-shop
+> deployment; risky if you ever have multiple developers landing schema
+> changes in parallel.
+
+### Render environment variables
+
+Mirror everything from `.env.local` into Render → **Environment**:
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `DATABASE_URL` — pooled URL (port 6543) with
+  `?pgbouncer=true&connection_limit=1`. Encode any special characters in the
+  password (e.g. `!` → `%21`, `@` → `%40`, `#` → `%23`).
+- `DIRECT_URL` — direct URL (port 5432). Used by `prisma migrate deploy` only.
+- `ANTHROPIC_API_KEY`
+- `NODE_VERSION=20` (or rely on `engines.node` in `package.json` — both work).
+
+`PORT` is injected by Render; Next.js `next start` reads it automatically.
 
 ## Build order (where we are)
 
@@ -139,7 +168,7 @@ at https://console.anthropic.com/settings/keys and put it in `.env.local`
 │   │   ├── auth.ts
 │   │   └── rls.ts           # RLS policies as a SQL string
 │   ├── pdf/                 # React-PDF documents (step 5)
-│   └── middleware.ts        # Session refresh + role-based route gating
+│   └── proxy.ts             # Session refresh + role-based route gating (Next 16 renamed middleware → proxy)
 └── public/
     ├── logo.svg             # Recreated from logo.avif
     └── logo-knockout.svg    # White-knockout for dark backgrounds
