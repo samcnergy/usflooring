@@ -47,7 +47,7 @@ export type OrderInitialValues = {
     size: string;
     lineTotal: string;
   }[];
-  taxCents: string;
+  taxPercent: string;
   depositCents: string;
   basedOn: string;
   remarks: string;
@@ -76,7 +76,7 @@ export const emptyInitialValues = (defaultSalespersonId: string): OrderInitialVa
     material: "", color: "", size: "",
     lineTotal: "",
   })),
-  taxCents: "", depositCents: "",
+  taxPercent: "7.75", depositCents: "",
   basedOn: "", remarks: "", balanceTerm: "",
 });
 
@@ -88,7 +88,7 @@ export function orderToInitial(order: {
   dateOfSale: Date;
   hasCabinet: boolean; hasCarpet: boolean; hasVinyl: boolean; hasWood: boolean;
   hasCeramic: boolean; hasCounterTop: boolean; hasFireplace: boolean; hasShower: boolean;
-  taxCents: number; depositCents: number;
+  taxPercent: number; depositCents: number;
   basedOn: string | null; remarks: string | null; balanceTerm: "cash" | "cod" | "finance" | null;
   customer: {
     firstName: string; lastName: string; addressLine1: string; city: string; state: string; zip: string;
@@ -151,7 +151,7 @@ export function orderToInitial(order: {
         lineTotal: a ? moneyToInput(a.lineTotalCents) : "",
       };
     }),
-    taxCents:     moneyToInput(order.taxCents),
+    taxPercent:   order.taxPercent != null ? String(order.taxPercent) : "7.75",
     depositCents: moneyToInput(order.depositCents),
     basedOn:     order.basedOn ?? "",
     remarks:     order.remarks ?? "",

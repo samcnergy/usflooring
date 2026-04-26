@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Order" ADD COLUMN     "taxPercent" DOUBLE PRECISION NOT NULL DEFAULT 7.75;

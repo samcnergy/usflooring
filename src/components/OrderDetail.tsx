@@ -151,7 +151,7 @@ export function InvoiceView({ order }: { order: FullOrder }) {
         </div>
         <div className="border-l border-marble-200 pl-4">
           <SummaryRow label="Sub-total" value={order.subtotalCents} />
-          <SummaryRow label="Tax" value={order.taxCents} />
+          <SummaryRow label={`Tax (${order.taxPercent.toFixed(2)}%)`} value={order.taxCents} />
           <SummaryRow label="Total" value={order.totalCents} bold />
           <SummaryRow label="Deposit" value={order.depositCents} />
           <SummaryRow label="Balance" value={order.balanceCents} bold />

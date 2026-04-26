@@ -158,7 +158,7 @@ export function InvoicePDF({
               <Text style={styles.totalsValue}>{centsToDollarString(order.subtotalCents)}</Text>
             </View>
             <View style={styles.totalsRow}>
-              <Text style={styles.totalsLabel}>TAX</Text>
+              <Text style={styles.totalsLabel}>TAX ({order.taxPercent.toFixed(2)}%)</Text>
               <Text style={styles.totalsValue}>{centsToDollarString(order.taxCents)}</Text>
             </View>
             <View style={styles.totalsRow}>

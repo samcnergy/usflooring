@@ -79,7 +79,21 @@ export const orderInput = z.object({
   areas: z.array(orderAreaInput).default([]),
 
   // money + terms
-  taxCents:     moneyString.default(0),
+  // taxPercent is the input; taxCents is recomputed server-side from
+  // subtotal × taxPercent. Default 7.75% (Orange County, CA combined rate).
+  taxPercent: z
+    .string()
+    .trim()
+    .optional()
+    .transform((v, ctx) => {
+      if (v == null || v === "") return 7.75;
+      const n = Number(v.replace(/[%\s]/g, ""));
+      if (!Number.isFinite(n) || n < 0 || n > 100) {
+        ctx.addIssue({ code: "custom", message: "Tax % must be between 0 and 100" });
+        return z.NEVER;
+      }
+      return n;
+    }),
   depositCents: moneyString.default(0),
   basedOn:      z.enum(["Square Yards", "Square Feet", "Total"]).optional().nullable().transform((v) => v || null),
   remarks:      z.string().trim().max(2000).optional().nullable().transform((v) => v || null),

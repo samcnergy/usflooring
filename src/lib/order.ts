@@ -12,9 +12,11 @@ import type { Prisma } from "@prisma/client";
 
 function computeTotals(input: OrderInputParsed) {
   const subtotalCents = input.areas.reduce((s, a) => s + (a.lineTotal ?? 0), 0);
-  const totalCents = subtotalCents + (input.taxCents ?? 0);
+  // Tax is computed from the rate, not typed in. Round half-up to nearest cent.
+  const taxCents = Math.round((subtotalCents * input.taxPercent) / 100);
+  const totalCents = subtotalCents + taxCents;
   const balanceCents = totalCents - (input.depositCents ?? 0);
-  return { subtotalCents, totalCents, balanceCents };
+  return { subtotalCents, taxCents, totalCents, balanceCents };
 }
 
 function shipFields(input: OrderInputParsed) {
@@ -41,7 +43,7 @@ function shipFields(input: OrderInputParsed) {
 }
 
 export async function createOrder(input: OrderInputParsed) {
-  const { subtotalCents, totalCents, balanceCents } = computeTotals(input);
+  const { subtotalCents, taxCents, totalCents, balanceCents } = computeTotals(input);
   const ship = shipFields(input);
 
   return prisma.$transaction(async (tx) => {
@@ -86,7 +88,8 @@ export async function createOrder(input: OrderInputParsed) {
         hasCounterTop: input.hasCounterTop,
         hasFireplace:  input.hasFireplace,
         hasShower:     input.hasShower,
-        taxCents:      input.taxCents,
+        taxPercent:    input.taxPercent,
+        taxCents,
         depositCents:  input.depositCents,
         subtotalCents,
         totalCents,
@@ -115,7 +118,7 @@ export async function createOrder(input: OrderInputParsed) {
 }
 
 export async function updateOrder(id: string, input: OrderInputParsed) {
-  const { subtotalCents, totalCents, balanceCents } = computeTotals(input);
+  const { subtotalCents, taxCents, totalCents, balanceCents } = computeTotals(input);
   const ship = shipFields(input);
 
   return prisma.$transaction(async (tx) => {
@@ -163,7 +166,8 @@ export async function updateOrder(id: string, input: OrderInputParsed) {
         hasCounterTop: input.hasCounterTop,
         hasFireplace:  input.hasFireplace,
         hasShower:     input.hasShower,
-        taxCents:      input.taxCents,
+        taxPercent:    input.taxPercent,
+        taxCents,
         depositCents:  input.depositCents,
         subtotalCents,
         totalCents,

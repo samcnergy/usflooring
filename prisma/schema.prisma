@@ -134,6 +134,10 @@ model Order {
   hasShower     Boolean @default(false)
 
   // Money in cents. subtotal/total/balance are server-recomputed on save.
+  // taxPercent is the source of truth; taxCents is computed server-side as
+  // subtotalCents * (taxPercent / 100). Default 7.75% (Orange County, CA
+  // combined rate). Salesperson can override per order.
+  taxPercent    Float @default(7.75)
   taxCents      Int @default(0)
   depositCents  Int @default(0)
   subtotalCents Int @default(0)

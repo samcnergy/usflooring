@@ -59,7 +59,7 @@ export function parseOrderForm(formData: FormData):
     hasFireplace:  bool(formData, "hasFireplace"),
     hasShower:     bool(formData, "hasShower"),
     areas,
-    taxCents:     str(formData, "taxCents") || "0",
+    taxPercent:   str(formData, "taxPercent"),
     depositCents: str(formData, "depositCents") || "0",
     basedOn:      str(formData, "basedOn") || null,
     remarks:      str(formData, "remarks") || null,

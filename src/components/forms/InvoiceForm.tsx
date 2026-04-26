@@ -348,10 +348,11 @@ export function InvoiceForm({
   );
 }
 
-// Totals card. Subtotal/Total/Balance live-update from the area inputs via a
-// passive client computation; the server recomputes authoritatively on save.
+// Totals card. Subtotal/Tax/Total/Balance live-update from the area inputs and
+// the tax % input. The server recomputes authoritatively on save (so tampering
+// with form values can't change the persisted totals).
 function Totals({ initial }: { initial: OrderInitialValues }) {
-  const [tax, setTax] = useState(initial.taxCents);
+  const [taxPercent, setTaxPercent] = useState(initial.taxPercent);
   const [deposit, setDeposit] = useState(initial.depositCents);
   const [, force] = useState(0);
 
@@ -371,26 +372,35 @@ function Totals({ initial }: { initial: OrderInitialValues }) {
       return s + (Number.isFinite(n) ? n * 100 : 0);
     }, 0);
   }
-  const taxCents     = Math.round(Number((tax     || "0").replace(/[$,\s]/g, "")) * 100);
+  const pctNum = Number((taxPercent || "0").replace(/[%\s]/g, ""));
+  const taxCents = Number.isFinite(pctNum) ? Math.round((subtotal * pctNum) / 100) : 0;
   const depositCents = Math.round(Number((deposit || "0").replace(/[$,\s]/g, "")) * 100);
-  const totalCents = subtotal + (Number.isFinite(taxCents) ? taxCents : 0);
+  const totalCents = Math.round(subtotal) + taxCents;
   const balanceCents = totalCents - (Number.isFinite(depositCents) ? depositCents : 0);
 
   return (
     <>
       <Row label="Sub-total" value={centsToDollarString(Math.round(subtotal))} />
-      <Field label="Tax ($)" htmlFor="taxCents">
-        <input
-          id="taxCents"
-          name="taxCents"
-          type="text"
-          inputMode="decimal"
-          value={tax}
-          onChange={(e) => { setTax(e.target.value); force((x) => x + 1); }}
-          placeholder="0.00"
-          className={`${inputCls} text-right tabular-money`}
-        />
-      </Field>
+      <div className="grid grid-cols-2 gap-3 items-end">
+        <Field label="Tax %" htmlFor="taxPercent" hint="Default 7.75%">
+          <input
+            id="taxPercent"
+            name="taxPercent"
+            type="text"
+            inputMode="decimal"
+            value={taxPercent}
+            onChange={(e) => { setTaxPercent(e.target.value); force((x) => x + 1); }}
+            placeholder="7.75"
+            className={`${inputCls} text-right tabular-money`}
+          />
+        </Field>
+        <div className="pb-2">
+          <p className="text-xs text-marble-700">Tax amount</p>
+          <p className="text-marble-900 tabular-money font-medium text-right pr-2">
+            {centsToDollarString(taxCents)}
+          </p>
+        </div>
+      </div>
       <Row label="Total" value={centsToDollarString(totalCents)} bold />
       <Field label="Deposit ($)" htmlFor="depositCents">
         <input
