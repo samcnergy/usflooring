@@ -1,7 +1,8 @@
-// Phase 1 root: send everyone to /login. Middleware then routes signed-in
-// users to /admin or /sales based on role.
 import { redirect } from "next/navigation";
+import { getSessionUser } from "@/lib/auth";
 
-export default function Home() {
-  redirect("/login");
+export default async function Home() {
+  const user = await getSessionUser();
+  if (!user) redirect("/login");
+  redirect(user.role === "admin" ? "/admin" : "/sales");
 }

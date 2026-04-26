@@ -28,9 +28,15 @@ export async function proxy(req: NextRequest) {
   const role = user?.app_metadata?.role as "admin" | "salesperson" | undefined;
   const path = req.nextUrl.pathname;
 
-  if (path === "/login" || path.startsWith("/_next") || path.startsWith("/api/auth")) {
-    return res;
-  }
+  // Public routes (no session required).
+  const isPublic =
+    path === "/login" ||
+    path === "/forgot-password" ||
+    path === "/reset-password" ||
+    path.startsWith("/_next") ||
+    path.startsWith("/api/auth");
+
+  if (isPublic) return res;
 
   if (!user) {
     const url = req.nextUrl.clone();

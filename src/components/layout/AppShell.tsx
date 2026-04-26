@@ -8,7 +8,7 @@ type Props = {
   navLinks: NavLink[];
   ctaHref: string;
   ctaLabel: string;
-  userLabel?: string;
+  userLabel: string;
   children: React.ReactNode;
 };
 
@@ -51,13 +51,21 @@ export function AppShell({ navLinks, ctaHref, ctaLabel, userLabel, children }: P
           </Link>
         </div>
       </header>
-      {userLabel ? (
-        <div className="border-b border-marble-200 bg-marble-100 text-marble-700 text-xs">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 h-8 flex items-center justify-end">
-            Signed in as {userLabel}
-          </div>
+      <div className="border-b border-marble-200 bg-marble-100 text-marble-700 text-xs">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 h-8 flex items-center justify-end gap-3">
+          <span>
+            Signed in as <span className="text-marble-900 font-medium">{userLabel}</span>
+          </span>
+          <form action="/api/auth/signout" method="POST">
+            <button
+              type="submit"
+              className="text-brand-700 hover:text-brand-900 underline underline-offset-2"
+            >
+              Sign out
+            </button>
+          </form>
         </div>
-      ) : null}
+      </div>
       <main className="flex-1 mx-auto w-full max-w-7xl px-4 sm:px-6 py-6">
         {children}
       </main>

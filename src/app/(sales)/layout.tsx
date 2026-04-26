@@ -1,6 +1,8 @@
 import { AppShell } from "@/components/layout/AppShell";
+import { requireRole } from "@/lib/auth";
 
-export default function SalesLayout({ children }: { children: React.ReactNode }) {
+export default async function SalesLayout({ children }: { children: React.ReactNode }) {
+  const user = await requireRole("salesperson");
   return (
     <AppShell
       navLinks={[
@@ -10,6 +12,7 @@ export default function SalesLayout({ children }: { children: React.ReactNode })
       ]}
       ctaHref="/sales"
       ctaLabel="New Order"
+      userLabel={user.fullName}
     >
       {children}
     </AppShell>
