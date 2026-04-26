@@ -66,14 +66,74 @@ export default async function SalesOrderDetailPage({
           <InvoiceView order={order} />
         </>
       ) : doc === "vendor" ? (
-        <div className="bg-marble-100 border border-marble-200 rounded-lg p-8 text-center">
-          <p className="text-marble-700">Vendor PO wizard ships in build step 6.</p>
-        </div>
+        <VendorTab orderId={order.id} basePath="/sales/orders" />
       ) : (
         <>
-          <DocumentToolbar orderId={order.id} doc={doc} />
+          <div className="flex items-center justify-between gap-4">
+            <DocumentToolbar orderId={order.id} doc={doc} />
+            {doc === "workorder" ? (
+              <Link
+                href={`/sales/orders/${order.id}/work-order`}
+                className="inline-flex items-center justify-center min-h-11 px-4 rounded border border-brand-700 text-brand-700 hover:bg-brand-100 font-medium no-print"
+              >
+                Edit work order details
+              </Link>
+            ) : null}
+          </div>
           <PdfPreview orderId={order.id} doc={doc} />
         </>
+      )}
+    </div>
+  );
+}
+
+async function VendorTab({ orderId, basePath }: { orderId: string; basePath: string }) {
+  const { listVendorOrders } = await import("@/lib/vendor-order");
+  const vos = await listVendorOrders(orderId);
+  return (
+    <div className="flex flex-col gap-3">
+      <div className="flex items-center justify-end gap-2">
+        <Link
+          href={`${basePath}/${orderId}/vendor-orders/new`}
+          className="inline-flex items-center justify-center min-h-11 px-4 rounded bg-brand-900 text-white font-medium hover:bg-[color-mix(in_oklab,var(--color-brand-900)_96%,black)]"
+        >
+          + New Vendor PO
+        </Link>
+      </div>
+      {vos.length === 0 ? (
+        <div className="bg-marble-100 border border-marble-200 rounded-lg p-8 text-center">
+          <p className="text-marble-700">No vendor POs yet — create one above.</p>
+        </div>
+      ) : (
+        <div className="border border-marble-200 rounded-lg overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-marble-100 text-marble-900">
+              <tr>
+                <th className="text-left px-3 py-2 font-semibold">P.O. #</th>
+                <th className="text-left px-3 py-2 font-semibold">Vendor</th>
+                <th className="text-left px-3 py-2 font-semibold">Status</th>
+                <th className="text-right px-3 py-2 font-semibold">PDF</th>
+              </tr>
+            </thead>
+            <tbody>
+              {vos.map((vo) => (
+                <tr key={vo.id} className="border-t border-marble-200">
+                  <td className="px-3 py-2 text-marble-900 tabular-money">{vo.poNumber}</td>
+                  <td className="px-3 py-2 text-marble-900">{vo.vendorName}</td>
+                  <td className="px-3 py-2 text-marble-700 capitalize">{vo.status}</td>
+                  <td className="px-3 py-2 text-right">
+                    <a
+                      href={`/api/orders/${orderId}/pdf?doc=vendor&vendorOrderId=${vo.id}`}
+                      className="text-brand-700 underline-offset-2 hover:underline text-sm"
+                    >
+                      Download
+                    </a>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );
