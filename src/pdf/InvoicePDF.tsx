@@ -110,20 +110,28 @@ export function InvoicePDF({
 
         {/* Areas table */}
         <View style={styles.tableHead}>
-          <Text style={{ width: 110 }}>AREA</Text>
-          <Text style={{ width: 22 }}>#</Text>
-          <Text style={{ flex: 1 }}>DESCRIPTION</Text>
-          <Text style={{ width: 70, textAlign: "right" }}>TOTAL</Text>
+          <Text style={{ width: 80 }}>AREA</Text>
+          <Text style={{ width: 18 }}>#</Text>
+          <Text style={{ flex: 1.4 }}>DESCRIPTION OF WORK</Text>
+          <Text style={{ flex: 1 }}>MATERIAL</Text>
+          <Text style={{ width: 60 }}>COLOR</Text>
+          <Text style={{ width: 50 }}>SIZE</Text>
+          <Text style={{ width: 60, textAlign: "right" }}>TOTAL</Text>
         </View>
         {ORDER_AREAS.map((spec) => {
           const a = order.areas.find((x) => x.areaName === spec.value);
-          const filled = a && (a.quantity != null || a.description || a.lineTotalCents > 0);
+          const filled =
+            a &&
+            (a.quantity != null || a.description || a.material || a.color || a.size || a.lineTotalCents > 0);
           return (
             <View key={spec.value} style={styles.tableRow}>
-              <Text style={{ width: 110 }}>{spec.label}</Text>
-              <Text style={{ width: 22 }}>{a?.quantity ?? ""}</Text>
-              <Text style={{ flex: 1, color: COLORS.muted }}>{a?.description ?? ""}</Text>
-              <Text style={{ width: 70, textAlign: "right" }}>
+              <Text style={{ width: 80 }}>{spec.label}</Text>
+              <Text style={{ width: 18 }}>{a?.quantity ?? ""}</Text>
+              <Text style={{ flex: 1.4, color: COLORS.muted }}>{a?.description ?? ""}</Text>
+              <Text style={{ flex: 1, color: COLORS.muted }}>{a?.material ?? ""}</Text>
+              <Text style={{ width: 60, color: COLORS.muted }}>{a?.color ?? ""}</Text>
+              <Text style={{ width: 50, color: COLORS.muted }}>{a?.size ?? ""}</Text>
+              <Text style={{ width: 60, textAlign: "right" }}>
                 {filled ? centsToDollarString(a!.lineTotalCents) : ""}
               </Text>
             </View>

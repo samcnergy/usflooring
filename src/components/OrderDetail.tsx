@@ -101,32 +101,42 @@ export function InvoiceView({ order }: { order: FullOrder }) {
       ) : null}
 
       {/* Areas table */}
-      <table className="w-full text-sm mb-6">
-        <thead className="border-b border-marble-700 text-marble-900">
-          <tr>
-            <th className="text-left py-2 w-40 font-semibold">Area</th>
-            <th className="text-left py-2 w-12 font-semibold">#</th>
-            <th className="text-left py-2 font-semibold">Description</th>
-            <th className="text-right py-2 w-32 font-semibold">Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          {ORDER_AREAS.map((spec) => {
-            const a = order.areas.find((x) => x.areaName === spec.value);
-            const filled = a && (a.quantity != null || a.description || a.lineTotalCents > 0);
-            return (
-              <tr key={spec.value} className="border-b border-marble-200">
-                <td className="py-1.5 text-marble-900">{spec.label}</td>
-                <td className="py-1.5 text-marble-700 tabular-money">{a?.quantity ?? ""}</td>
-                <td className="py-1.5 text-marble-700">{a?.description ?? ""}</td>
-                <td className="py-1.5 text-right tabular-money">
-                  {filled ? centsToDollarString(a!.lineTotalCents) : ""}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+      <div className="overflow-x-auto mb-6">
+        <table className="w-full text-sm min-w-[820px]">
+          <thead className="border-b border-marble-700 text-marble-900">
+            <tr>
+              <th className="text-left py-2 w-32 font-semibold">Area</th>
+              <th className="text-left py-2 w-10 font-semibold">#</th>
+              <th className="text-left py-2 font-semibold">Description of work</th>
+              <th className="text-left py-2 w-32 font-semibold">Material</th>
+              <th className="text-left py-2 w-24 font-semibold">Color</th>
+              <th className="text-left py-2 w-20 font-semibold">Size</th>
+              <th className="text-right py-2 w-24 font-semibold">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {ORDER_AREAS.map((spec) => {
+              const a = order.areas.find((x) => x.areaName === spec.value);
+              const filled =
+                a &&
+                (a.quantity != null || a.description || a.material || a.color || a.size || a.lineTotalCents > 0);
+              return (
+                <tr key={spec.value} className="border-b border-marble-200">
+                  <td className="py-1.5 text-marble-900 whitespace-nowrap">{spec.label}</td>
+                  <td className="py-1.5 text-marble-700 tabular-money">{a?.quantity ?? ""}</td>
+                  <td className="py-1.5 text-marble-700">{a?.description ?? ""}</td>
+                  <td className="py-1.5 text-marble-700">{a?.material ?? ""}</td>
+                  <td className="py-1.5 text-marble-700">{a?.color ?? ""}</td>
+                  <td className="py-1.5 text-marble-700">{a?.size ?? ""}</td>
+                  <td className="py-1.5 text-right tabular-money">
+                    {filled ? centsToDollarString(a!.lineTotalCents) : ""}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
 
       {/* Footer */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

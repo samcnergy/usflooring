@@ -217,28 +217,33 @@ export function InvoiceForm({
 
       {/* Areas table */}
       <div className="border border-marble-200 rounded-lg overflow-x-auto">
-        <table className="w-full text-sm">
+        <table className="w-full text-sm min-w-[900px]">
           <thead className="bg-marble-100 text-marble-900">
             <tr>
-              <th className="text-left px-3 py-2 font-semibold w-40">Area</th>
-              <th className="text-left px-3 py-2 font-semibold w-16">#</th>
-              <th className="text-left px-3 py-2 font-semibold">Description</th>
-              <th className="text-right px-3 py-2 font-semibold w-32">Total ($)</th>
+              <th className="text-left px-3 py-2 font-semibold w-32">Area</th>
+              <th className="text-left px-3 py-2 font-semibold w-12">#</th>
+              <th className="text-left px-3 py-2 font-semibold">Description of work</th>
+              <th className="text-left px-3 py-2 font-semibold w-32">Material</th>
+              <th className="text-left px-3 py-2 font-semibold w-28">Color</th>
+              <th className="text-left px-3 py-2 font-semibold w-24">Size</th>
+              <th className="text-right px-3 py-2 font-semibold w-28">Total ($)</th>
             </tr>
           </thead>
           <tbody>
-            {initial.areas.map((area, i) => {
+            {initial.areas.map((area) => {
               const spec = ORDER_AREAS.find((s) => s.value === area.areaName);
+              const cellInput =
+                "w-full bg-white border border-marble-200 rounded px-2 py-1 text-marble-900 focus:outline-none focus:ring-1 focus:ring-brand-700";
               return (
                 <tr key={area.areaName} className="border-t border-marble-200">
-                  <td className="px-3 py-1.5 text-marble-900">{spec?.label}</td>
+                  <td className="px-3 py-1.5 text-marble-900 whitespace-nowrap">{spec?.label}</td>
                   <td className="px-3 py-1">
                     <input
                       type="text"
                       inputMode="numeric"
                       name={`area_${area.areaName}_quantity`}
                       defaultValue={area.quantity}
-                      className="w-full bg-white border border-marble-200 rounded px-2 py-1 text-marble-900 tabular-money focus:outline-none focus:ring-1 focus:ring-brand-700"
+                      className={`${cellInput} tabular-money`}
                     />
                   </td>
                   <td className="px-3 py-1">
@@ -246,7 +251,31 @@ export function InvoiceForm({
                       type="text"
                       name={`area_${area.areaName}_description`}
                       defaultValue={area.description}
-                      className="w-full bg-white border border-marble-200 rounded px-2 py-1 text-marble-900 focus:outline-none focus:ring-1 focus:ring-brand-700"
+                      className={cellInput}
+                    />
+                  </td>
+                  <td className="px-3 py-1">
+                    <input
+                      type="text"
+                      name={`area_${area.areaName}_material`}
+                      defaultValue={area.material}
+                      className={cellInput}
+                    />
+                  </td>
+                  <td className="px-3 py-1">
+                    <input
+                      type="text"
+                      name={`area_${area.areaName}_color`}
+                      defaultValue={area.color}
+                      className={cellInput}
+                    />
+                  </td>
+                  <td className="px-3 py-1">
+                    <input
+                      type="text"
+                      name={`area_${area.areaName}_size`}
+                      defaultValue={area.size}
+                      className={cellInput}
                     />
                   </td>
                   <td className="px-3 py-1">
@@ -256,7 +285,7 @@ export function InvoiceForm({
                       name={`area_${area.areaName}_lineTotal`}
                       defaultValue={area.lineTotal}
                       placeholder="0.00"
-                      className="w-full bg-white border border-marble-200 rounded px-2 py-1 text-marble-900 text-right tabular-money focus:outline-none focus:ring-1 focus:ring-brand-700"
+                      className={`${cellInput} text-right tabular-money`}
                     />
                   </td>
                 </tr>

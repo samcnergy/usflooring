@@ -96,11 +96,14 @@ export async function createOrder(input: OrderInputParsed) {
         balanceTerm: input.balanceTerm,
         areas: {
           create: input.areas
-            .filter((a) => a.quantity != null || a.description || a.lineTotal > 0)
+            .filter((a) => a.quantity != null || a.description || a.material || a.color || a.size || a.lineTotal > 0)
             .map((a) => ({
               areaName: a.areaName,
               quantity: a.quantity,
               description: a.description,
+              material: a.material,
+              color: a.color,
+              size: a.size,
               lineTotalCents: a.lineTotal,
             })),
         },
@@ -170,11 +173,14 @@ export async function updateOrder(id: string, input: OrderInputParsed) {
         balanceTerm: input.balanceTerm,
         areas: {
           create: input.areas
-            .filter((a) => a.quantity != null || a.description || a.lineTotal > 0)
+            .filter((a) => a.quantity != null || a.description || a.material || a.color || a.size || a.lineTotal > 0)
             .map((a) => ({
               areaName: a.areaName,
               quantity: a.quantity,
               description: a.description,
+              material: a.material,
+              color: a.color,
+              size: a.size,
               lineTotalCents: a.lineTotal,
             })),
         },

@@ -27,6 +27,9 @@ export const orderAreaInput = z.object({
     .optional()
     .transform((v) => (v == null || v === "" ? null : Number(v))),
   description: z.string().trim().max(500).optional().nullable().transform((v) => v || null),
+  material:    z.string().trim().max(200).optional().nullable().transform((v) => v || null),
+  color:       z.string().trim().max(200).optional().nullable().transform((v) => v || null),
+  size:        z.string().trim().max(200).optional().nullable().transform((v) => v || null),
   lineTotal: moneyString,
 });
 

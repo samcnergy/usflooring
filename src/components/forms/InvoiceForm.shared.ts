@@ -38,7 +38,15 @@ export type OrderInitialValues = {
   hasCounterTop: boolean;
   hasFireplace: boolean;
   hasShower: boolean;
-  areas: { areaName: string; quantity: string; description: string; lineTotal: string }[];
+  areas: {
+    areaName: string;
+    quantity: string;
+    description: string;
+    material: string;
+    color: string;
+    size: string;
+    lineTotal: string;
+  }[];
   taxCents: string;
   depositCents: string;
   basedOn: string;
@@ -64,7 +72,9 @@ export const emptyInitialValues = (defaultSalespersonId: string): OrderInitialVa
   hasCabinet: false, hasCarpet: false, hasVinyl: false, hasWood: false,
   hasCeramic: false, hasCounterTop: false, hasFireplace: false, hasShower: false,
   areas: ORDER_AREAS.map((a) => ({
-    areaName: a.value, quantity: "", description: "", lineTotal: "",
+    areaName: a.value, quantity: "", description: "",
+    material: "", color: "", size: "",
+    lineTotal: "",
   })),
   taxCents: "", depositCents: "",
   basedOn: "", remarks: "", balanceTerm: "",
@@ -86,7 +96,15 @@ export function orderToInitial(order: {
     shipFirstName: string | null; shipLastName: string | null; shipAddressLine1: string | null;
     shipCity: string | null; shipState: string | null; shipZip: string | null; shipPhone: string | null;
   };
-  areas: { areaName: string; quantity: number | null; description: string | null; lineTotalCents: number }[];
+  areas: {
+    areaName: string;
+    quantity: number | null;
+    description: string | null;
+    material: string | null;
+    color: string | null;
+    size: string | null;
+    lineTotalCents: number;
+  }[];
 }): OrderInitialValues {
   const ship = order.customer;
   const same =
@@ -127,6 +145,9 @@ export function orderToInitial(order: {
         areaName: spec.value,
         quantity: a?.quantity != null ? String(a.quantity) : "",
         description: a?.description ?? "",
+        material: a?.material ?? "",
+        color: a?.color ?? "",
+        size: a?.size ?? "",
         lineTotal: a ? moneyToInput(a.lineTotalCents) : "",
       };
     }),

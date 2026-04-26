@@ -22,6 +22,9 @@ export function parseOrderForm(formData: FormData):
     areaName: a.value as AreaName,
     quantity:    str(formData, `area_${a.value}_quantity`),
     description: str(formData, `area_${a.value}_description`),
+    material:    str(formData, `area_${a.value}_material`),
+    color:       str(formData, `area_${a.value}_color`),
+    size:        str(formData, `area_${a.value}_size`),
     lineTotal:   str(formData, `area_${a.value}_lineTotal`),
   }));
 
