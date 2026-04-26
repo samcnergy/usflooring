@@ -7,7 +7,7 @@ import { parseOrderForm } from "@/lib/order-form-parser";
 import { createOrder, updateOrder, voidOrder, getOrder } from "@/lib/order";
 import { audit } from "@/lib/audit";
 import { prisma } from "@/lib/prisma";
-import type { ActionState } from "@/components/forms/InvoiceForm";
+import type { ActionState } from "@/components/forms/InvoiceForm.shared";
 
 async function ownsOrder(orderId: string, salespersonId: string) {
   const o = await prisma.order.findFirst({

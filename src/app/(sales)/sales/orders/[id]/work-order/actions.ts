@@ -7,7 +7,7 @@ import { parseWorkOrderForm } from "@/lib/work-order-form-parser";
 import { updateWorkOrder } from "@/lib/work-order";
 import { audit } from "@/lib/audit";
 import { prisma } from "@/lib/prisma";
-import type { WorkOrderActionState } from "@/components/forms/WorkOrderForm";
+import type { WorkOrderActionState } from "@/components/forms/WorkOrderForm.shared";
 
 export async function updateOwnWorkOrderAction(
   orderId: string,

@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import { getOrder } from "@/lib/order";
 import { requireRole } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { InvoiceForm, orderToInitial, type ActionState } from "@/components/forms/InvoiceForm";
+import { InvoiceForm } from "@/components/forms/InvoiceForm";
+import { orderToInitial, type ActionState } from "@/components/forms/InvoiceForm.shared";
 import { updateOwnOrderAction } from "../../../actions";
 
 type Params = Promise<{ id: string }>;

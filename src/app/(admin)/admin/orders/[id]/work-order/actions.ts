@@ -6,7 +6,7 @@ import { requireRole } from "@/lib/auth";
 import { parseWorkOrderForm } from "@/lib/work-order-form-parser";
 import { updateWorkOrder } from "@/lib/work-order";
 import { audit } from "@/lib/audit";
-import type { WorkOrderActionState } from "@/components/forms/WorkOrderForm";
+import type { WorkOrderActionState } from "@/components/forms/WorkOrderForm.shared";
 
 export async function updateWorkOrderAction(
   orderId: string,

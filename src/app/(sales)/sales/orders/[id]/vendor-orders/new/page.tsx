@@ -2,7 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { requireRole } from "@/lib/auth";
-import { VendorOrderWizard, type CreateVendorState } from "@/components/forms/VendorOrderWizard";
+import { VendorOrderWizard } from "@/components/forms/VendorOrderWizard";
+import type { CreateVendorState } from "@/components/forms/VendorOrderWizard.shared";
 import { createOwnVendorOrderAction } from "./actions";
 
 type Params = Promise<{ id: string }>;

@@ -6,7 +6,7 @@ import { requireRole } from "@/lib/auth";
 import { parseOrderForm } from "@/lib/order-form-parser";
 import { createOrder, updateOrder, voidOrder, unvoidOrder, softDeleteOrder, getOrder } from "@/lib/order";
 import { audit } from "@/lib/audit";
-import type { ActionState } from "@/components/forms/InvoiceForm";
+import type { ActionState } from "@/components/forms/InvoiceForm.shared";
 
 export async function createOrderAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
   const me = await requireRole("admin");

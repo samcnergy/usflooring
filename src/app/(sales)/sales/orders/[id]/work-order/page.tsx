@@ -2,7 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { requireRole } from "@/lib/auth";
-import { WorkOrderForm, workOrderToInitial, type WorkOrderActionState } from "@/components/forms/WorkOrderForm";
+import { WorkOrderForm } from "@/components/forms/WorkOrderForm";
+import { workOrderToInitial, type WorkOrderActionState } from "@/components/forms/WorkOrderForm.shared";
 import { updateOwnWorkOrderAction } from "./actions";
 
 type Params = Promise<{ id: string }>;

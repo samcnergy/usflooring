@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { requireRole } from "@/lib/auth";
-import { InvoiceForm, emptyInitialValues } from "@/components/forms/InvoiceForm";
+import { InvoiceForm } from "@/components/forms/InvoiceForm";
+import { emptyInitialValues } from "@/components/forms/InvoiceForm.shared";
 import { createOrderAction } from "../actions";
 
 export default async function NewOrderPage() {

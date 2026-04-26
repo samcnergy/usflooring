@@ -3,11 +3,11 @@
 import { useActionState } from "react";
 import Link from "next/link";
 import { Field, inputCls, requiredInputCls } from "./Field";
+import type { CreateVendorState } from "./VendorOrderWizard.shared";
 
-export type CreateVendorState =
-  | { ok: true }
-  | { ok: false; errors?: Record<string, string>; message?: string }
-  | null;
+// Re-export for client-side import convenience. Server components MUST
+// import from "./VendorOrderWizard.shared" directly.
+export type { CreateVendorState } from "./VendorOrderWizard.shared";
 
 type MaterialOption = {
   id: string;
