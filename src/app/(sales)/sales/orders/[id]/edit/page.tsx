@@ -22,8 +22,10 @@ export default async function SalesEditOrderPage({ params }: { params: Params })
   });
 
   const initial = orderToInitial(order);
-  const action = async (prev: ActionState, formData: FormData) =>
-    updateOwnOrderAction(id, prev, formData);
+  const action = async (prev: ActionState, formData: FormData) => {
+    "use server";
+    return updateOwnOrderAction(id, prev, formData);
+  };
 
   return (
     <div>

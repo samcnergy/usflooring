@@ -29,8 +29,10 @@ export default async function AdminEditOrderPage({ params }: { params: Params })
   ]);
 
   const initial = orderToInitial(order);
-  const action = async (prev: ActionState, formData: FormData) =>
-    updateOrderAction(id, prev, formData);
+  const action = async (prev: ActionState, formData: FormData) => {
+    "use server";
+    return updateOrderAction(id, prev, formData);
+  };
 
   return (
     <div>
