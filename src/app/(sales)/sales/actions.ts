@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { requireRole } from "@/lib/auth";
 import { parseOrderForm } from "@/lib/order-form-parser";
 import { createOrder, updateOrder, voidOrder, getOrder } from "@/lib/order";
+import { audit } from "@/lib/audit";
 import { prisma } from "@/lib/prisma";
 import type { ActionState } from "@/components/forms/InvoiceForm";
 
@@ -23,6 +24,13 @@ export async function createOwnOrderAction(_prev: ActionState, formData: FormDat
   // Force salespersonId to be the current user — never trust the form.
   parsed.data.salespersonId = me.id;
   const order = await createOrder(parsed.data);
+  await audit({
+    actorUserId: me.id,
+    action: "create",
+    entityType: "Order",
+    entityId: order.id,
+    diff: { invoiceNumber: order.invoiceNumber, totalCents: order.totalCents },
+  });
   revalidatePath("/sales/orders");
   redirect(`/sales/orders/${order.id}`);
 }
@@ -36,6 +44,7 @@ export async function updateOwnOrderAction(orderId: string, _prev: ActionState, 
   if (!parsed.ok) return parsed;
   parsed.data.salespersonId = me.id;
   await updateOrder(orderId, parsed.data);
+  await audit({ actorUserId: me.id, action: "update", entityType: "Order", entityId: orderId });
   revalidatePath(`/sales/orders/${orderId}`);
   revalidatePath("/sales/orders");
   redirect(`/sales/orders/${orderId}`);
@@ -49,6 +58,7 @@ export async function voidOwnOrderAction(orderId: string) {
   const order = await getOrder(orderId);
   if (!order) return;
   await voidOrder(orderId);
+  await audit({ actorUserId: me.id, action: "void", entityType: "Order", entityId: orderId });
   revalidatePath(`/sales/orders/${orderId}`);
   revalidatePath("/sales/orders");
 }
