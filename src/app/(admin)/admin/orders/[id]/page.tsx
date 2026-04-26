@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { getOrder } from "@/lib/order";
 import { requireRole } from "@/lib/auth";
 import { InvoiceView, DocumentTabs } from "@/components/OrderDetail";
+import { DocumentToolbar } from "@/components/DocumentToolbar";
+import { PdfPreview } from "@/components/PdfPreview";
 import { voidOrderAction, unvoidOrderAction, deleteOrderAction } from "../actions";
 
 type Params = Promise<{ id: string }>;
@@ -66,23 +68,20 @@ export default async function AdminOrderDetailPage({
       <DocumentTabs basePath={`/admin/orders/${order.id}`} active={doc} />
 
       {doc === "invoice" ? (
-        <InvoiceView order={order} />
+        <>
+          <DocumentToolbar orderId={order.id} doc="invoice" showPrint />
+          <InvoiceView order={order} />
+        </>
+      ) : doc === "vendor" ? (
+        <div className="bg-marble-100 border border-marble-200 rounded-lg p-8 text-center">
+          <p className="text-marble-700">Vendor PO wizard ships in build step 6 (Phase 2 plumbing).</p>
+        </div>
       ) : (
-        <PdfStub doc={doc} />
+        <>
+          <DocumentToolbar orderId={order.id} doc={doc} />
+          <PdfPreview orderId={order.id} doc={doc} />
+        </>
       )}
-    </div>
-  );
-}
-
-function PdfStub({ doc }: { doc: "workorder" | "dailyworkorder" | "vendor" }) {
-  const labels = {
-    workorder: "Work Order",
-    dailyworkorder: "Daily Work Order",
-    vendor: "Vendor Order(s)",
-  };
-  return (
-    <div className="bg-marble-100 border border-marble-200 rounded-lg p-8 text-center">
-      <p className="text-marble-700">{labels[doc]} preview + PDF download ship in build step 5.</p>
     </div>
   );
 }

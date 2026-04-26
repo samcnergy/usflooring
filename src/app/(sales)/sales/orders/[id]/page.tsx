@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { getOrder } from "@/lib/order";
 import { requireRole } from "@/lib/auth";
 import { InvoiceView, DocumentTabs } from "@/components/OrderDetail";
+import { DocumentToolbar } from "@/components/DocumentToolbar";
+import { PdfPreview } from "@/components/PdfPreview";
 import { voidOwnOrderAction } from "../../actions";
 
 type Params = Promise<{ id: string }>;
@@ -59,11 +61,19 @@ export default async function SalesOrderDetailPage({
       <DocumentTabs basePath={`/sales/orders/${order.id}`} active={doc} />
 
       {doc === "invoice" ? (
-        <InvoiceView order={order} />
-      ) : (
+        <>
+          <DocumentToolbar orderId={order.id} doc="invoice" showPrint />
+          <InvoiceView order={order} />
+        </>
+      ) : doc === "vendor" ? (
         <div className="bg-marble-100 border border-marble-200 rounded-lg p-8 text-center">
-          <p className="text-marble-700">PDF preview + download ship in build step 5.</p>
+          <p className="text-marble-700">Vendor PO wizard ships in build step 6.</p>
         </div>
+      ) : (
+        <>
+          <DocumentToolbar orderId={order.id} doc={doc} />
+          <PdfPreview orderId={order.id} doc={doc} />
+        </>
       )}
     </div>
   );
