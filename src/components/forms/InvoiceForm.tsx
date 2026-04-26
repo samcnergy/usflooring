@@ -2,7 +2,7 @@
 
 import { useActionState, useState } from "react";
 import Link from "next/link";
-import { ExclusionType, InclusionType, LineCategory, PricingMode, RoomName, UnitOfMeasure } from "@prisma/client";
+import { ExclusionType, InclusionType, LineCategory, RoomName, UnitOfMeasure } from "@prisma/client";
 import { Field, inputCls, requiredInputCls, requiredSelectCls, selectCls } from "./Field";
 import { centsToDollarString } from "@/lib/money";
 import { ROOMS } from "@/lib/rooms";
@@ -41,7 +41,6 @@ export function InvoiceForm({
 
   const [sameAs, setSameAs] = useState(initial.sameAsSoldTo);
   const [siteSame, setSiteSame] = useState(initial.jobSiteSameAsBilling);
-  const [pricingMode, setPricingMode] = useState<PricingMode>(initial.pricingMode);
   const [rooms, setRooms] = useState(initial.rooms);
   const [lineItems, setLineItems] = useState<LineItemFormValue[]>(initial.lineItems);
   const [inclusions, setInclusions] = useState<Set<InclusionType>>(new Set(initial.inclusions));
@@ -206,7 +205,6 @@ export function InvoiceForm({
             key={li.key}
             index={i}
             value={li}
-            pricingMode={pricingMode}
             onChange={(next) => setLineItems((prev) => prev.map((x, j) => (j === i ? next : x)))}
             onRemove={() => setLineItems((prev) => prev.filter((_, j) => j !== i))}
           />
@@ -278,12 +276,7 @@ export function InvoiceForm({
             </select>
           </Field>
         </div>
-        <Totals
-          initial={initial}
-          pricingMode={pricingMode}
-          setPricingMode={setPricingMode}
-          lineItems={lineItems}
-        />
+        <Totals initial={initial} lineItems={lineItems} />
       </div>
 
       <div className="flex items-center justify-end gap-3 pb-12">
@@ -369,15 +362,13 @@ function formatAccounting(raw: string): string {
 }
 
 function LineItemRow({
-  index, value, pricingMode, onChange, onRemove,
+  index, value, onChange, onRemove,
 }: {
   index: number;
   value: LineItemFormValue;
-  pricingMode: PricingMode;
   onChange: (next: LineItemFormValue) => void;
   onRemove: () => void;
 }) {
-  const dim = pricingMode === PricingMode.flatTotal;
   const cellInput = "w-full bg-white border border-marble-200 rounded px-2 py-1 text-marble-900 text-xs focus:outline-none focus:ring-1 focus:ring-brand-700";
 
   // Live line total. Quantity is a unit count; price is in dollars (user-typed).
@@ -433,7 +424,7 @@ function LineItemRow({
             {UNITS.map((u) => (<option key={u.value} value={u.value}>{u.short}</option>))}
           </select>
         </div>
-        <div className={`col-span-3 sm:col-span-1 ${dim ? "opacity-50" : ""}`}>
+        <div className="col-span-3 sm:col-span-1">
           <label className="block text-xs text-marble-700 mb-1">Unit $</label>
           <input
             type="text"
@@ -445,7 +436,7 @@ function LineItemRow({
             className={`${cellInput} text-right tabular-money`}
           />
         </div>
-        <div className={`col-span-3 sm:col-span-1 ${dim ? "opacity-50" : ""}`}>
+        <div className="col-span-3 sm:col-span-1">
           <label className="block text-xs text-marble-700 mb-1">Total</label>
           <p className="text-xs text-marble-900 tabular-money font-medium px-2 py-1 text-right">
             {centsToDollarString(lineTotalCents)}
@@ -533,18 +524,15 @@ function ChipsPanel<T extends string>({
 }
 
 function Totals({
-  initial, pricingMode, setPricingMode, lineItems,
+  initial, lineItems,
 }: {
   initial: OrderInitialValues;
-  pricingMode: PricingMode;
-  setPricingMode: (m: PricingMode) => void;
   lineItems: LineItemFormValue[];
 }) {
   const [taxPercent, setTaxPercent] = useState(initial.taxPercent);
   const [deposit, setDeposit] = useState(initial.depositCents);
-  const [flatTotal, setFlatTotal] = useState(initial.flatTotalCents);
 
-  const lineSum = lineItems.reduce((acc, li) => {
+  const subtotalCents = lineItems.reduce((acc, li) => {
     const q = Number((li.quantity || "0").replace(/[,\s]/g, ""));
     const p = Number((li.unitPriceCents || "0").replace(/[$,\s]/g, ""));
     if (Number.isFinite(q) && Number.isFinite(p)) return acc + Math.round(q * p * 100);
@@ -552,41 +540,13 @@ function Totals({
   }, 0);
   const pctNum = Number((taxPercent || "0").replace(/[%\s]/g, ""));
   const depositCents = Math.round(Number((deposit || "0").replace(/[$,\s]/g, "")) * 100);
-  const flatTotalCents = Math.round(Number((flatTotal || "0").replace(/[$,\s]/g, "")) * 100);
-
-  let subtotalCents = 0, taxCents = 0, totalCents = 0;
-  if (pricingMode === PricingMode.itemized) {
-    subtotalCents = lineSum;
-    taxCents = Math.round((subtotalCents * pctNum) / 100);
-    totalCents = subtotalCents + taxCents;
-  } else {
-    totalCents = flatTotalCents;
-    taxCents = Math.round((totalCents * pctNum) / (100 + pctNum));
-    subtotalCents = totalCents - taxCents;
-  }
+  const taxCents = Math.round((subtotalCents * pctNum) / 100);
+  const totalCents = subtotalCents + taxCents;
   const balanceCents = totalCents - depositCents;
 
   return (
     <div className="bg-marble-100 border border-marble-200 rounded-lg p-4 flex flex-col gap-3">
-      <input type="hidden" name="pricingMode" value={pricingMode} />
-      <Field label="Pricing mode" htmlFor="pricingModeToggle" hint="Itemized adds line totals + tax. Flat enters total directly.">
-        <div className="flex gap-1 bg-white border border-marble-200 rounded p-1">
-          <button
-            type="button"
-            onClick={() => setPricingMode(PricingMode.itemized)}
-            className={`flex-1 px-3 py-1.5 rounded text-sm font-medium ${pricingMode === PricingMode.itemized ? "bg-brand-700 text-white" : "text-marble-700"}`}
-          >
-            Itemized
-          </button>
-          <button
-            type="button"
-            onClick={() => setPricingMode(PricingMode.flatTotal)}
-            className={`flex-1 px-3 py-1.5 rounded text-sm font-medium ${pricingMode === PricingMode.flatTotal ? "bg-brand-700 text-white" : "text-marble-700"}`}
-          >
-            Flat total
-          </button>
-        </div>
-      </Field>
+      <input type="hidden" name="pricingMode" value="itemized" />
       <Row label="Sub-total" value={centsToDollarString(subtotalCents)} />
       <div className="grid grid-cols-2 gap-3 items-end">
         <Field label="Tax %" htmlFor="taxPercent" hint="Default 7.75%">
@@ -606,23 +566,7 @@ function Totals({
           <p className="text-marble-900 tabular-money font-medium text-right pr-2">{centsToDollarString(taxCents)}</p>
         </div>
       </div>
-      {pricingMode === PricingMode.flatTotal ? (
-        <Field label="Total ($)" htmlFor="flatTotalCents">
-          <input
-            id="flatTotalCents"
-            name="flatTotalCents"
-            type="text"
-            inputMode="decimal"
-            value={flatTotal}
-            onChange={(e) => setFlatTotal(e.target.value)}
-            onBlur={(e) => setFlatTotal(formatAccounting(e.target.value))}
-            placeholder="0.00"
-            className={`${inputCls} text-right tabular-money`}
-          />
-        </Field>
-      ) : (
-        <Row label="Total" value={centsToDollarString(totalCents)} bold />
-      )}
+      <Row label="Total" value={centsToDollarString(totalCents)} bold />
       <Field label="Deposit ($)" htmlFor="depositCents">
         <input
           id="depositCents"
