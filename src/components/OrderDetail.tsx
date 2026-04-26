@@ -218,10 +218,11 @@ export function DocumentTabs({
   active,
 }: {
   basePath: string;
-  active: "invoice" | "workorder" | "dailyworkorder" | "vendor";
+  active: "invoice" | "scope" | "workorder" | "dailyworkorder" | "vendor";
 }) {
   const tabs: { key: typeof active; label: string }[] = [
     { key: "invoice",         label: "Invoice" },
+    { key: "scope",           label: "Scope of Work" },
     { key: "workorder",       label: "Work Order" },
     { key: "dailyworkorder",  label: "Daily Work Order" },
     { key: "vendor",          label: "Vendor Order(s)" },

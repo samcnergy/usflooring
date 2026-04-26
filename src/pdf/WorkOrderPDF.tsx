@@ -7,6 +7,7 @@ import { centsToDollarString } from "@/lib/money";
 import { lineCategoryLabel } from "@/lib/line-categories";
 import { unitShort } from "@/lib/units";
 import { inclusionLabel, exclusionLabel } from "@/lib/inclusions";
+import { generateScopeOfWork } from "@/lib/scope";
 
 type FullOrder = Prisma.OrderGetPayload<{
   include: {
@@ -166,6 +167,25 @@ export function WorkOrderPDF({
             ) : null}
           </View>
         ) : null}
+
+        {/* Scope of Work (per Invoice) */}
+        <View style={{ marginTop: 8, paddingTop: 6, borderTopWidth: 0.5, borderColor: COLORS.borderLight }}>
+          <Text style={[styles.sectionLabel, { color: COLORS.brand, fontSize: 10, marginBottom: 3 }]}>
+            SCOPE OF WORK (per Invoice)
+          </Text>
+          {(order.scopeOverride ?? generateScopeOfWork({
+            rooms: [], // Work Order's order has no rooms loaded in this query;
+            lineItems: order.lineItems,
+            inclusions: order.inclusions,
+            exclusions: order.exclusions,
+            remarks: order.remarks,
+            depositInstructions: order.depositInstructions,
+          })).split(/\n\n+/).map((p, i) => (
+            <Text key={i} style={{ marginBottom: 3 }}>
+              {p.replace(/\*\*([^*]+)\*\*/g, "$1")}
+            </Text>
+          ))}
+        </View>
 
         <PdfFooter docType="Work Order" downloadedBy={downloadedBy} />
       </Page>

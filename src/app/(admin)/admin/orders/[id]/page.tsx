@@ -5,7 +5,10 @@ import { requireRole } from "@/lib/auth";
 import { InvoiceView, DocumentTabs } from "@/components/OrderDetail";
 import { DocumentToolbar } from "@/components/DocumentToolbar";
 import { PdfPreview } from "@/components/PdfPreview";
+import { ScopeOfWork } from "@/components/ScopeOfWork";
+import { generateScopeOfWork } from "@/lib/scope";
 import { voidOrderAction, unvoidOrderAction, deleteOrderAction } from "../actions";
+import { saveScopeAction, resetScopeAction } from "./scope/actions";
 
 type Params = Promise<{ id: string }>;
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
@@ -22,6 +25,7 @@ export default async function AdminOrderDetailPage({
   const sp = await searchParams;
   const doc = (typeof sp.doc === "string" ? sp.doc : "invoice") as
     | "invoice"
+    | "scope"
     | "workorder"
     | "dailyworkorder"
     | "vendor";
@@ -72,21 +76,20 @@ export default async function AdminOrderDetailPage({
           <DocumentToolbar orderId={order.id} doc="invoice" showPrint />
           <InvoiceView order={order} />
         </>
+      ) : doc === "scope" ? (
+        <ScopeOfWork
+          orderId={order.id}
+          generatedScope={generateScopeOfWork(order)}
+          override={order.scopeOverride}
+          canEdit
+          saveAction={saveScopeAction}
+          resetAction={resetScopeAction}
+        />
       ) : doc === "vendor" ? (
         <VendorTab orderId={order.id} />
       ) : (
         <>
-          <div className="flex items-center justify-between gap-4">
-            <DocumentToolbar orderId={order.id} doc={doc} />
-            {doc === "workorder" ? (
-              <Link
-                href={`/admin/orders/${order.id}/work-order`}
-                className="inline-flex items-center justify-center min-h-11 px-4 rounded border border-brand-700 text-brand-700 hover:bg-brand-100 font-medium no-print"
-              >
-                Edit work order details
-              </Link>
-            ) : null}
-          </div>
+          <DocumentToolbar orderId={order.id} doc={doc} />
           <PdfPreview orderId={order.id} doc={doc} />
         </>
       )}

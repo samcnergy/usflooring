@@ -8,6 +8,7 @@ import { roomLabel } from "@/lib/rooms";
 import { lineCategoryLabel, PRINTED_CATEGORY_CHECKBOXES } from "@/lib/line-categories";
 import { unitShort } from "@/lib/units";
 import { inclusionLabel, exclusionLabel } from "@/lib/inclusions";
+import { generateScopeOfWork } from "@/lib/scope";
 import { PricingMode } from "@prisma/client";
 
 type FullOrder = Prisma.OrderGetPayload<{
@@ -21,6 +22,13 @@ type FullOrder = Prisma.OrderGetPayload<{
     exclusions: true;
   };
 }>;
+
+// Strip the **bold** markdown wrappers that the scope generator emits,
+// since @react-pdf doesn't render markdown. (Bold formatting is sacrificed
+// in the PDF — the readable text remains intact.)
+function stripBoldMarkdown(s: string): string {
+  return s.replace(/\*\*([^*]+)\*\*/g, "$1");
+}
 
 const balanceTermLabels: Record<string, string> = {
   cash: "Cash",
@@ -185,6 +193,14 @@ export function InvoicePDF({
             ) : null}
           </View>
         ) : null}
+
+        {/* Scope of Work — between line items/inclusions and totals. */}
+        <View style={{ marginTop: 10, paddingTop: 6, borderTopWidth: 0.5, borderColor: COLORS.borderLight }}>
+          <Text style={[styles.sectionLabel, { color: COLORS.brand, fontSize: 10, marginBottom: 3 }]}>SCOPE OF WORK</Text>
+          {(order.scopeOverride ?? generateScopeOfWork(order)).split(/\n\n+/).map((p, i) => (
+            <Text key={i} style={{ marginBottom: 3 }}>{stripBoldMarkdown(p)}</Text>
+          ))}
+        </View>
 
         {/* Based-on / Remarks + Totals */}
         <View style={[styles.twoCol, { marginTop: 8 }]}>

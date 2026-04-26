@@ -137,6 +137,11 @@ model Order {
   remarks     String?
   balanceTerm BalanceTerm?
 
+  // Hand-tuned override for the auto-generated Scope of Work narrative.
+  // When non-null, all rendered scopes use this string verbatim instead of
+  // calling generateScopeOfWork(order). Reset by clearing the column.
+  scopeOverride String?
+
   // Job-site fields (the "margin notes" homes from real handwritten invoices)
   jobSiteAddressLine1  String?
   jobSiteCity          String?
