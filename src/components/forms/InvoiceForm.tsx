@@ -354,6 +354,20 @@ function RoomCheckbox({
   );
 }
 
+/** Format a money string in accounting style: "1234.5" → "1,234.50". Empty
+ *  / non-numeric strings pass through unchanged so the user can still
+ *  delete + retype. */
+function formatAccounting(raw: string): string {
+  const cleaned = raw.replace(/[$,\s]/g, "");
+  if (!cleaned) return "";
+  const n = Number(cleaned);
+  if (!Number.isFinite(n)) return raw;
+  return n.toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+}
+
 function LineItemRow({
   index, value, pricingMode, onChange, onRemove,
 }: {
@@ -366,10 +380,12 @@ function LineItemRow({
   const dim = pricingMode === PricingMode.flatTotal;
   const cellInput = "w-full bg-white border border-marble-200 rounded px-2 py-1 text-marble-900 text-xs focus:outline-none focus:ring-1 focus:ring-brand-700";
 
-  // Live line total
+  // Live line total. Quantity is a unit count; price is in dollars (user-typed).
+  // centsToDollarString takes cents, so multiply by 100 once at the end.
   const qty = Number((value.quantity || "0").replace(/[,\s]/g, ""));
   const price = Number((value.unitPriceCents || "0").replace(/[$,\s]/g, ""));
-  const lineTotal = Number.isFinite(qty) && Number.isFinite(price) ? qty * price : 0;
+  const lineTotalCents =
+    Number.isFinite(qty) && Number.isFinite(price) ? Math.round(qty * price * 100) : 0;
 
   return (
     <div className="border-t border-marble-200 first:border-t-0 py-3">
@@ -419,12 +435,20 @@ function LineItemRow({
         </div>
         <div className={`col-span-3 sm:col-span-1 ${dim ? "opacity-50" : ""}`}>
           <label className="block text-xs text-marble-700 mb-1">Unit $</label>
-          <input type="text" inputMode="decimal" name={`li_${index}_unitPriceCents`} value={value.unitPriceCents} onChange={(e) => onChange({ ...value, unitPriceCents: e.target.value })} className={`${cellInput} text-right tabular-money`} />
+          <input
+            type="text"
+            inputMode="decimal"
+            name={`li_${index}_unitPriceCents`}
+            value={value.unitPriceCents}
+            onChange={(e) => onChange({ ...value, unitPriceCents: e.target.value })}
+            onBlur={(e) => onChange({ ...value, unitPriceCents: formatAccounting(e.target.value) })}
+            className={`${cellInput} text-right tabular-money`}
+          />
         </div>
         <div className={`col-span-3 sm:col-span-1 ${dim ? "opacity-50" : ""}`}>
           <label className="block text-xs text-marble-700 mb-1">Total</label>
           <p className="text-xs text-marble-900 tabular-money font-medium px-2 py-1 text-right">
-            {centsToDollarString(Math.round(lineTotal))}
+            {centsToDollarString(lineTotalCents)}
           </p>
         </div>
         <div className="col-span-12 sm:col-span-3">
@@ -591,6 +615,7 @@ function Totals({
             inputMode="decimal"
             value={flatTotal}
             onChange={(e) => setFlatTotal(e.target.value)}
+            onBlur={(e) => setFlatTotal(formatAccounting(e.target.value))}
             placeholder="0.00"
             className={`${inputCls} text-right tabular-money`}
           />
@@ -606,6 +631,7 @@ function Totals({
           inputMode="decimal"
           value={deposit}
           onChange={(e) => setDeposit(e.target.value)}
+          onBlur={(e) => setDeposit(formatAccounting(e.target.value))}
           placeholder="0.00"
           className={`${inputCls} text-right tabular-money`}
         />
