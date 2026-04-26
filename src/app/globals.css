@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 /*
  * U.S. Floor, Kitchen & Bath — design tokens.
