@@ -1,9 +1,24 @@
 // Vendor PO creation. Auto-creates a Vendor row when a vendor name is typed
 // for the first time (Phase 2 hook from spec § 14). Snapshots the chosen
-// material lines into JSON so editing the master order doesn't silently
+// OrderLineItem rows into JSON so editing the master order doesn't silently
 // mutate a sent PO.
 
 import { prisma } from "./prisma";
+import type { LineCategory, UnitOfMeasure } from "@prisma/client";
+
+export type VendorOrderLineSnapshot = {
+  position: number;
+  category: LineCategory;
+  brand: string | null;
+  style: string | null;
+  color: string | null;
+  sizeSpec: string | null;
+  sku: string | null;
+  quantity: number | null;
+  unit: UnitOfMeasure | null;
+  unitPriceCents: number | null;
+  notes: string | null;
+};
 
 type CreateInput = {
   orderId: string;
@@ -14,35 +29,34 @@ type CreateInput = {
   willCallDate?: Date | null;
   deliveryDate?: Date | null;
   deliveryAddress?: string | null;
-  materialLineIds: string[];
+  /** OrderLineItem.id values to include on this PO */
+  lineItemIds: string[];
 };
 
 export async function createVendorOrder(input: CreateInput) {
   return prisma.$transaction(async (tx) => {
-    // Auto-create or match the Vendor by case-insensitive name.
     const trimmed = input.vendorName.trim();
     const existing = await tx.vendor.findFirst({
       where: { name: { equals: trimmed, mode: "insensitive" } },
     });
-    const vendor =
-      existing ??
-      (await tx.vendor.create({ data: { name: trimmed } }));
+    const vendor = existing ?? (await tx.vendor.create({ data: { name: trimmed } }));
 
-    // Snapshot the selected material lines.
-    const lines = await tx.orderMaterial.findMany({
-      where: { orderId: input.orderId, id: { in: input.materialLineIds } },
+    const lines = await tx.orderLineItem.findMany({
+      where: { orderId: input.orderId, id: { in: input.lineItemIds } },
+      orderBy: { position: "asc" },
     });
-    const lineItems = lines.map((m) => ({
-      lineNumber: m.lineNumber,
-      millStyle: m.millStyle,
-      color: m.color,
-      size: m.size,
-      refNumber: m.refNumber,
-      pad: m.pad,
-      areas: m.areas,
-      unitOfMeasure: m.unitOfMeasure,
-      quantity: m.quantity,
-      unitPriceCents: m.unitPriceCents,
+    const lineItems: VendorOrderLineSnapshot[] = lines.map((li) => ({
+      position: li.position,
+      category: li.category,
+      brand: li.brand,
+      style: li.style,
+      color: li.color,
+      sizeSpec: li.sizeSpec,
+      sku: li.sku,
+      quantity: li.quantity,
+      unit: li.unit,
+      unitPriceCents: li.unitPriceCents,
+      notes: li.notes,
     }));
 
     return tx.vendorOrder.create({
@@ -56,7 +70,7 @@ export async function createVendorOrder(input: CreateInput) {
         willCallDate: input.willCallDate ?? null,
         deliveryDate: input.deliveryDate ?? null,
         deliveryAddress: input.deliveryAddress ?? null,
-        lineItems: lineItems as object,
+        lineItems: { lineItems } as object,
       },
     });
   });

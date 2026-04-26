@@ -1,20 +1,23 @@
 import { Document, Page, Text, View } from "@react-pdf/renderer";
-import { styles, COLORS } from "./styles";
-import { PdfFooter } from "./PdfFooter";
 import { format } from "date-fns";
 import type { Prisma } from "@prisma/client";
+import { styles, COLORS } from "./styles";
+import { PdfFooter } from "./PdfFooter";
+import { roomLabel } from "@/lib/rooms";
+import { lineCategoryLabel } from "@/lib/line-categories";
+import { unitShort } from "@/lib/units";
 
 type FullOrder = Prisma.OrderGetPayload<{
   include: {
     customer: true;
     salesperson: { select: { id: true; fullName: true; email: true } };
+    rooms: true;
+    lineItems: true;
     showerSpec: true;
     tileSpec: true;
     removals: true;
   };
 }>;
-
-// Installer's sheet — never has prices, regardless of role.
 
 export function DailyWorkOrderPDF({
   order,
@@ -27,12 +30,42 @@ export function DailyWorkOrderPDF({
   const tile = order.tileSpec;
   const shower = order.showerSpec;
 
+  const linesByCategory = new Map<string, typeof order.lineItems>();
+  for (const li of order.lineItems) {
+    const cat = lineCategoryLabel(li.category);
+    if (!linesByCategory.has(cat)) linesByCategory.set(cat, []);
+    linesByCategory.get(cat)!.push(li);
+  }
+
   return (
     <Document title={`USFKB Daily Work Order ${order.invoiceNumber}`}>
       <Page size="LETTER" style={styles.page}>
         <Text style={styles.bigTitle}>DAILY WORK ORDER</Text>
 
-        {/* Identity strip */}
+        {(order.siteContactName || order.accessInstructions || !order.jobSiteSameAsBilling) ? (
+          <View style={{ borderWidth: 1, borderColor: COLORS.invoiceRed, padding: 8, marginBottom: 8 }}>
+            <Text style={[styles.sectionLabel, { color: COLORS.invoiceRed, fontSize: 11 }]}>SITE NOTES — read before leaving the shop</Text>
+            {!order.jobSiteSameAsBilling ? (
+              <Text style={{ marginTop: 4 }}>
+                <Text style={{ fontFamily: "Helvetica-Bold" }}>Address: </Text>
+                {order.jobSiteAddressLine1}, {order.jobSiteCity}, {order.jobSiteState} {order.jobSiteZip}
+              </Text>
+            ) : null}
+            {order.siteContactName ? (
+              <Text style={{ marginTop: 2 }}>
+                <Text style={{ fontFamily: "Helvetica-Bold" }}>Contact: </Text>
+                {order.siteContactName}{order.siteContactPhone ? ` · ${order.siteContactPhone}` : ""}
+              </Text>
+            ) : null}
+            {order.accessInstructions ? (
+              <Text style={{ marginTop: 2 }}>
+                <Text style={{ fontFamily: "Helvetica-Bold" }}>Access: </Text>
+                {order.accessInstructions}
+              </Text>
+            ) : null}
+          </View>
+        ) : null}
+
         <View style={{ borderWidth: 1, borderColor: COLORS.borderHeavy, padding: 6, marginBottom: 8 }}>
           <View style={styles.twoCol}>
             <View style={styles.col}>
@@ -52,63 +85,74 @@ export function DailyWorkOrderPDF({
           </View>
         </View>
 
-        {/* Shower */}
-        <Text style={[styles.sectionLabel, { fontSize: 11, marginBottom: 4 }]}>SHOWER</Text>
-        <View style={{ borderWidth: 1, borderColor: COLORS.borderHeavy, padding: 6, marginBottom: 8 }}>
-          <Field label="SHOWER WALLS SQFT">{shower?.shower_walls_sqft ?? ""}</Field>
-          <Field label="WALL MATERIAL">{shower?.wall_material ?? ""}</Field>
-          <Field label="SHOWER PAN">{shower?.shower_pan ?? ""}</Field>
-          <Field label="SHOWER PAN MATERIAL">{shower?.shower_pan_material ?? ""}</Field>
-          <Field label="SOAP BOX MATERIAL">{shower?.soap_box_material ?? ""}</Field>
-          <Field label="BENCH">{shower?.bench ?? ""}</Field>
-          <Field label="BATHROOM FLOOR SQFT">{shower?.bathroom_floor_sqft ?? ""}</Field>
-          <Field label="BATHROOM FLOOR MATERIAL">{shower?.bathroom_floor_material ?? ""}</Field>
-          <Field label="SCHLUTER">{shower?.schluter ?? ""}</Field>
-          <Field label="GROUT COLOR">{shower?.grout_color ?? ""}</Field>
-          <Field label="VERTICAL / HORIZONTAL">
-            {`${boolLabel(shower?.vertical)} / ${boolLabel(shower?.horizontal)}`}
-          </Field>
-        </View>
+        {order.rooms.length > 0 ? (
+          <View style={{ marginBottom: 8 }}>
+            <Text style={[styles.sectionLabel, { fontSize: 11 }]}>ROOMS</Text>
+            {order.rooms.map((r) => (
+              <Text key={r.id}>
+                {roomLabel(r.room)}{r.quantity ? ` × ${r.quantity}` : ""}{r.notes ? ` — ${r.notes}` : ""}
+              </Text>
+            ))}
+          </View>
+        ) : null}
 
-        {/* Tile / Stone */}
-        <Text style={[styles.sectionLabel, { fontSize: 11, marginBottom: 4 }]}>TILE, STONE</Text>
-        <View style={{ borderWidth: 1, borderColor: COLORS.borderHeavy, padding: 6, marginBottom: 8 }}>
-          <Text>
-            {[
-              tile?.hasTile && "Tile",
-              tile?.hasMarble && "Marble",
-              tile?.hasTravertine && "Travertine",
-              tile?.hasSlate && "Slate",
-              tile?.hasTumbleMarble && "Tumble Marble",
-            ].filter(Boolean).join(" · ") || "—"}
-          </Text>
-          <Text style={{ marginTop: 4 }}>
-            {[
-              tile?.hasBacksplash && "Back Splash",
-              tile?.hasFloor && "Floor",
-              tile?.hasFireplace && "Fireplace",
-              tile?.hasShowerTile && "Shower",
-              tile?.hasWalls && "Walls",
-              tile?.hasCounterTop && "Counter Top",
-              tile?.hasStone && "Stone",
-              tile?.hasSlab && "Slab",
-            ].filter(Boolean).join(" · ") || "—"}
-          </Text>
-          <Field label="WONDERBOARD">{boolLabel(tile?.wonderboard)}</Field>
-          <Field label="SLIP SHEET">{boolLabel(tile?.slipSheet)}</Field>
-          <Field label="SEAL">{boolLabel(tile?.seal)}</Field>
-          <Field label="GROUT COLOR">{tile?.groutColor ?? ""}</Field>
-        </View>
+        {linesByCategory.size > 0 ? (
+          <View style={{ marginBottom: 8 }}>
+            <Text style={[styles.sectionLabel, { fontSize: 11 }]}>WHAT TO INSTALL</Text>
+            {Array.from(linesByCategory.entries()).map(([cat, lines]) => (
+              <View key={cat} style={{ marginTop: 4 }}>
+                <Text style={{ fontFamily: "Helvetica-Bold" }}>{cat}:</Text>
+                {lines.map((li) => (
+                  <Text key={li.id} style={{ color: COLORS.muted, marginLeft: 8 }}>
+                    • {[li.brand, li.style, li.color, li.sizeSpec].filter(Boolean).join(" — ")}
+                    {li.quantity != null ? ` (${li.quantity}${li.unit ? " " + unitShort(li.unit) : ""})` : ""}
+                    {li.notes ? ` · ${li.notes}` : ""}
+                  </Text>
+                ))}
+              </View>
+            ))}
+          </View>
+        ) : null}
 
-        {/* Removal & appliances */}
-        <Text style={[styles.sectionLabel, { fontSize: 11, marginBottom: 4 }]}>REMOVAL &amp; APPLIANCES</Text>
-        <View style={{ borderWidth: 1, borderColor: COLORS.borderHeavy, padding: 6 }}>
-          <Text>
-            {order.removals.length > 0
-              ? order.removals.map((r) => labelEnum(r.type)).join(" · ")
-              : "—"}
-          </Text>
-        </View>
+        {shower ? (
+          <>
+            <Text style={[styles.sectionLabel, { fontSize: 11, marginBottom: 4 }]}>SHOWER</Text>
+            <View style={{ borderWidth: 1, borderColor: COLORS.borderHeavy, padding: 6, marginBottom: 8 }}>
+              <Field label="SHOWER WALLS SQFT">{shower.shower_walls_sqft ?? ""}</Field>
+              <Field label="WALL MATERIAL">{shower.wall_material ?? ""}</Field>
+              <Field label="SHOWER PAN">{shower.shower_pan ?? ""}</Field>
+              <Field label="SHOWER PAN MATERIAL">{shower.shower_pan_material ?? ""}</Field>
+              <Field label="GROUT COLOR">{shower.grout_color ?? ""}</Field>
+            </View>
+          </>
+        ) : null}
+
+        {tile ? (
+          <>
+            <Text style={[styles.sectionLabel, { fontSize: 11, marginBottom: 4 }]}>TILE, STONE</Text>
+            <View style={{ borderWidth: 1, borderColor: COLORS.borderHeavy, padding: 6, marginBottom: 8 }}>
+              <Text>
+                {[
+                  tile.hasTile && "Tile",
+                  tile.hasMarble && "Marble",
+                  tile.hasTravertine && "Travertine",
+                  tile.hasSlate && "Slate",
+                  tile.hasTumbleMarble && "Tumble Marble",
+                ].filter(Boolean).join(" · ") || "—"}
+              </Text>
+              <Field label="GROUT COLOR">{tile.groutColor ?? ""}</Field>
+            </View>
+          </>
+        ) : null}
+
+        {order.removals.length > 0 ? (
+          <>
+            <Text style={[styles.sectionLabel, { fontSize: 11, marginBottom: 4 }]}>REMOVAL &amp; APPLIANCES</Text>
+            <View style={{ borderWidth: 1, borderColor: COLORS.borderHeavy, padding: 6 }}>
+              <Text>{order.removals.map((r) => labelEnum(r.type)).join(" · ")}</Text>
+            </View>
+          </>
+        ) : null}
 
         <PdfFooter docType="Daily Work Order" downloadedBy={downloadedBy} />
       </Page>
@@ -123,12 +167,6 @@ function Field({ label, children }: { label: string; children?: React.ReactNode 
       {(children ?? "") as React.ReactNode}
     </Text>
   );
-}
-
-function boolLabel(v: boolean | null | undefined): string {
-  if (v === true) return "Yes";
-  if (v === false) return "No";
-  return "—";
 }
 
 function labelEnum(v: string | null | undefined): string {

@@ -1,17 +1,24 @@
 import { Document, Page, Text, View } from "@react-pdf/renderer";
-import { styles, COLORS } from "./styles";
-import { PdfFooter } from "./PdfFooter";
-import { ORDER_AREAS } from "@/lib/order-areas";
-import { centsToDollarString } from "@/lib/money";
 import { format } from "date-fns";
 import type { Prisma } from "@prisma/client";
+import { styles, COLORS } from "./styles";
+import { PdfFooter } from "./PdfFooter";
+import { centsToDollarString } from "@/lib/money";
+import { roomLabel } from "@/lib/rooms";
+import { lineCategoryLabel, PRINTED_CATEGORY_CHECKBOXES } from "@/lib/line-categories";
+import { unitShort } from "@/lib/units";
+import { inclusionLabel, exclusionLabel } from "@/lib/inclusions";
+import { PricingMode } from "@prisma/client";
 
 type FullOrder = Prisma.OrderGetPayload<{
   include: {
     customer: true;
     salesperson: { select: { id: true; fullName: true; email: true } };
     advertisingSource: true;
-    areas: true;
+    rooms: true;
+    lineItems: true;
+    inclusions: true;
+    exclusions: true;
   };
 }>;
 
@@ -29,16 +36,8 @@ export function InvoicePDF({
   downloadedBy?: string;
 }) {
   const cust = order.customer;
-  const cats: { key: string; label: string; on: boolean }[] = [
-    { key: "cab", label: "Cabinet",    on: order.hasCabinet },
-    { key: "car", label: "CARPET",     on: order.hasCarpet },
-    { key: "vin", label: "VINYL",      on: order.hasVinyl },
-    { key: "wod", label: "WOOD",       on: order.hasWood },
-    { key: "cer", label: "CERAMIC",    on: order.hasCeramic },
-    { key: "ctp", label: "COUNTER TOP", on: order.hasCounterTop },
-    { key: "fpl", label: "FIREPLACE",  on: order.hasFireplace },
-    { key: "shw", label: "SHOWER",     on: order.hasShower },
-  ];
+  const categoriesUsed = new Set(order.lineItems.map((li) => li.category));
+  const showPrices = order.pricingMode === PricingMode.itemized;
 
   return (
     <Document title={`USFKB Invoice ${order.invoiceNumber}`}>
@@ -75,8 +74,8 @@ export function InvoicePDF({
           Tel: 949-589-9226 &middot; Fax: 949-589-9216 &middot; usfloorkb.com
         </Text>
 
-        {/* Sold to / Ship to */}
-        <View style={styles.twoCol}>
+        {/* Sold to / Ship to / Job Site / Salesperson */}
+        <View style={[styles.twoCol, { marginBottom: 4 }]}>
           <View style={styles.col}>
             <Text style={styles.sectionLabel}>SOLD TO:</Text>
             <Text>{cust.firstName} {cust.lastName}</Text>
@@ -93,50 +92,99 @@ export function InvoicePDF({
             <Text style={{ color: COLORS.muted }}>
               {(cust.shipCity ?? cust.city)}, {(cust.shipState ?? cust.state)} {(cust.shipZip ?? cust.zip)}
             </Text>
-            {cust.shipPhone ? <Text style={{ color: COLORS.muted }}>PH (HM): {cust.shipPhone}</Text> : null}
+            {cust.shipPhone ? <Text style={{ color: COLORS.muted }}>{cust.shipPhone}</Text> : null}
             <Text style={{ marginTop: 6, color: COLORS.muted }}>SALESPERSON: {order.salesperson.fullName}</Text>
           </View>
         </View>
 
-        {/* Categories */}
+        {!order.jobSiteSameAsBilling || order.siteContactName || order.accessInstructions ? (
+          <View style={{ borderTopWidth: 0.5, borderColor: COLORS.borderLight, paddingTop: 4, marginBottom: 4 }}>
+            <Text style={styles.sectionLabel}>JOB SITE:</Text>
+            {!order.jobSiteSameAsBilling ? (
+              <Text style={{ color: COLORS.muted }}>
+                {order.jobSiteAddressLine1}, {order.jobSiteCity}, {order.jobSiteState} {order.jobSiteZip}
+              </Text>
+            ) : null}
+            {order.siteContactName ? (
+              <Text style={{ color: COLORS.muted }}>
+                Contact: {order.siteContactName}{order.siteContactPhone ? ` · ${order.siteContactPhone}` : ""}
+              </Text>
+            ) : null}
+            {order.accessInstructions ? (
+              <Text style={{ color: COLORS.muted }}>Access: {order.accessInstructions}</Text>
+            ) : null}
+          </View>
+        ) : null}
+
+        {/* Categories (derived from line items) */}
         <View style={styles.categoryRow}>
-          {cats.map((c) => (
-            <View key={c.key} style={styles.categoryItem}>
-              <View style={c.on ? styles.checkBoxFilled : styles.checkBox} />
-              <Text style={{ fontFamily: "Helvetica-Bold" }}>{c.label}</Text>
+          {PRINTED_CATEGORY_CHECKBOXES.map((c) => (
+            <View key={c.value} style={styles.categoryItem}>
+              <View style={categoriesUsed.has(c.value) ? styles.checkBoxFilled : styles.checkBox} />
+              <Text style={{ fontFamily: "Helvetica-Bold" }}>{c.label.toUpperCase()}</Text>
             </View>
           ))}
         </View>
 
-        {/* Areas table */}
-        <View style={styles.tableHead}>
-          <Text style={{ width: 80 }}>AREA</Text>
-          <Text style={{ width: 18 }}>#</Text>
-          <Text style={{ flex: 1.4 }}>DESCRIPTION OF WORK</Text>
-          <Text style={{ flex: 1 }}>MATERIAL</Text>
-          <Text style={{ width: 60 }}>COLOR</Text>
-          <Text style={{ width: 50 }}>SIZE</Text>
-          <Text style={{ width: 60, textAlign: "right" }}>TOTAL</Text>
-        </View>
-        {ORDER_AREAS.map((spec) => {
-          const a = order.areas.find((x) => x.areaName === spec.value);
-          const filled =
-            a &&
-            (a.quantity != null || a.description || a.material || a.color || a.size || a.lineTotalCents > 0);
-          return (
-            <View key={spec.value} style={styles.tableRow}>
-              <Text style={{ width: 80 }}>{spec.label}</Text>
-              <Text style={{ width: 18 }}>{a?.quantity ?? ""}</Text>
-              <Text style={{ flex: 1.4, color: COLORS.muted }}>{a?.description ?? ""}</Text>
-              <Text style={{ flex: 1, color: COLORS.muted }}>{a?.material ?? ""}</Text>
-              <Text style={{ width: 60, color: COLORS.muted }}>{a?.color ?? ""}</Text>
-              <Text style={{ width: 50, color: COLORS.muted }}>{a?.size ?? ""}</Text>
-              <Text style={{ width: 60, textAlign: "right" }}>
-                {filled ? centsToDollarString(a!.lineTotalCents) : ""}
+        {/* Rooms summary */}
+        {order.rooms.length > 0 ? (
+          <View style={{ marginBottom: 6 }}>
+            <Text style={{ fontFamily: "Helvetica-Bold" }}>
+              ROOMS:{" "}
+              <Text style={{ fontFamily: "Helvetica" }}>
+                {order.rooms.map((r) => `${roomLabel(r.room)}${r.quantity ? ` × ${r.quantity}` : ""}`).join(", ")}
               </Text>
+            </Text>
+          </View>
+        ) : null}
+
+        {/* Line items */}
+        {order.lineItems.length > 0 ? (
+          <>
+            <View style={styles.tableHead}>
+              <Text style={{ width: 56 }}>CATEGORY</Text>
+              <Text style={{ flex: 1.2 }}>BRAND / STYLE</Text>
+              <Text style={{ width: 70 }}>COLOR</Text>
+              <Text style={{ width: 50 }}>SIZE</Text>
+              <Text style={{ width: 30, textAlign: "right" }}>QTY</Text>
+              <Text style={{ width: 30 }}>UNIT</Text>
+              {showPrices ? <Text style={{ width: 56, textAlign: "right" }}>UNIT $</Text> : null}
+              {showPrices ? <Text style={{ width: 56, textAlign: "right" }}>TOTAL</Text> : null}
             </View>
-          );
-        })}
+            {order.lineItems.map((li) => (
+              <View key={li.id} style={styles.tableRow}>
+                <Text style={{ width: 56 }}>{lineCategoryLabel(li.category)}</Text>
+                <Text style={{ flex: 1.2, color: COLORS.muted }}>
+                  {[li.brand, li.style].filter(Boolean).join(" — ")}
+                </Text>
+                <Text style={{ width: 70, color: COLORS.muted }}>{li.color ?? ""}</Text>
+                <Text style={{ width: 50, color: COLORS.muted }}>{li.sizeSpec ?? ""}</Text>
+                <Text style={{ width: 30, textAlign: "right" }}>{li.quantity ?? ""}</Text>
+                <Text style={{ width: 30 }}>{unitShort(li.unit)}</Text>
+                {showPrices ? <Text style={{ width: 56, textAlign: "right" }}>{li.unitPriceCents != null ? centsToDollarString(li.unitPriceCents) : ""}</Text> : null}
+                {showPrices ? <Text style={{ width: 56, textAlign: "right" }}>{li.lineTotalCents != null ? centsToDollarString(li.lineTotalCents) : ""}</Text> : null}
+              </View>
+            ))}
+          </>
+        ) : null}
+
+        {/* Inclusions / Exclusions */}
+        {(order.inclusions.length > 0 || order.exclusions.length > 0) ? (
+          <View style={{ marginTop: 8 }}>
+            {order.inclusions.length > 0 ? (
+              <Text style={{ marginBottom: 3 }}>
+                <Text style={{ fontFamily: "Helvetica-Bold" }}>Price includes: </Text>
+                {order.inclusions.map((i) => i.type === "customNote" ? i.customText : inclusionLabel(i.type)).filter(Boolean).join(", ")}.
+              </Text>
+            ) : null}
+            {order.exclusions.length > 0 ? (
+              <Text>
+                <Text style={{ fontFamily: "Helvetica-Bold" }}>Not included: </Text>
+                {order.exclusions.map((e) => e.type === "customNote" ? e.customText : exclusionLabel(e.type)).filter(Boolean).join(", ")}.
+              </Text>
+            ) : null}
+          </View>
+        ) : null}
 
         {/* Based-on / Remarks + Totals */}
         <View style={[styles.twoCol, { marginTop: 8 }]}>
@@ -145,16 +193,15 @@ export function InvoicePDF({
               Based on{" "}
               <Text style={{ fontFamily: "Helvetica-Bold" }}>
                 {order.basedOn ?? "_______________"}
-              </Text>
-              {" "}— Square Yards / Square Feet / Total — Subject to measurement
+              </Text>{" "}
+              — Square Yards / Square Feet / Total — Subject to measurement
             </Text>
-            {order.remarks ? (
-              <Text style={{ marginTop: 4 }}>Remarks: {order.remarks}</Text>
-            ) : null}
+            {order.remarks ? <Text style={{ marginTop: 4 }}>Remarks: {order.remarks}</Text> : null}
+            {order.depositInstructions ? <Text style={{ marginTop: 4, fontStyle: "italic" }}>Deposit: {order.depositInstructions}</Text> : null}
           </View>
           <View style={[styles.col, styles.totalsBox]}>
             <View style={styles.totalsRow}>
-              <Text style={styles.totalsLabel}>TOTAL</Text>
+              <Text style={styles.totalsLabel}>SUB-TOTAL</Text>
               <Text style={styles.totalsValue}>{centsToDollarString(order.subtotalCents)}</Text>
             </View>
             <View style={styles.totalsRow}>
@@ -162,8 +209,8 @@ export function InvoicePDF({
               <Text style={styles.totalsValue}>{centsToDollarString(order.taxCents)}</Text>
             </View>
             <View style={styles.totalsRow}>
-              <Text style={styles.totalsLabel}>SUB-TOTAL</Text>
-              <Text style={styles.totalsValue}>{centsToDollarString(order.subtotalCents + order.taxCents)}</Text>
+              <Text style={[styles.totalsLabel, { fontFamily: "Helvetica-Bold" }]}>TOTAL</Text>
+              <Text style={styles.totalsValue}>{centsToDollarString(order.totalCents)}</Text>
             </View>
             <View style={styles.totalsRow}>
               <Text style={styles.totalsLabel}>DEPOSIT</Text>
@@ -191,7 +238,6 @@ export function InvoicePDF({
           Interest will be charged at maximum legal rate on all past due.
         </Text>
 
-        {/* Signature row */}
         <View style={[styles.twoCol, { marginTop: 6 }]}>
           <View style={styles.col}>
             <View style={styles.signatureBox}>

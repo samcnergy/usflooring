@@ -2,27 +2,27 @@
 
 import { useActionState, useState } from "react";
 import Link from "next/link";
+import { ExclusionType, InclusionType, LineCategory, PricingMode, RoomName, UnitOfMeasure } from "@prisma/client";
 import { Field, inputCls, requiredInputCls, requiredSelectCls, selectCls } from "./Field";
-import { ORDER_AREAS } from "@/lib/order-areas";
 import { centsToDollarString } from "@/lib/money";
-import type { OrderInitialValues, ActionState } from "./InvoiceForm.shared";
+import { ROOMS } from "@/lib/rooms";
+import { LINE_CATEGORIES, lineCategoryLabel } from "@/lib/line-categories";
+import { UNITS } from "@/lib/units";
+import { INCLUSION_CHIPS, EXCLUSION_CHIPS } from "@/lib/inclusions";
+import {
+  emptyLineItem, type LineItemFormValue,
+  type OrderInitialValues, type ActionState,
+  type SalespersonOption, type AdvSourceOption,
+} from "./InvoiceForm.shared";
 
-// Re-export shared types/factories for convenience so existing client-side
-// imports of `InvoiceForm` keep working. Server components MUST import from
-// "./InvoiceForm.shared" directly to avoid the use-client boundary error.
 export type { OrderInitialValues, ActionState } from "./InvoiceForm.shared";
 export { emptyInitialValues, orderToInitial } from "./InvoiceForm.shared";
-
-type SalespersonOption = { id: string; fullName: string };
-type AdvSourceOption = { id: string; name: string };
 
 type Props = {
   initial: OrderInitialValues;
   salespeople: SalespersonOption[];
   advertisingSources: AdvSourceOption[];
-  /** When true, the salesperson dropdown is disabled (sales-context only). */
   lockSalesperson?: boolean;
-  /** Server action. Receives FormData; returns ActionState (the page redirects on success via the action). */
   action: (prev: ActionState, formData: FormData) => Promise<ActionState>;
   submitLabel: string;
   cancelHref: string;
@@ -38,33 +38,31 @@ export function InvoiceForm({
   cancelHref,
 }: Props) {
   const [state, formAction, pending] = useActionState<ActionState, FormData>(action, null);
+
   const [sameAs, setSameAs] = useState(initial.sameAsSoldTo);
+  const [siteSame, setSiteSame] = useState(initial.jobSiteSameAsBilling);
+  const [pricingMode, setPricingMode] = useState<PricingMode>(initial.pricingMode);
+  const [rooms, setRooms] = useState(initial.rooms);
+  const [lineItems, setLineItems] = useState<LineItemFormValue[]>(initial.lineItems);
+  const [inclusions, setInclusions] = useState<Set<InclusionType>>(new Set(initial.inclusions));
+  const [exclusions, setExclusions] = useState<Set<ExclusionType>>(new Set(initial.exclusions));
+  const [inclusionNotes, setInclusionNotes] = useState<string[]>(initial.inclusionNotes);
+  const [exclusionNotes, setExclusionNotes] = useState<string[]>(initial.exclusionNotes);
 
   const errs = state && !state.ok ? state.errors ?? {} : {};
   const fieldErr = (k: string) => errs[k];
 
   return (
     <form action={formAction} className="flex flex-col gap-6">
-      {/* Salesperson — first field, sticky on mobile */}
+      {/* Salesperson — sticky required first field */}
       <div className="sticky top-0 z-10 bg-marble-50 -mx-4 sm:mx-0 px-4 sm:px-0 py-3 sm:py-0 sm:static border-b border-marble-200 sm:border-0">
-        <Field
-          label="Salesperson"
-          htmlFor="salespersonId"
-          required
-          error={fieldErr("salespersonId")}
-        >
+        <Field label="Salesperson" htmlFor="salespersonId" required error={fieldErr("salespersonId")}>
           <select
-            id="salespersonId"
-            name="salespersonId"
-            defaultValue={initial.salespersonId}
-            required
-            disabled={lockSalesperson}
-            className={requiredSelectCls}
+            id="salespersonId" name="salespersonId" defaultValue={initial.salespersonId}
+            required disabled={lockSalesperson} className={requiredSelectCls}
           >
             <option value="">— Choose salesperson —</option>
-            {salespeople.map((s) => (
-              <option key={s.id} value={s.id}>{s.fullName}</option>
-            ))}
+            {salespeople.map((s) => (<option key={s.id} value={s.id}>{s.fullName}</option>))}
           </select>
         </Field>
       </div>
@@ -75,42 +73,23 @@ export function InvoiceForm({
         </p>
       ) : null}
 
-      {/* Header card */}
+      {/* Section 1 — Header */}
       <div className="bg-marble-100 border border-marble-200 rounded-lg p-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
         <Field label="Date of sale" htmlFor="dateOfSale">
-          <input
-            type="date"
-            id="dateOfSale"
-            name="dateOfSale"
-            defaultValue={initial.dateOfSale}
-            className={inputCls}
-          />
+          <input type="date" id="dateOfSale" name="dateOfSale" defaultValue={initial.dateOfSale} className={inputCls} />
         </Field>
         <Field label="Invoice #" htmlFor="invoiceNumberDisplay" hint={initial.invoiceNumber ? undefined : "Assigned on save"}>
-          <input
-            id="invoiceNumberDisplay"
-            type="text"
-            value={initial.invoiceNumber ?? "— pending —"}
-            disabled
-            className={`${inputCls} text-marble-700 tabular-money`}
-          />
+          <input id="invoiceNumberDisplay" type="text" value={initial.invoiceNumber ?? "— pending —"} disabled className={`${inputCls} text-marble-700 tabular-money`} />
         </Field>
         <Field label="Adv. source" htmlFor="advertisingSourceId">
-          <select
-            id="advertisingSourceId"
-            name="advertisingSourceId"
-            defaultValue={initial.advertisingSourceId ?? ""}
-            className={selectCls}
-          >
+          <select id="advertisingSourceId" name="advertisingSourceId" defaultValue={initial.advertisingSourceId ?? ""} className={selectCls}>
             <option value="">— None —</option>
-            {advertisingSources.map((a) => (
-              <option key={a.id} value={a.id}>{a.name}</option>
-            ))}
+            {advertisingSources.map((a) => (<option key={a.id} value={a.id}>{a.name}</option>))}
           </select>
         </Field>
       </div>
 
-      {/* Sold to */}
+      {/* Section 2 — Sold To / Ship To / Job Site */}
       <fieldset className="bg-marble-100 border border-marble-200 rounded-lg p-4">
         <legend className="px-2 text-sm font-semibold text-brand-700">Sold to</legend>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -151,151 +130,132 @@ export function InvoiceForm({
         </div>
       </fieldset>
 
-      {/* Ship to */}
       <fieldset className="bg-marble-100 border border-marble-200 rounded-lg p-4">
         <legend className="px-2 text-sm font-semibold text-brand-700">Ship to</legend>
         <label className="flex items-center gap-2 text-sm text-marble-700 mb-3">
-          <input
-            type="checkbox"
-            name="sameAsSoldTo"
-            checked={sameAs}
-            onChange={(e) => setSameAs(e.target.checked)}
-            className="rounded border-marble-200"
-          />
+          <input type="checkbox" name="sameAsSoldTo" checked={sameAs} onChange={(e) => setSameAs(e.target.checked)} className="rounded border-marble-200" />
           Same as sold to
         </label>
         {!sameAs ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Field label="First name" htmlFor="shipFirstName">
-              <input id="shipFirstName" name="shipFirstName" defaultValue={initial.shipFirstName} className={inputCls} />
-            </Field>
-            <Field label="Last name" htmlFor="shipLastName">
-              <input id="shipLastName" name="shipLastName" defaultValue={initial.shipLastName} className={inputCls} />
-            </Field>
-            <Field label="Address" htmlFor="shipAddressLine1" className="sm:col-span-2">
-              <input id="shipAddressLine1" name="shipAddressLine1" defaultValue={initial.shipAddressLine1} className={inputCls} />
-            </Field>
-            <Field label="City" htmlFor="shipCity">
-              <input id="shipCity" name="shipCity" defaultValue={initial.shipCity} className={inputCls} />
-            </Field>
+            <Field label="First name" htmlFor="shipFirstName"><input id="shipFirstName" name="shipFirstName" defaultValue={initial.shipFirstName} className={inputCls} /></Field>
+            <Field label="Last name" htmlFor="shipLastName"><input id="shipLastName" name="shipLastName" defaultValue={initial.shipLastName} className={inputCls} /></Field>
+            <Field label="Address" htmlFor="shipAddressLine1" className="sm:col-span-2"><input id="shipAddressLine1" name="shipAddressLine1" defaultValue={initial.shipAddressLine1} className={inputCls} /></Field>
+            <Field label="City" htmlFor="shipCity"><input id="shipCity" name="shipCity" defaultValue={initial.shipCity} className={inputCls} /></Field>
             <div className="grid grid-cols-2 gap-4">
-              <Field label="State" htmlFor="shipState">
-                <input id="shipState" name="shipState" maxLength={2} defaultValue={initial.shipState} className={inputCls} />
-              </Field>
-              <Field label="Zip" htmlFor="shipZip">
-                <input id="shipZip" name="shipZip" defaultValue={initial.shipZip} className={inputCls} />
-              </Field>
+              <Field label="State" htmlFor="shipState"><input id="shipState" name="shipState" maxLength={2} defaultValue={initial.shipState} className={inputCls} /></Field>
+              <Field label="Zip" htmlFor="shipZip"><input id="shipZip" name="shipZip" defaultValue={initial.shipZip} className={inputCls} /></Field>
             </div>
-            <Field label="Phone" htmlFor="shipPhone">
-              <input id="shipPhone" name="shipPhone" defaultValue={initial.shipPhone} className={inputCls} />
+            <Field label="Phone" htmlFor="shipPhone"><input id="shipPhone" name="shipPhone" defaultValue={initial.shipPhone} className={inputCls} /></Field>
+          </div>
+        ) : null}
+      </fieldset>
+
+      <fieldset className="bg-marble-100 border border-marble-200 rounded-lg p-4">
+        <legend className="px-2 text-sm font-semibold text-brand-700">Job site</legend>
+        <Field label="Deposit notes" htmlFor="depositInstructions" hint="e.g. Customer to bring deposit on 8-19-24" className="mb-3">
+          <textarea id="depositInstructions" name="depositInstructions" rows={2} defaultValue={initial.depositInstructions} className={inputCls} />
+        </Field>
+        <label className="flex items-center gap-2 text-sm text-marble-700 mb-3">
+          <input type="checkbox" name="jobSiteSameAsBilling" checked={siteSame} onChange={(e) => setSiteSame(e.target.checked)} className="rounded border-marble-200" />
+          Same as billing
+        </label>
+        {!siteSame ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Field label="Address" htmlFor="jobSiteAddressLine1" className="sm:col-span-2"><input id="jobSiteAddressLine1" name="jobSiteAddressLine1" defaultValue={initial.jobSiteAddressLine1} className={inputCls} /></Field>
+            <Field label="City" htmlFor="jobSiteCity"><input id="jobSiteCity" name="jobSiteCity" defaultValue={initial.jobSiteCity} className={inputCls} /></Field>
+            <div className="grid grid-cols-2 gap-4">
+              <Field label="State" htmlFor="jobSiteState"><input id="jobSiteState" name="jobSiteState" maxLength={2} defaultValue={initial.jobSiteState} className={inputCls} /></Field>
+              <Field label="Zip" htmlFor="jobSiteZip"><input id="jobSiteZip" name="jobSiteZip" defaultValue={initial.jobSiteZip} className={inputCls} /></Field>
+            </div>
+            <Field label="Site contact name" htmlFor="siteContactName"><input id="siteContactName" name="siteContactName" defaultValue={initial.siteContactName} className={inputCls} /></Field>
+            <Field label="Site contact phone" htmlFor="siteContactPhone"><input id="siteContactPhone" name="siteContactPhone" defaultValue={initial.siteContactPhone} className={inputCls} /></Field>
+            <Field label="Access instructions" htmlFor="accessInstructions" hint="e.g. Ask for Irwin, side gate, lockbox 1234" className="sm:col-span-2">
+              <textarea id="accessInstructions" name="accessInstructions" rows={2} defaultValue={initial.accessInstructions} className={inputCls} />
             </Field>
           </div>
         ) : null}
       </fieldset>
 
-      {/* Categories */}
+      {/* Section 3 — Rooms involved */}
       <fieldset className="bg-marble-100 border border-marble-200 rounded-lg p-4">
-        <legend className="px-2 text-sm font-semibold text-brand-700">Categories</legend>
+        <legend className="px-2 text-sm font-semibold text-brand-700">Rooms involved</legend>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-          {([
-            ["hasCabinet", "Cabinet"], ["hasCarpet", "Carpet"], ["hasVinyl", "Vinyl"],
-            ["hasWood", "Wood"], ["hasCeramic", "Ceramic"], ["hasCounterTop", "Counter Top"],
-            ["hasFireplace", "Fireplace"], ["hasShower", "Shower"],
-          ] as const).map(([name, label]) => (
-            <label key={name} className="flex items-center gap-2 text-sm text-marble-900">
-              <input
-                type="checkbox"
-                name={name}
-                defaultChecked={initial[name]}
-                className="rounded border-marble-200"
+          {ROOMS.map((spec) => {
+            const value = rooms.find((r) => r.room === spec.value)!;
+            return (
+              <RoomCheckbox
+                key={spec.value}
+                spec={spec}
+                value={value}
+                onChange={(updates) =>
+                  setRooms((prev) => prev.map((r) => (r.room === spec.value ? { ...r, ...updates } : r)))
+                }
               />
-              {label}
-            </label>
-          ))}
+            );
+          })}
         </div>
       </fieldset>
 
-      {/* Areas table */}
-      <div className="border border-marble-200 rounded-lg overflow-x-auto">
-        <table className="w-full text-sm min-w-[900px]">
-          <thead className="bg-marble-100 text-marble-900">
-            <tr>
-              <th className="text-left px-3 py-2 font-semibold w-32">Area</th>
-              <th className="text-left px-3 py-2 font-semibold w-12">#</th>
-              <th className="text-left px-3 py-2 font-semibold">Description of work</th>
-              <th className="text-left px-3 py-2 font-semibold w-32">Material</th>
-              <th className="text-left px-3 py-2 font-semibold w-28">Color</th>
-              <th className="text-left px-3 py-2 font-semibold w-24">Size</th>
-              <th className="text-right px-3 py-2 font-semibold w-28">Total ($)</th>
-            </tr>
-          </thead>
-          <tbody>
-            {initial.areas.map((area) => {
-              const spec = ORDER_AREAS.find((s) => s.value === area.areaName);
-              const cellInput =
-                "w-full bg-white border border-marble-200 rounded px-2 py-1 text-marble-900 focus:outline-none focus:ring-1 focus:ring-brand-700";
-              return (
-                <tr key={area.areaName} className="border-t border-marble-200">
-                  <td className="px-3 py-1.5 text-marble-900 whitespace-nowrap">{spec?.label}</td>
-                  <td className="px-3 py-1">
-                    <input
-                      type="text"
-                      inputMode="numeric"
-                      name={`area_${area.areaName}_quantity`}
-                      defaultValue={area.quantity}
-                      className={`${cellInput} tabular-money`}
-                    />
-                  </td>
-                  <td className="px-3 py-1">
-                    <input
-                      type="text"
-                      name={`area_${area.areaName}_description`}
-                      defaultValue={area.description}
-                      className={cellInput}
-                    />
-                  </td>
-                  <td className="px-3 py-1">
-                    <input
-                      type="text"
-                      name={`area_${area.areaName}_material`}
-                      defaultValue={area.material}
-                      className={cellInput}
-                    />
-                  </td>
-                  <td className="px-3 py-1">
-                    <input
-                      type="text"
-                      name={`area_${area.areaName}_color`}
-                      defaultValue={area.color}
-                      className={cellInput}
-                    />
-                  </td>
-                  <td className="px-3 py-1">
-                    <input
-                      type="text"
-                      name={`area_${area.areaName}_size`}
-                      defaultValue={area.size}
-                      className={cellInput}
-                    />
-                  </td>
-                  <td className="px-3 py-1">
-                    <input
-                      type="text"
-                      inputMode="decimal"
-                      name={`area_${area.areaName}_lineTotal`}
-                      defaultValue={area.lineTotal}
-                      placeholder="0.00"
-                      className={`${cellInput} text-right tabular-money`}
-                    />
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+      {/* Section 4 — Line items */}
+      <fieldset className="bg-marble-100 border border-marble-200 rounded-lg p-4">
+        <legend className="px-2 text-sm font-semibold text-brand-700">Line items</legend>
+        <input type="hidden" name="li_count" value={lineItems.length} />
+        {lineItems.map((li, i) => (
+          <LineItemRow
+            key={li.key}
+            index={i}
+            value={li}
+            pricingMode={pricingMode}
+            onChange={(next) => setLineItems((prev) => prev.map((x, j) => (j === i ? next : x)))}
+            onRemove={() => setLineItems((prev) => prev.filter((_, j) => j !== i))}
+          />
+        ))}
+        <button
+          type="button"
+          onClick={() => setLineItems((prev) => [...prev, emptyLineItem()])}
+          className="mt-3 inline-flex items-center justify-center min-h-11 px-4 rounded border border-brand-700 text-brand-700 hover:bg-brand-100 font-medium text-sm"
+        >
+          + Add line item
+        </button>
+      </fieldset>
+
+      {/* Section 5 — Includes / Excludes */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <ChipsPanel
+          title="Price includes"
+          chips={INCLUSION_CHIPS}
+          selected={inclusions}
+          onToggle={(t) => setInclusions((s) => {
+            const next = new Set(s);
+            if (next.has(t as InclusionType)) next.delete(t as InclusionType);
+            else next.add(t as InclusionType);
+            return next;
+          })}
+          customNotes={inclusionNotes}
+          setCustomNotes={setInclusionNotes}
+          chipPrefix="inc_"
+          customPrefix="inc_custom_"
+        />
+        <ChipsPanel
+          title="Not included"
+          chips={EXCLUSION_CHIPS}
+          selected={exclusions}
+          onToggle={(t) => setExclusions((s) => {
+            const next = new Set(s);
+            if (next.has(t as ExclusionType)) next.delete(t as ExclusionType);
+            else next.add(t as ExclusionType);
+            return next;
+          })}
+          customNotes={exclusionNotes}
+          setCustomNotes={setExclusionNotes}
+          chipPrefix="exc_"
+          customPrefix="exc_custom_"
+          muted
+        />
       </div>
 
-      {/* Footer */}
+      {/* Section 6 — Remarks + Section 7 — Totals */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="lg:col-span-2 bg-marble-100 border border-marble-200 rounded-lg p-4 flex flex-col gap-4">
           <Field label="Based on" htmlFor="basedOn" hint="Square Yards / Square Feet / Total — subject to measurement">
@@ -307,13 +267,7 @@ export function InvoiceForm({
             </select>
           </Field>
           <Field label="Remarks" htmlFor="remarks">
-            <textarea
-              id="remarks"
-              name="remarks"
-              rows={3}
-              defaultValue={initial.remarks}
-              className={inputCls}
-            />
+            <textarea id="remarks" name="remarks" rows={4} defaultValue={initial.remarks} className={inputCls} />
           </Field>
           <Field label="Balance terms" htmlFor="balanceTerm">
             <select id="balanceTerm" name="balanceTerm" defaultValue={initial.balanceTerm} className={selectCls}>
@@ -324,23 +278,17 @@ export function InvoiceForm({
             </select>
           </Field>
         </div>
-        <div className="bg-marble-100 border border-marble-200 rounded-lg p-4 flex flex-col gap-3">
-          <Totals initial={initial} />
-        </div>
+        <Totals
+          initial={initial}
+          pricingMode={pricingMode}
+          setPricingMode={setPricingMode}
+          lineItems={lineItems}
+        />
       </div>
 
       <div className="flex items-center justify-end gap-3 pb-12">
-        <Link
-          href={cancelHref}
-          className="inline-flex items-center justify-center min-h-11 px-4 rounded border border-brand-700 text-brand-700 hover:bg-brand-100 font-medium"
-        >
-          Cancel
-        </Link>
-        <button
-          type="submit"
-          disabled={pending}
-          className="inline-flex items-center justify-center min-h-11 px-4 rounded bg-brand-900 text-white font-medium hover:bg-[color-mix(in_oklab,var(--color-brand-900)_96%,black)] disabled:opacity-50 disabled:pointer-events-none"
-        >
+        <Link href={cancelHref} className="inline-flex items-center justify-center min-h-11 px-4 rounded border border-brand-700 text-brand-700 hover:bg-brand-100 font-medium">Cancel</Link>
+        <button type="submit" disabled={pending} className="inline-flex items-center justify-center min-h-11 px-4 rounded bg-brand-900 text-white font-medium hover:bg-[color-mix(in_oklab,var(--color-brand-900)_96%,black)] disabled:opacity-50 disabled:pointer-events-none">
           {pending ? "Saving…" : submitLabel}
         </button>
       </div>
@@ -348,39 +296,274 @@ export function InvoiceForm({
   );
 }
 
-// Totals card. Subtotal/Tax/Total/Balance live-update from the area inputs and
-// the tax % input. The server recomputes authoritatively on save (so tampering
-// with form values can't change the persisted totals).
-function Totals({ initial }: { initial: OrderInitialValues }) {
-  const [taxPercent, setTaxPercent] = useState(initial.taxPercent);
-  const [deposit, setDeposit] = useState(initial.depositCents);
-  const [, force] = useState(0);
+// ---------- Sub-components ----------
 
-  // Recompute on every render. Read live values from form inputs by name.
-  const formEl = typeof document !== "undefined" ? document.querySelector("form") : null;
-  let subtotal = 0;
-  if (formEl) {
-    for (const a of initial.areas) {
-      const el = formEl.elements.namedItem(`area_${a.areaName}_lineTotal`) as HTMLInputElement | null;
-      const v = el?.value ?? a.lineTotal;
-      const n = Number((v || "0").replace(/[$,\s]/g, ""));
-      if (Number.isFinite(n)) subtotal += n * 100;
-    }
-  } else {
-    subtotal = initial.areas.reduce((s, a) => {
-      const n = Number((a.lineTotal || "0").replace(/[$,\s]/g, ""));
-      return s + (Number.isFinite(n) ? n * 100 : 0);
-    }, 0);
-  }
-  const pctNum = Number((taxPercent || "0").replace(/[%\s]/g, ""));
-  const taxCents = Number.isFinite(pctNum) ? Math.round((subtotal * pctNum) / 100) : 0;
-  const depositCents = Math.round(Number((deposit || "0").replace(/[$,\s]/g, "")) * 100);
-  const totalCents = Math.round(subtotal) + taxCents;
-  const balanceCents = totalCents - (Number.isFinite(depositCents) ? depositCents : 0);
+function RoomCheckbox({
+  spec,
+  value,
+  onChange,
+}: {
+  spec: { value: RoomName; label: string; countable: boolean };
+  value: { room: RoomName; on: boolean; quantity: string; notes: string };
+  onChange: (updates: Partial<{ on: boolean; quantity: string; notes: string }>) => void;
+}) {
+  const [showNote, setShowNote] = useState(!!value.notes);
+  return (
+    <div className="bg-white border border-marble-200 rounded p-2">
+      <label className="flex items-center gap-2 text-sm text-marble-900">
+        <input
+          type="checkbox"
+          name={`room_${spec.value}_on`}
+          checked={value.on}
+          onChange={(e) => onChange({ on: e.target.checked })}
+          className="rounded border-marble-200"
+        />
+        {spec.label}
+      </label>
+      {value.on && spec.countable ? (
+        <input
+          type="number"
+          name={`room_${spec.value}_quantity`}
+          value={value.quantity}
+          onChange={(e) => onChange({ quantity: e.target.value })}
+          placeholder="#"
+          className="mt-1 w-16 bg-white border border-marble-200 rounded px-2 py-0.5 text-marble-900 text-xs"
+          min={1}
+        />
+      ) : null}
+      {value.on ? (
+        <>
+          {!showNote ? (
+            <button type="button" onClick={() => setShowNote(true)} className="block mt-1 text-xs text-brand-700 hover:underline">
+              + note
+            </button>
+          ) : (
+            <input
+              type="text"
+              name={`room_${spec.value}_notes`}
+              value={value.notes}
+              onChange={(e) => onChange({ notes: e.target.value })}
+              placeholder="note"
+              className="mt-1 w-full bg-white border border-marble-200 rounded px-2 py-0.5 text-marble-900 text-xs"
+              autoFocus
+            />
+          )}
+        </>
+      ) : null}
+    </div>
+  );
+}
+
+function LineItemRow({
+  index, value, pricingMode, onChange, onRemove,
+}: {
+  index: number;
+  value: LineItemFormValue;
+  pricingMode: PricingMode;
+  onChange: (next: LineItemFormValue) => void;
+  onRemove: () => void;
+}) {
+  const dim = pricingMode === PricingMode.flatTotal;
+  const cellInput = "w-full bg-white border border-marble-200 rounded px-2 py-1 text-marble-900 text-xs focus:outline-none focus:ring-1 focus:ring-brand-700";
+
+  // Live line total
+  const qty = Number((value.quantity || "0").replace(/[,\s]/g, ""));
+  const price = Number((value.unitPriceCents || "0").replace(/[$,\s]/g, ""));
+  const lineTotal = Number.isFinite(qty) && Number.isFinite(price) ? qty * price : 0;
 
   return (
-    <>
-      <Row label="Sub-total" value={centsToDollarString(Math.round(subtotal))} />
+    <div className="border-t border-marble-200 first:border-t-0 py-3">
+      <div className="grid grid-cols-12 gap-2 items-end">
+        <div className="col-span-12 sm:col-span-2">
+          <label className="block text-xs text-marble-700 mb-1">Category</label>
+          <select
+            name={`li_${index}_category`}
+            value={value.category}
+            onChange={(e) => onChange({ ...value, category: e.target.value as LineCategory })}
+            className={cellInput}
+          >
+            <option value="">—</option>
+            {LINE_CATEGORIES.map((c) => (<option key={c.value} value={c.value}>{c.label}</option>))}
+          </select>
+        </div>
+        <div className="col-span-6 sm:col-span-2">
+          <label className="block text-xs text-marble-700 mb-1">Brand</label>
+          <input type="text" name={`li_${index}_brand`} value={value.brand} onChange={(e) => onChange({ ...value, brand: e.target.value })} className={cellInput} />
+        </div>
+        <div className="col-span-6 sm:col-span-2">
+          <label className="block text-xs text-marble-700 mb-1">Style</label>
+          <input type="text" name={`li_${index}_style`} value={value.style} onChange={(e) => onChange({ ...value, style: e.target.value })} className={cellInput} />
+        </div>
+        <div className="col-span-6 sm:col-span-2">
+          <label className="block text-xs text-marble-700 mb-1">Color</label>
+          <input type="text" name={`li_${index}_color`} value={value.color} onChange={(e) => onChange({ ...value, color: e.target.value })} className={cellInput} />
+        </div>
+        <div className="col-span-3 sm:col-span-1">
+          <label className="block text-xs text-marble-700 mb-1">Size</label>
+          <input type="text" name={`li_${index}_sizeSpec`} value={value.sizeSpec} onChange={(e) => onChange({ ...value, sizeSpec: e.target.value })} className={cellInput} />
+        </div>
+        <div className="col-span-3 sm:col-span-1">
+          <label className="block text-xs text-marble-700 mb-1">SKU</label>
+          <input type="text" name={`li_${index}_sku`} value={value.sku} onChange={(e) => onChange({ ...value, sku: e.target.value })} className={cellInput} />
+        </div>
+        <div className="col-span-2 sm:col-span-1">
+          <label className="block text-xs text-marble-700 mb-1">Qty</label>
+          <input type="text" inputMode="decimal" name={`li_${index}_quantity`} value={value.quantity} onChange={(e) => onChange({ ...value, quantity: e.target.value })} className={`${cellInput} text-right tabular-money`} />
+        </div>
+        <div className="col-span-2 sm:col-span-1">
+          <label className="block text-xs text-marble-700 mb-1">Unit</label>
+          <select name={`li_${index}_unit`} value={value.unit} onChange={(e) => onChange({ ...value, unit: e.target.value as UnitOfMeasure })} className={cellInput}>
+            <option value="">—</option>
+            {UNITS.map((u) => (<option key={u.value} value={u.value}>{u.short}</option>))}
+          </select>
+        </div>
+        <div className={`col-span-3 sm:col-span-1 ${dim ? "opacity-50" : ""}`}>
+          <label className="block text-xs text-marble-700 mb-1">Unit $</label>
+          <input type="text" inputMode="decimal" name={`li_${index}_unitPriceCents`} value={value.unitPriceCents} onChange={(e) => onChange({ ...value, unitPriceCents: e.target.value })} className={`${cellInput} text-right tabular-money`} />
+        </div>
+        <div className={`col-span-3 sm:col-span-1 ${dim ? "opacity-50" : ""}`}>
+          <label className="block text-xs text-marble-700 mb-1">Total</label>
+          <p className="text-xs text-marble-900 tabular-money font-medium px-2 py-1 text-right">
+            {centsToDollarString(Math.round(lineTotal))}
+          </p>
+        </div>
+        <div className="col-span-12 sm:col-span-3">
+          <label className="block text-xs text-marble-700 mb-1">Notes</label>
+          <input type="text" name={`li_${index}_notes`} value={value.notes} onChange={(e) => onChange({ ...value, notes: e.target.value })} className={cellInput} />
+        </div>
+        <div className="col-span-12 sm:col-span-1 flex sm:justify-end">
+          <button type="button" onClick={onRemove} aria-label="Remove line item" className="text-marble-700 hover:text-danger text-sm px-2 py-1">
+            ✕
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ChipsPanel<T extends string>({
+  title, chips, selected, onToggle, customNotes, setCustomNotes,
+  chipPrefix, customPrefix, muted,
+}: {
+  title: string;
+  chips: { value: T; label: string }[];
+  selected: Set<T>;
+  onToggle: (v: T) => void;
+  customNotes: string[];
+  setCustomNotes: (next: string[]) => void;
+  chipPrefix: string;
+  customPrefix: string;
+  muted?: boolean;
+}) {
+  return (
+    <fieldset className={`border rounded-lg p-4 ${muted ? "bg-marble-100/60 border-marble-200" : "bg-marble-100 border-marble-200"}`}>
+      <legend className={`px-2 text-sm font-semibold ${muted ? "text-marble-700" : "text-brand-700"}`}>{title}</legend>
+      <div className="flex flex-wrap gap-2">
+        {chips.map((c) => {
+          const active = selected.has(c.value);
+          return (
+            <label key={c.value} className="cursor-pointer">
+              <input
+                type="checkbox"
+                name={`${chipPrefix}${c.value}`}
+                checked={active}
+                onChange={() => onToggle(c.value)}
+                className="sr-only peer"
+              />
+              <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium border transition-colors
+                ${active
+                  ? "bg-brand-700 text-white border-brand-700"
+                  : "bg-white text-marble-700 border-marble-200 hover:border-brand-700"}`}>
+                {c.label}
+              </span>
+            </label>
+          );
+        })}
+      </div>
+      {customNotes.length > 0 ? (
+        <div className="mt-3 flex flex-col gap-2">
+          {customNotes.map((note, i) => (
+            <div key={i} className="flex gap-2 items-center">
+              <input
+                type="text"
+                name={`${customPrefix}${i}`}
+                value={note}
+                onChange={(e) => setCustomNotes(customNotes.map((n, j) => (j === i ? e.target.value : n)))}
+                placeholder="Custom note"
+                className="flex-1 bg-white border border-marble-200 rounded px-2 py-1 text-xs"
+              />
+              <button type="button" onClick={() => setCustomNotes(customNotes.filter((_, j) => j !== i))} className="text-marble-700 hover:text-danger text-sm">✕</button>
+            </div>
+          ))}
+        </div>
+      ) : null}
+      <button
+        type="button"
+        onClick={() => setCustomNotes([...customNotes, ""])}
+        className="mt-2 text-xs text-brand-700 hover:underline"
+      >
+        + Add custom
+      </button>
+    </fieldset>
+  );
+}
+
+function Totals({
+  initial, pricingMode, setPricingMode, lineItems,
+}: {
+  initial: OrderInitialValues;
+  pricingMode: PricingMode;
+  setPricingMode: (m: PricingMode) => void;
+  lineItems: LineItemFormValue[];
+}) {
+  const [taxPercent, setTaxPercent] = useState(initial.taxPercent);
+  const [deposit, setDeposit] = useState(initial.depositCents);
+  const [flatTotal, setFlatTotal] = useState(initial.flatTotalCents);
+
+  const lineSum = lineItems.reduce((acc, li) => {
+    const q = Number((li.quantity || "0").replace(/[,\s]/g, ""));
+    const p = Number((li.unitPriceCents || "0").replace(/[$,\s]/g, ""));
+    if (Number.isFinite(q) && Number.isFinite(p)) return acc + Math.round(q * p * 100);
+    return acc;
+  }, 0);
+  const pctNum = Number((taxPercent || "0").replace(/[%\s]/g, ""));
+  const depositCents = Math.round(Number((deposit || "0").replace(/[$,\s]/g, "")) * 100);
+  const flatTotalCents = Math.round(Number((flatTotal || "0").replace(/[$,\s]/g, "")) * 100);
+
+  let subtotalCents = 0, taxCents = 0, totalCents = 0;
+  if (pricingMode === PricingMode.itemized) {
+    subtotalCents = lineSum;
+    taxCents = Math.round((subtotalCents * pctNum) / 100);
+    totalCents = subtotalCents + taxCents;
+  } else {
+    totalCents = flatTotalCents;
+    taxCents = Math.round((totalCents * pctNum) / (100 + pctNum));
+    subtotalCents = totalCents - taxCents;
+  }
+  const balanceCents = totalCents - depositCents;
+
+  return (
+    <div className="bg-marble-100 border border-marble-200 rounded-lg p-4 flex flex-col gap-3">
+      <input type="hidden" name="pricingMode" value={pricingMode} />
+      <Field label="Pricing mode" htmlFor="pricingModeToggle" hint="Itemized adds line totals + tax. Flat enters total directly.">
+        <div className="flex gap-1 bg-white border border-marble-200 rounded p-1">
+          <button
+            type="button"
+            onClick={() => setPricingMode(PricingMode.itemized)}
+            className={`flex-1 px-3 py-1.5 rounded text-sm font-medium ${pricingMode === PricingMode.itemized ? "bg-brand-700 text-white" : "text-marble-700"}`}
+          >
+            Itemized
+          </button>
+          <button
+            type="button"
+            onClick={() => setPricingMode(PricingMode.flatTotal)}
+            className={`flex-1 px-3 py-1.5 rounded text-sm font-medium ${pricingMode === PricingMode.flatTotal ? "bg-brand-700 text-white" : "text-marble-700"}`}
+          >
+            Flat total
+          </button>
+        </div>
+      </Field>
+      <Row label="Sub-total" value={centsToDollarString(subtotalCents)} />
       <div className="grid grid-cols-2 gap-3 items-end">
         <Field label="Tax %" htmlFor="taxPercent" hint="Default 7.75%">
           <input
@@ -389,19 +572,32 @@ function Totals({ initial }: { initial: OrderInitialValues }) {
             type="text"
             inputMode="decimal"
             value={taxPercent}
-            onChange={(e) => { setTaxPercent(e.target.value); force((x) => x + 1); }}
+            onChange={(e) => setTaxPercent(e.target.value)}
             placeholder="7.75"
             className={`${inputCls} text-right tabular-money`}
           />
         </Field>
         <div className="pb-2">
           <p className="text-xs text-marble-700">Tax amount</p>
-          <p className="text-marble-900 tabular-money font-medium text-right pr-2">
-            {centsToDollarString(taxCents)}
-          </p>
+          <p className="text-marble-900 tabular-money font-medium text-right pr-2">{centsToDollarString(taxCents)}</p>
         </div>
       </div>
-      <Row label="Total" value={centsToDollarString(totalCents)} bold />
+      {pricingMode === PricingMode.flatTotal ? (
+        <Field label="Total ($)" htmlFor="flatTotalCents">
+          <input
+            id="flatTotalCents"
+            name="flatTotalCents"
+            type="text"
+            inputMode="decimal"
+            value={flatTotal}
+            onChange={(e) => setFlatTotal(e.target.value)}
+            placeholder="0.00"
+            className={`${inputCls} text-right tabular-money`}
+          />
+        </Field>
+      ) : (
+        <Row label="Total" value={centsToDollarString(totalCents)} bold />
+      )}
       <Field label="Deposit ($)" htmlFor="depositCents">
         <input
           id="depositCents"
@@ -409,13 +605,13 @@ function Totals({ initial }: { initial: OrderInitialValues }) {
           type="text"
           inputMode="decimal"
           value={deposit}
-          onChange={(e) => { setDeposit(e.target.value); force((x) => x + 1); }}
+          onChange={(e) => setDeposit(e.target.value)}
           placeholder="0.00"
           className={`${inputCls} text-right tabular-money`}
         />
       </Field>
       <Row label="Balance" value={centsToDollarString(balanceCents)} bold />
-    </>
+    </div>
   );
 }
 
@@ -423,9 +619,7 @@ function Row({ label, value, bold }: { label: string; value: string; bold?: bool
   return (
     <div className="flex items-center justify-between text-sm">
       <span className="text-marble-700">{label}</span>
-      <span className={`tabular-money ${bold ? "text-marble-900 font-semibold" : "text-marble-900"}`}>
-        {value}
-      </span>
+      <span className={`tabular-money ${bold ? "text-marble-900 font-semibold" : "text-marble-900"}`}>{value}</span>
     </div>
   );
 }

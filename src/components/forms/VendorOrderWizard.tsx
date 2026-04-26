@@ -9,18 +9,21 @@ import type { CreateVendorState } from "./VendorOrderWizard.shared";
 // import from "./VendorOrderWizard.shared" directly.
 export type { CreateVendorState } from "./VendorOrderWizard.shared";
 
-type MaterialOption = {
+type LineItemOption = {
   id: string;
-  lineNumber: number;
-  millStyle: string | null;
+  position: number;
+  category: string;
+  brand: string | null;
+  style: string | null;
   color: string | null;
-  size: string | null;
+  sizeSpec: string | null;
 };
 
 type Props = {
   defaultVendorName: string;
   defaultPoSuggestion: string;
-  materials: MaterialOption[];
+  /** Selectable OrderLineItem rows from the parent Order */
+  lineItems: LineItemOption[];
   action: (prev: CreateVendorState, formData: FormData) => Promise<CreateVendorState>;
   cancelHref: string;
 };
@@ -28,7 +31,7 @@ type Props = {
 export function VendorOrderWizard({
   defaultVendorName,
   defaultPoSuggestion,
-  materials,
+  lineItems,
   action,
   cancelHref,
 }: Props) {
@@ -69,27 +72,29 @@ export function VendorOrderWizard({
 
       <fieldset className="bg-marble-100 border border-marble-200 rounded-lg p-4">
         <legend className="px-2 text-sm font-semibold text-brand-700">
-          Material lines on this PO {errs.materialLineIds ? <span className="text-danger">— {errs.materialLineIds}</span> : null}
+          Line items on this PO {errs.lineItemIds ? <span className="text-danger">— {errs.lineItemIds}</span> : null}
         </legend>
-        {materials.length === 0 ? (
+        {lineItems.length === 0 ? (
           <p className="text-sm text-marble-700">
-            No material lines on this order yet. Add some on the Work Order tab first.
+            No line items on this order yet. Add some on the Invoice form first.
           </p>
         ) : (
           <ul className="flex flex-col gap-2">
-            {materials.map((m) => (
-              <li key={m.id} className="flex items-start gap-3">
+            {lineItems.map((li) => (
+              <li key={li.id} className="flex items-start gap-3">
                 <input
                   type="checkbox"
-                  name="materialLineIds"
-                  value={m.id}
+                  name="lineItemIds"
+                  value={li.id}
                   defaultChecked
                   className="mt-1 rounded border-marble-200"
                 />
                 <div className="text-sm">
-                  <p className="text-marble-900 font-medium">Line {m.lineNumber}: {m.millStyle ?? "—"}</p>
+                  <p className="text-marble-900 font-medium">
+                    {li.category} {li.brand ? `— ${li.brand}` : ""} {li.style ? `· ${li.style}` : ""}
+                  </p>
                   <p className="text-marble-700 text-xs">
-                    {m.color ?? "—"} · {m.size ?? "—"}
+                    {li.color ?? "—"} · {li.sizeSpec ?? "—"}
                   </p>
                 </div>
               </li>
@@ -107,7 +112,7 @@ export function VendorOrderWizard({
         </Link>
         <button
           type="submit"
-          disabled={pending || materials.length === 0}
+          disabled={pending || lineItems.length === 0}
           className="inline-flex items-center justify-center min-h-11 px-4 rounded bg-brand-900 text-white font-medium hover:bg-[color-mix(in_oklab,var(--color-brand-900)_96%,black)] disabled:opacity-50 disabled:pointer-events-none"
         >
           {pending ? "Creating…" : "Create PO"}

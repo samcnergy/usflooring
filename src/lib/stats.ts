@@ -128,16 +128,18 @@ export async function ordersBySource(now = new Date(), days = 90) {
   }));
 }
 
-const CATEGORIES = [
-  { key: "hasCabinet",    label: "Cabinet" },
-  { key: "hasCarpet",     label: "Carpet" },
-  { key: "hasVinyl",      label: "Vinyl" },
-  { key: "hasWood",       label: "Wood" },
-  { key: "hasCeramic",    label: "Ceramic" },
-  { key: "hasCounterTop", label: "Counter Top" },
-  { key: "hasFireplace",  label: "Fireplace" },
-  { key: "hasShower",     label: "Shower" },
-] as const;
+// Category mix derived from OrderLineItem.category (post-restructure).
+// One order can have multiple categories; we count the order once per
+// category that appears among its line items.
+
+import { LineCategory } from "@prisma/client";
+import { lineCategoryLabel } from "./line-categories";
+
+const CHART_CATEGORIES: LineCategory[] = [
+  LineCategory.cabinet, LineCategory.carpet, LineCategory.vinyl, LineCategory.wood,
+  LineCategory.ceramic, LineCategory.counterTop, LineCategory.fireplace, LineCategory.shower,
+  LineCategory.tile, LineCategory.stone,
+];
 
 export async function categoryMix(now = new Date(), months = 6) {
   const start = startOfMonth(subMonths(now, months - 1));
@@ -145,29 +147,32 @@ export async function categoryMix(now = new Date(), months = 6) {
     where: { ...ACTIVE, dateOfSale: { gte: start, lte: now } },
     select: {
       dateOfSale: true,
-      hasCabinet: true, hasCarpet: true, hasVinyl: true, hasWood: true,
-      hasCeramic: true, hasCounterTop: true, hasFireplace: true, hasShower: true,
+      lineItems: { select: { category: true } },
     },
   });
-  // bucket by yyyy-MM
   type Row = { month: string } & Record<string, number | string>;
   const map = new Map<string, Row>();
   for (let i = months - 1; i >= 0; i--) {
     const m = subMonths(now, i);
     const key = format(m, "yyyy-MM");
     const row: Row = { month: format(m, "MMM yy") };
-    for (const c of CATEGORIES) row[c.label] = 0;
+    for (const c of CHART_CATEGORIES) row[lineCategoryLabel(c)] = 0;
     map.set(key, row);
   }
   for (const o of orders) {
     const key = format(o.dateOfSale, "yyyy-MM");
     const row = map.get(key);
     if (!row) continue;
-    for (const c of CATEGORIES) {
-      if (o[c.key]) row[c.label] = (row[c.label] as number) + 1;
+    const seen = new Set<LineCategory>();
+    for (const li of o.lineItems) seen.add(li.category);
+    for (const c of CHART_CATEGORIES) {
+      if (seen.has(c)) {
+        const label = lineCategoryLabel(c);
+        row[label] = (row[label] as number) + 1;
+      }
     }
   }
   return Array.from(map.values());
 }
 
-export const CATEGORY_LABELS = CATEGORIES.map((c) => c.label);
+export const CATEGORY_LABELS = CHART_CATEGORIES.map((c) => lineCategoryLabel(c));

@@ -13,7 +13,10 @@ export default async function SalesNewVendorOrderPage({ params }: { params: Para
   const { id } = await params;
   const order = await prisma.order.findFirst({
     where: { id, deletedAt: null, salespersonId: me.id },
-    include: { materials: { orderBy: { lineNumber: "asc" } }, vendorOrders: { select: { id: true } } },
+    include: {
+      lineItems: { orderBy: { position: "asc" } },
+      vendorOrders: { select: { id: true } },
+    },
   });
   if (!order) notFound();
 
@@ -34,9 +37,14 @@ export default async function SalesNewVendorOrderPage({ params }: { params: Para
       <VendorOrderWizard
         defaultVendorName=""
         defaultPoSuggestion={defaultPo}
-        materials={order.materials.map((m) => ({
-          id: m.id, lineNumber: m.lineNumber,
-          millStyle: m.millStyle, color: m.color, size: m.size,
+        lineItems={order.lineItems.map((li) => ({
+          id: li.id,
+          position: li.position,
+          category: li.category,
+          brand: li.brand,
+          style: li.style,
+          color: li.color,
+          sizeSpec: li.sizeSpec,
         }))}
         action={action}
         cancelHref={`/sales/orders/${order.id}?doc=vendor`}

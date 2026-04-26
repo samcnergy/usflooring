@@ -1,4 +1,4 @@
-// U.S. Floor, Kitchen & Bath — Phase 1 schema.
+// U.S. Floor, Kitchen & Bath — Phase 1 schema (post-restructure 2026-04).
 // Source of truth for the four documents (Invoice, Work Order, Daily Work Order,
 // Vendor Order). The downstream documents are projections of `Order` plus its
 // children; the same field is never stored twice.
@@ -7,9 +7,6 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// Prisma 7 moved connection URLs out of schema.prisma. The migrate URL lives
-// in `prisma.config.ts`; the runtime URL is consumed by the pg driver adapter
-// passed to `new PrismaClient({ adapter })` (see src/lib/prisma.ts).
 datasource db {
   provider = "postgresql"
 }
@@ -24,16 +21,14 @@ enum Role {
 model User {
   id           String   @id @default(uuid())
   email        String   @unique
-  // Supabase Auth owns the password hash in `auth.users`. We mirror the user
-  // here for FKs (Order.salespersonId, audit log) and role gating.
   passwordHash String?
   fullName     String
   role         Role
   isActive     Boolean  @default(true)
   createdAt    DateTime @default(now())
 
-  ordersAsSalesperson Order[]      @relation("SalespersonOrders")
-  auditEntries        AuditLog[]   @relation("AuditActor")
+  ordersAsSalesperson Order[]    @relation("SalespersonOrders")
+  auditEntries        AuditLog[] @relation("AuditActor")
 }
 
 // ---------- Lookup tables ----------
@@ -49,19 +44,18 @@ model AdvertisingSource {
 // ---------- Customers ----------
 
 model Customer {
-  id           String   @id @default(uuid())
+  id           String  @id @default(uuid())
   firstName    String
   lastName     String
   addressLine1 String
   city         String
-  state        String   @default("CA")
+  state        String  @default("CA")
   zip          String
   phoneHome    String?
   phoneWork    String?
   phoneExt     String?
   email        String?
 
-  // Ship-to often differs from sold-to (per the paper invoice both blocks exist)
   shipFirstName    String?
   shipLastName     String?
   shipAddressLine1 String?
@@ -107,6 +101,11 @@ enum InstallMethod {
   other
 }
 
+enum PricingMode {
+  itemized   // total = sum(lineItems) + tax. Lines must have unit prices.
+  flatTotal  // salesperson types totalCents directly. Lines are reference-only.
+}
+
 model Order {
   id            String      @id @default(uuid())
   // Server-assigned from a Postgres SEQUENCE starting at 6515.
@@ -123,31 +122,31 @@ model Order {
   advertisingSourceId String?
   advertisingSource   AdvertisingSource? @relation(fields: [advertisingSourceId], references: [id])
 
-  // Top-of-invoice category checkboxes
-  hasCabinet    Boolean @default(false)
-  hasCarpet     Boolean @default(false)
-  hasVinyl      Boolean @default(false)
-  hasWood       Boolean @default(false)
-  hasCeramic    Boolean @default(false)
-  hasCounterTop Boolean @default(false)
-  hasFireplace  Boolean @default(false)
-  hasShower     Boolean @default(false)
+  // Pricing & money. taxPercent is the source of truth; taxCents is computed
+  // server-side. Default 7.75% (Orange County, CA combined rate). Salesperson
+  // can override per order.
+  pricingMode   PricingMode @default(itemized)
+  taxPercent    Float       @default(7.75)
+  taxCents      Int         @default(0)
+  depositCents  Int         @default(0)
+  subtotalCents Int         @default(0)
+  totalCents    Int         @default(0)
+  balanceCents  Int         @default(0)
 
-  // Money in cents. subtotal/total/balance are server-recomputed on save.
-  // taxPercent is the source of truth; taxCents is computed server-side as
-  // subtotalCents * (taxPercent / 100). Default 7.75% (Orange County, CA
-  // combined rate). Salesperson can override per order.
-  taxPercent    Float @default(7.75)
-  taxCents      Int @default(0)
-  depositCents  Int @default(0)
-  subtotalCents Int @default(0)
-  totalCents    Int @default(0)
-  balanceCents  Int @default(0)
-
-  basedOn String? // "Square Yards" | "Square Feet" | "Total"
-  remarks String?
-
+  basedOn     String? // "Square Yards" | "Square Feet" | "Total"
+  remarks     String?
   balanceTerm BalanceTerm?
+
+  // Job-site fields (the "margin notes" homes from real handwritten invoices)
+  jobSiteAddressLine1  String?
+  jobSiteCity          String?
+  jobSiteState         String?
+  jobSiteZip           String?
+  jobSiteSameAsBilling Boolean @default(true)
+  siteContactName      String?
+  siteContactPhone     String?
+  accessInstructions   String?
+  depositInstructions  String?
 
   // Work-order-only fields (filled in after the invoice exists)
   availabilityDate   DateTime?
@@ -160,25 +159,27 @@ model Order {
   subfloorType    SubfloorType?
   installSubfloor Boolean?
   pullOldFloor    Boolean?
-  oldFloorType    String?  // tile | marble | wood | vinyl | carpet | other
+  oldFloorType    String?
   oldFloorSize    String?
 
   // Carpet-specific (work order)
   removeOldCarpetAndPad Boolean?
   removeOldTagStrip     Boolean?
-  newTackStripType      String?  // wood | concrete
+  newTackStripType      String?
   hasSteps              Boolean?
   numSteps              Int?
   emptyHouse            Boolean?
   heavyFurniture        Boolean?
   heavyFurnitureType    String?
 
-  installMethod InstallMethod?
-
+  installMethod       InstallMethod?
   specialInstructions String?
 
-  areas        OrderArea[]
-  materials    OrderMaterial[]
+  // Children
+  rooms        OrderRoom[]
+  lineItems    OrderLineItem[]
+  inclusions   OrderInclusion[]
+  exclusions   OrderExclusion[]
   moldings     OrderMolding[]
   fixtures     OrderFixture[]
   showerSpec   OrderShower?
@@ -195,9 +196,9 @@ model Order {
   @@index([status])
 }
 
-// ---------- Order children ----------
+// ---------- Rooms involved (pure checklist, no pricing) ----------
 
-enum AreaName {
+enum RoomName {
   livingRoom
   diningRoom
   familyRoom
@@ -206,65 +207,146 @@ enum AreaName {
   closet
   entrance
   bathroom
+  masterBath
   den
   kitchen
   stairs
   office
   laundry
+  downstairs
+  upstairs
+  outside
   other
 }
 
-model OrderArea {
-  id             String   @id @default(uuid())
-  orderId        String
-  order          Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  areaName       AreaName
-  quantity       Int?
-  description    String?
-  material       String?
-  color          String?
-  size           String?
-  lineTotalCents Int      @default(0)
+model OrderRoom {
+  id        String   @id @default(uuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  room      RoomName
+  quantity  Int?     // for Bedroom(s)/Bathroom(s)/Closet(s) where staff write a count; null otherwise
+  notes     String?  // optional per-room note ("master only", "downstairs", etc.)
+  createdAt DateTime @default(now())
+
+  @@unique([orderId, room])
 }
 
-enum CarpetType {
-  plush
-  berber
-  glueDown
-  plushWP
-  berberWP
+// ---------- Line Items (the actual money) ----------
+
+enum LineCategory {
+  cabinet
+  carpet
+  vinyl
+  wood
+  ceramic
+  counterTop
+  fireplace
+  shower
+  tile
+  stone
+  molding
+  labor
+  fixture
+  other
 }
 
-model OrderMaterial {
-  id         String @id @default(uuid())
-  orderId    String
-  order      Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  lineNumber Int
+enum UnitOfMeasure {
+  sqft
+  sqyd
+  slab
+  box
+  piece
+  linearFt
+  each
+  hour
+  lump
+}
 
-  // PHASE 2 HOOK — populated when the materials catalog ships.
+model OrderLineItem {
+  id       String @id @default(uuid())
+  orderId  String
+  order    Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  position Int    // display order within the order
+
+  category LineCategory
+
+  brand    String?
+  style    String?
+  color    String?
+  sizeSpec String?
+  sku      String?
+
+  quantity       Float?
+  unit           UnitOfMeasure?
+  unitPriceCents Int?
+  lineTotalCents Int?
+
+  notes String?
+
+  // PHASE 2 readiness
   materialId String?
-  // material Material? @relation(fields: [materialId], references: [id])
 
-  millStyle     String?
-  size          String?
-  color         String?
-  refNumber     String?
-  pad           String?
-  areas         String?
-  carpetType    CarpetType?
-  unitOfMeasure String?  // "sqft" | "sqyd" | "linft" | "each"
-  quantity      Float?
-  unitPriceCents  Int?
-  lineTotalCents  Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  // Vendor PO additions
-  vendorName         String?
-  poNumber           String?
-  willCallDate       DateTime?
-  vendorDeliveryDate DateTime?
-
-  @@index([orderId, lineNumber])
+  @@index([orderId, position])
 }
+
+// ---------- Inclusions / Exclusions (chips + custom notes) ----------
+
+enum InclusionType {
+  material
+  installation
+  removalAndHaulAway
+  pad
+  underlayment
+  moveFurniture
+  demo
+  sandAndCement
+  hotMop
+  fabrication
+  sinkCutOut
+  fullBacksplash
+  straightEdgeNosing
+  delivery
+  roughPlumbing
+  customerProvidedVanityInstall
+  customNote
+}
+
+model OrderInclusion {
+  id         String        @id @default(uuid())
+  orderId    String
+  order      Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  type       InclusionType
+  customText String?
+  createdAt  DateTime      @default(now())
+
+  @@unique([orderId, type, customText])
+}
+
+enum ExclusionType {
+  plumbing
+  patchAndPaint
+  electrical
+  leveling
+  permits
+  disposal
+  customNote
+}
+
+model OrderExclusion {
+  id         String        @id @default(uuid())
+  orderId    String
+  order      Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  type       ExclusionType
+  customText String?
+  createdAt  DateTime      @default(now())
+
+  @@unique([orderId, type, customText])
+}
+
+// ---------- Other order children (unchanged) ----------
 
 enum MoldingType {
   baseShoe
@@ -339,22 +421,22 @@ model OrderShower {
 }
 
 model OrderTileStone {
-  id              String  @id @default(uuid())
-  orderId         String  @unique
-  order           Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  hasTile         Boolean @default(false)
-  hasMarble       Boolean @default(false)
-  hasTravertine   Boolean @default(false)
-  hasSlate        Boolean @default(false)
-  hasTumbleMarble Boolean @default(false)
-  hasBacksplash   Boolean @default(false)
-  hasFloor        Boolean @default(false)
-  hasFireplace    Boolean @default(false)
-  hasShowerTile   Boolean @default(false)
-  hasWalls        Boolean @default(false)
-  hasCounterTop   Boolean @default(false)
-  hasStone        Boolean @default(false)
-  hasSlab         Boolean @default(false)
+  id              String   @id @default(uuid())
+  orderId         String   @unique
+  order           Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  hasTile         Boolean  @default(false)
+  hasMarble       Boolean  @default(false)
+  hasTravertine   Boolean  @default(false)
+  hasSlate        Boolean  @default(false)
+  hasTumbleMarble Boolean  @default(false)
+  hasBacksplash   Boolean  @default(false)
+  hasFloor        Boolean  @default(false)
+  hasFireplace    Boolean  @default(false)
+  hasShowerTile   Boolean  @default(false)
+  hasWalls        Boolean  @default(false)
+  hasCounterTop   Boolean  @default(false)
+  hasStone        Boolean  @default(false)
+  hasSlab         Boolean  @default(false)
   wonderboard     Boolean?
   slipSheet       Boolean?
   seal            Boolean?
@@ -400,8 +482,6 @@ model VendorOrder {
   orderId String
   order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
-  // PHASE 2 HOOK — vendor names auto-create rows in the Vendor table on first
-  // use, so by the time the catalog ships the vendor list is already clean.
   vendorId String?
   vendor   Vendor? @relation(fields: [vendorId], references: [id])
 
@@ -412,16 +492,14 @@ model VendorOrder {
   willCallDate    DateTime?
   deliveryDate    DateTime?
   deliveryAddress String?
-  // JSON snapshot of the OrderMaterial rows on this PO at the moment it was
+  // JSON snapshot of OrderLineItem rows on this PO at the moment it was
   // generated, so editing the master order doesn't silently mutate a sent PO.
+  // Shape: { lineItems: { category, brand, style, color, sizeSpec, sku, quantity, unit, unitPriceCents }[] }
   lineItems       Json
   status          VendorOrderStatus @default(draft)
   createdAt       DateTime          @default(now())
 }
 
-// PHASE 2-READY STUB. Phase 1 only auto-creates rows when a salesperson types
-// a vendor name on a VendorOrder. Phase 2 adds CRUD, contacts, default delivery
-// addresses, and pricing terms. Keep this minimal so Phase 2 is purely additive.
 model Vendor {
   id           String        @id @default(uuid())
   name         String        @unique
@@ -431,23 +509,26 @@ model Vendor {
 }
 
 // ---------- Phase 2 feeder: passive, write-only in Phase 1 ----------
-// Every saved OrderMaterial line upserts into this table by `fingerprint`,
-// incrementing usageCount. Nothing reads from it in Phase 1; Phase 2 seeds the
-// materials catalog from the top-N rows.
 
 model MaterialSuggestion {
-  id                 String      @id @default(uuid())
-  fingerprint        String      @unique
-  millStyle          String?
+  id                 String         @id @default(uuid())
+  // Lowercased, trimmed, single-spaced concatenation of:
+  //   category + brand + style + color + sizeSpec + unit
+  fingerprint        String         @unique
+  category           LineCategory
+  brand              String?
+  style              String?
   color              String?
-  size               String?
-  carpetType         CarpetType?
-  unitOfMeasure      String?
-  usageCount         Int         @default(1)
+  sizeSpec           String?
+  unit               UnitOfMeasure?
+  usageCount         Int            @default(1)
   lastVendorName     String?
   lastUnitPriceCents Int?
-  firstSeenAt        DateTime    @default(now())
-  lastSeenAt         DateTime    @default(now())
+  firstSeenAt        DateTime       @default(now())
+  lastSeenAt         DateTime       @default(now())
+
+  @@index([category, usageCount])
+  @@index([brand, usageCount])
 }
 
 // ---------- Audit log ----------
@@ -456,8 +537,8 @@ model AuditLog {
   id          String   @id @default(uuid())
   actorUserId String?
   actor       User?    @relation("AuditActor", fields: [actorUserId], references: [id])
-  action      String   // "create" | "update" | "void" | "delete" | "role_change" | ...
-  entityType  String   // "Order" | "OrderMaterial" | "User" | ...
+  action      String
+  entityType  String
   entityId    String
   diff        Json?
   createdAt   DateTime @default(now())
@@ -469,17 +550,17 @@ model AuditLog {
 // ---------- AI analysis runs ----------
 
 model AiAnalysisRun {
-  id              String   @id @default(uuid())
-  requestedById   String
-  rangeStart      DateTime
-  rangeEnd        DateTime
-  customQuestion  String?
-  snapshotJson    Json
-  responseMd      String   // streamed response, persisted at the end
-  modelId         String   // e.g. "claude-opus-4-7"
-  inputTokens     Int?
-  outputTokens    Int?
-  createdAt       DateTime @default(now())
+  id             String   @id @default(uuid())
+  requestedById  String
+  rangeStart     DateTime
+  rangeEnd       DateTime
+  customQuestion String?
+  snapshotJson   Json
+  responseMd     String
+  modelId        String
+  inputTokens    Int?
+  outputTokens   Int?
+  createdAt      DateTime @default(now())
 }
 
 // PHASE 2 — DO NOT UNCOMMENT IN PHASE 1
@@ -487,15 +568,15 @@ model AiAnalysisRun {
 //   id                    String   @id @default(uuid())
 //   sku                   String?  @unique
 //   name                  String
-//   category              String   // "carpet" | "vinyl" | "wood" | "tile" | "stone" | "cabinet" | "countertop" | "molding" | "other"
+//   category              LineCategory
 //   defaultVendorId       String?
 //   defaultVendor         Vendor?  @relation(fields: [defaultVendorId], references: [id])
-//   defaultUom            String   // "sqft" | "sqyd" | "linft" | "each"
+//   defaultUnit           UnitOfMeasure
 //   defaultUnitPriceCents Int?
 //   defaultCostCents      Int?
 //   isActive              Boolean  @default(true)
 //   notes                 String?
 //   createdAt             DateTime @default(now())
 //   updatedAt             DateTime @updatedAt
-//   orderMaterials        OrderMaterial[]
+//   lineItems             OrderLineItem[]
 // }

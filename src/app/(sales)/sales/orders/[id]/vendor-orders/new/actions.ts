@@ -16,7 +16,7 @@ const inputSchema = z.object({
   willCallDate: z.string().trim().optional().transform((v) => (v ? new Date(v) : null)),
   deliveryDate: z.string().trim().optional().transform((v) => (v ? new Date(v) : null)),
   deliveryAddress: z.string().trim().optional().nullable().transform((v) => v || null),
-  materialLineIds: z.array(z.string().uuid()).min(1),
+  lineItemIds: z.array(z.string().uuid()).min(1),
 });
 
 export type CreateVendorState =
@@ -36,7 +36,7 @@ export async function createOwnVendorOrderAction(
   });
   if (!owns) return { ok: false, message: "You can't create a PO for an order that isn't yours." };
 
-  const materialLineIds = formData.getAll("materialLineIds").map(String).filter(Boolean);
+  const lineItemIds = formData.getAll("lineItemIds").map(String).filter(Boolean);
   const parsed = inputSchema.safeParse({
     vendorName: String(formData.get("vendorName") ?? ""),
     poNumber:   String(formData.get("poNumber") ?? ""),
@@ -45,7 +45,7 @@ export async function createOwnVendorOrderAction(
     willCallDate: String(formData.get("willCallDate") ?? ""),
     deliveryDate: String(formData.get("deliveryDate") ?? ""),
     deliveryAddress: String(formData.get("deliveryAddress") ?? ""),
-    materialLineIds,
+    lineItemIds,
   });
   if (!parsed.success) {
     const errors: Record<string, string> = {};
@@ -58,7 +58,7 @@ export async function createOwnVendorOrderAction(
     action: "create",
     entityType: "VendorOrder",
     entityId: vo.id,
-    diff: { vendorName: vo.vendorName, poNumber: vo.poNumber, lineCount: parsed.data.materialLineIds.length },
+    diff: { vendorName: vo.vendorName, poNumber: vo.poNumber, lineCount: parsed.data.lineItemIds.length },
   });
   revalidatePath(`/sales/orders/${orderId}`);
   redirect(`/sales/orders/${orderId}?doc=vendor`);

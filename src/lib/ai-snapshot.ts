@@ -31,7 +31,8 @@ export async function buildSnapshot(start: Date, end: Date): Promise<Snapshot> {
     include: {
       salesperson: { select: { fullName: true } },
       advertisingSource: { select: { name: true } },
-      areas: true,
+      lineItems: { select: { category: true, lineTotalCents: true } },
+      rooms: { select: { room: true } },
     },
   });
 
@@ -80,34 +81,45 @@ export async function buildSnapshot(start: Date, end: Date): Promise<Snapshot> {
     }))
     .sort((a, b) => parseDollar(b.revenue) - parseDollar(a.revenue));
 
-  // category mix (% of revenue) — orders may have multiple categories;
-  // attribute full revenue to each checked category. (Future: split evenly.)
-  const cats = [
-    ["hasCabinet", "Cabinet"], ["hasCarpet", "Carpet"], ["hasVinyl", "Vinyl"],
-    ["hasWood", "Wood"], ["hasCeramic", "Ceramic"], ["hasCounterTop", "Counter Top"],
-    ["hasFireplace", "Fireplace"], ["hasShower", "Shower"],
-  ] as const;
-  const categoryMixPct = cats.map(([key, label]) => {
-    const sum = nonVoided.filter((o) => o[key]).reduce((s, o) => s + o.totalCents, 0);
-    const pct = totalRev > 0 ? (sum / totalRev) * 100 : 0;
-    return { category: label, pctOfRevenue: pct.toFixed(1) + "%" };
-  });
-
-  // areas
-  const areaFreq = new Map<string, number>();
-  const areaRev = new Map<string, number>();
+  // category mix (% of revenue) — sum of line-item totals per category /
+  // total revenue. A line item with no totals (qty/price not set) contributes 0.
+  const catRevenue = new Map<string, number>();
   for (const o of nonVoided) {
-    for (const a of o.areas) {
-      if (a.quantity == null && !a.description && a.lineTotalCents === 0) continue;
-      areaFreq.set(a.areaName, (areaFreq.get(a.areaName) ?? 0) + 1);
-      areaRev.set(a.areaName, (areaRev.get(a.areaName) ?? 0) + a.lineTotalCents);
+    for (const li of o.lineItems) {
+      const cur = catRevenue.get(li.category) ?? 0;
+      catRevenue.set(li.category, cur + (li.lineTotalCents ?? 0));
     }
   }
-  const topAreasByFrequency = Array.from(areaFreq.entries())
+  const categoryMixPct = Array.from(catRevenue.entries())
+    .map(([category, sum]) => ({
+      category,
+      pctOfRevenue: (totalRev > 0 ? (sum / totalRev) * 100 : 0).toFixed(1) + "%",
+    }))
+    .sort((a, b) => parseFloat(b.pctOfRevenue) - parseFloat(a.pctOfRevenue));
+
+  // rooms touched (replaces the old areas-frequency calc)
+  const roomFreq = new Map<string, number>();
+  for (const o of nonVoided) {
+    for (const r of o.rooms) {
+      roomFreq.set(r.room, (roomFreq.get(r.room) ?? 0) + 1);
+    }
+  }
+  const topAreasByFrequency = Array.from(roomFreq.entries())
     .sort((a, b) => b[1] - a[1])
     .slice(0, 10)
     .map(([area, count]) => ({ area, count }));
-  const topAreasByRevenue = Array.from(areaRev.entries())
+  // Per-room revenue is no longer trivially computable (revenue lives on line
+  // items, rooms are a checklist). Approximate: distribute order revenue evenly
+  // across the rooms touched.
+  const roomRev = new Map<string, number>();
+  for (const o of nonVoided) {
+    if (o.rooms.length === 0) continue;
+    const share = Math.round(o.totalCents / o.rooms.length);
+    for (const r of o.rooms) {
+      roomRev.set(r.room, (roomRev.get(r.room) ?? 0) + share);
+    }
+  }
+  const topAreasByRevenue = Array.from(roomRev.entries())
     .sort((a, b) => b[1] - a[1])
     .slice(0, 10)
     .map(([area, rev]) => ({ area, revenue: centsToDollarString(rev) }));

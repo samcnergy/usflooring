@@ -1,23 +1,15 @@
 import { Document, Page, Text, View } from "@react-pdf/renderer";
-import { styles, COLORS } from "./styles";
-import { PdfFooter } from "./PdfFooter";
 import { format } from "date-fns";
 import type { Prisma } from "@prisma/client";
+import { styles, COLORS } from "./styles";
+import { PdfFooter } from "./PdfFooter";
+import type { VendorOrderLineSnapshot } from "@/lib/vendor-order";
+import { lineCategoryLabel } from "@/lib/line-categories";
+import { unitShort } from "@/lib/units";
 
 type FullVendorOrder = Prisma.VendorOrderGetPayload<{
   include: { order: { include: { customer: true } } };
 }>;
-
-type LineItem = {
-  millStyle?: string | null;
-  color?: string | null;
-  size?: string | null;
-};
-
-type Molding = {
-  type: string;
-  quantity?: string | null;
-};
 
 export function VendorOrderPDF({
   vendorOrder,
@@ -27,15 +19,13 @@ export function VendorOrderPDF({
   downloadedBy?: string;
 }) {
   const vo = vendorOrder;
-  const items: LineItem[] = Array.isArray(vo.lineItems)
-    ? (vo.lineItems as unknown as LineItem[])
-    : [];
-  const moldings: Molding[] = []; // populated when material capture lands
+  const snapshot = vo.lineItems as { lineItems?: VendorOrderLineSnapshot[] } | VendorOrderLineSnapshot[];
+  const items: VendorOrderLineSnapshot[] =
+    Array.isArray(snapshot) ? snapshot : (snapshot?.lineItems ?? []);
 
   return (
     <Document title={`USFKB Vendor PO ${vo.poNumber}`}>
       <Page size="LETTER" style={styles.page}>
-        {/* Letterhead */}
         <View style={{ alignItems: "center", marginBottom: 8 }}>
           <Text style={{ fontSize: 18, fontFamily: "Helvetica-Bold" }}>U.S. Floor, Kitchen &amp; Bath</Text>
           <Text style={{ fontSize: 9, color: COLORS.muted }}>
@@ -72,31 +62,27 @@ export function VendorOrderPDF({
           ORDERING THE FOLLOWING ITEMS:
         </Text>
 
-        <View style={styles.twoCol}>
-          <View style={styles.col}>
-            {[0, 1, 2, 3].map((i) => {
-              const it = items[i];
-              return (
-                <View key={i} style={{ marginBottom: 6 }}>
-                  <Field label={`${i + 1}) Style`}>{it?.millStyle ?? ""}</Field>
-                  <Field label={`${i + 1}) Color`}>{it?.color ?? ""}</Field>
-                  <Field label={`${i + 1}) Size`}>{it?.size ?? ""}</Field>
-                </View>
-              );
-            })}
+        {items.length === 0 ? (
+          <Text style={{ color: COLORS.muted, marginTop: 4 }}>No items on this PO.</Text>
+        ) : (
+          <View style={{ marginTop: 4 }}>
+            {items.map((it, i) => (
+              <View key={i} style={{ marginBottom: 8, borderBottomWidth: 0.5, borderColor: COLORS.borderLight, paddingBottom: 4 }}>
+                <Text style={{ fontFamily: "Helvetica-Bold" }}>
+                  {i + 1}) {lineCategoryLabel(it.category)} {it.brand ? `— ${it.brand}` : ""}
+                </Text>
+                {it.style ? <Field label="Style">{it.style}</Field> : null}
+                {it.color ? <Field label="Color">{it.color}</Field> : null}
+                {it.sizeSpec ? <Field label="Size">{it.sizeSpec}</Field> : null}
+                {it.sku ? <Field label="SKU">{it.sku}</Field> : null}
+                {it.quantity != null ? (
+                  <Field label="Qty">{`${it.quantity} ${unitShort(it.unit) ?? ""}`}</Field>
+                ) : null}
+                {it.notes ? <Field label="Notes">{it.notes}</Field> : null}
+              </View>
+            ))}
           </View>
-
-          <View style={styles.col}>
-            <Text style={[styles.sectionLabel, { fontSize: 10 }]}>MOLDINGS:</Text>
-            {moldings.length === 0 ? (
-              <Text style={{ color: COLORS.muted }}>—</Text>
-            ) : (
-              moldings.map((m, i) => (
-                <Text key={i}>{labelMolding(m.type)}: {m.quantity ?? ""}</Text>
-              ))
-            )}
-          </View>
-        </View>
+        )}
 
         <Text style={{ marginTop: 12, color: COLORS.invoiceRed, fontFamily: "Helvetica-Bold", textAlign: "center" }}>
           PLEASE, FAX OR E-MAIL ORDER CONFIRMATION ASAP
@@ -118,18 +104,4 @@ function Field({ label, children }: { label: string; children?: React.ReactNode 
       {(children ?? "") as React.ReactNode}
     </Text>
   );
-}
-
-function labelMolding(type: string) {
-  // Map enum-ish names to paper-form labels.
-  const map: Record<string, string> = {
-    baseShoe: "Base Shoe",
-    baseboard: "Baseboard",
-    quarterRound: "Quarter round",
-    tMolding: "T-Molding",
-    reducer: "Reducer",
-    endMolding: "End Molding",
-    bullNose: "Bull-Nose",
-  };
-  return map[type] ?? type;
 }

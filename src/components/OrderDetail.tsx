@@ -1,21 +1,26 @@
-// Read-only Invoice view for the Order detail page. Matches the paper-form
-// layout closely enough that staff feel at home. Used in both /admin and
-// /sales contexts; admin sees prices in Work Order, salesperson doesn't (the
-// distinction matters when WorkOrder/DailyWorkOrder content lands in step 5).
+// Read-only Invoice view for the Order detail page (post-restructure).
+// Displays the structured Invoice data: rooms, line items, inclusions/
+// exclusions, job-site block, totals.
 
 import Link from "next/link";
-import { centsToDollarString } from "@/lib/money";
-import { ORDER_AREAS } from "@/lib/order-areas";
-import { OrderStatusPill } from "@/components/forms/OrderStatusPill";
 import { format } from "date-fns";
 import type { Prisma } from "@prisma/client";
+import { centsToDollarString } from "@/lib/money";
+import { roomLabel } from "@/lib/rooms";
+import { lineCategoryLabel, PRINTED_CATEGORY_CHECKBOXES } from "@/lib/line-categories";
+import { unitShort } from "@/lib/units";
+import { inclusionLabel, exclusionLabel } from "@/lib/inclusions";
+import { OrderStatusPill } from "@/components/forms/OrderStatusPill";
 
 type FullOrder = Prisma.OrderGetPayload<{
   include: {
     customer: true;
     salesperson: { select: { id: true; fullName: true; email: true } };
     advertisingSource: true;
-    areas: true;
+    rooms: true;
+    lineItems: true;
+    inclusions: true;
+    exclusions: true;
   };
 }>;
 
@@ -27,16 +32,8 @@ const balanceTermLabels: Record<string, string> = {
 
 export function InvoiceView({ order }: { order: FullOrder }) {
   const cust = order.customer;
-  const cats = [
-    order.hasCabinet && "Cabinet",
-    order.hasCarpet && "Carpet",
-    order.hasVinyl && "Vinyl",
-    order.hasWood && "Wood",
-    order.hasCeramic && "Ceramic",
-    order.hasCounterTop && "Counter Top",
-    order.hasFireplace && "Fireplace",
-    order.hasShower && "Shower",
-  ].filter(Boolean) as string[];
+  // Categories shown ticked = those that appear in any line item
+  const categoriesUsed = new Set(order.lineItems.map((li) => li.category));
 
   return (
     <div className="bg-white border border-marble-200 rounded-lg p-6">
@@ -52,8 +49,8 @@ export function InvoiceView({ order }: { order: FullOrder }) {
         </div>
       </div>
 
-      {/* Sold/ship/salesperson */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      {/* Sold/ship/job-site/salesperson */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <div>
           <p className="text-xs text-marble-700 uppercase tracking-wide font-semibold mb-1">Sold to</p>
           <p className="text-marble-900 font-medium">{cust.firstName} {cust.lastName}</p>
@@ -73,6 +70,21 @@ export function InvoiceView({ order }: { order: FullOrder }) {
           {cust.shipPhone ? <p className="text-marble-700 text-sm">{cust.shipPhone}</p> : null}
         </div>
         <div>
+          <p className="text-xs text-marble-700 uppercase tracking-wide font-semibold mb-1">Job site</p>
+          {order.jobSiteSameAsBilling ? (
+            <p className="text-marble-700 text-sm italic">Same as billing</p>
+          ) : (
+            <>
+              <p className="text-marble-900">{order.jobSiteAddressLine1 ?? "—"}</p>
+              <p className="text-marble-700 text-sm">
+                {order.jobSiteCity ?? ""}{order.jobSiteCity ? "," : ""} {order.jobSiteState ?? ""} {order.jobSiteZip ?? ""}
+              </p>
+            </>
+          )}
+          {order.siteContactName ? <p className="text-marble-900 text-sm mt-1">Contact: {order.siteContactName}{order.siteContactPhone ? ` · ${order.siteContactPhone}` : ""}</p> : null}
+          {order.accessInstructions ? <p className="text-marble-700 text-xs mt-1">Access: {order.accessInstructions}</p> : null}
+        </div>
+        <div>
           <p className="text-xs text-marble-700 uppercase tracking-wide font-semibold mb-1">Salesperson</p>
           <p className="text-marble-900 font-medium">{order.salesperson.fullName}</p>
           {order.advertisingSource ? (
@@ -86,57 +98,83 @@ export function InvoiceView({ order }: { order: FullOrder }) {
         </div>
       </div>
 
-      {/* Categories */}
-      {cats.length > 0 ? (
+      {/* Categories (derived) */}
+      {categoriesUsed.size > 0 ? (
         <div className="border-y border-marble-200 py-3 mb-4">
           <p className="text-xs text-marble-700 uppercase tracking-wide font-semibold mb-1">Categories</p>
           <div className="flex flex-wrap gap-2">
-            {cats.map((c) => (
-              <span key={c} className="text-xs bg-brand-100 text-brand-700 rounded px-2 py-0.5">
-                {c}
-              </span>
+            {PRINTED_CATEGORY_CHECKBOXES.filter((c) => categoriesUsed.has(c.value)).map((c) => (
+              <span key={c.value} className="text-xs bg-brand-100 text-brand-700 rounded px-2 py-0.5">{c.label}</span>
             ))}
           </div>
         </div>
       ) : null}
 
-      {/* Areas table */}
-      <div className="overflow-x-auto mb-6">
-        <table className="w-full text-sm min-w-[820px]">
-          <thead className="border-b border-marble-700 text-marble-900">
-            <tr>
-              <th className="text-left py-2 w-32 font-semibold">Area</th>
-              <th className="text-left py-2 w-10 font-semibold">#</th>
-              <th className="text-left py-2 font-semibold">Description of work</th>
-              <th className="text-left py-2 w-32 font-semibold">Material</th>
-              <th className="text-left py-2 w-24 font-semibold">Color</th>
-              <th className="text-left py-2 w-20 font-semibold">Size</th>
-              <th className="text-right py-2 w-24 font-semibold">Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            {ORDER_AREAS.map((spec) => {
-              const a = order.areas.find((x) => x.areaName === spec.value);
-              const filled =
-                a &&
-                (a.quantity != null || a.description || a.material || a.color || a.size || a.lineTotalCents > 0);
-              return (
-                <tr key={spec.value} className="border-b border-marble-200">
-                  <td className="py-1.5 text-marble-900 whitespace-nowrap">{spec.label}</td>
-                  <td className="py-1.5 text-marble-700 tabular-money">{a?.quantity ?? ""}</td>
-                  <td className="py-1.5 text-marble-700">{a?.description ?? ""}</td>
-                  <td className="py-1.5 text-marble-700">{a?.material ?? ""}</td>
-                  <td className="py-1.5 text-marble-700">{a?.color ?? ""}</td>
-                  <td className="py-1.5 text-marble-700">{a?.size ?? ""}</td>
-                  <td className="py-1.5 text-right tabular-money">
-                    {filled ? centsToDollarString(a!.lineTotalCents) : ""}
-                  </td>
+      {/* Rooms */}
+      {order.rooms.length > 0 ? (
+        <div className="mb-4 text-sm">
+          <p className="text-xs text-marble-700 uppercase tracking-wide font-semibold mb-1">Rooms</p>
+          <p className="text-marble-900">
+            {order.rooms.map((r) => `${roomLabel(r.room)}${r.quantity ? ` × ${r.quantity}` : ""}${r.notes ? ` (${r.notes})` : ""}`).join(", ")}
+          </p>
+        </div>
+      ) : null}
+
+      {/* Line items */}
+      {order.lineItems.length > 0 ? (
+        <div className="overflow-x-auto mb-6">
+          <table className="w-full text-sm min-w-[820px]">
+            <thead className="border-b border-marble-700 text-marble-900">
+              <tr>
+                <th className="text-left py-2 w-28 font-semibold">Category</th>
+                <th className="text-left py-2 font-semibold">Brand / Style</th>
+                <th className="text-left py-2 w-28 font-semibold">Color</th>
+                <th className="text-left py-2 w-24 font-semibold">Size</th>
+                <th className="text-right py-2 w-20 font-semibold">Qty</th>
+                <th className="text-left py-2 w-16 font-semibold">Unit</th>
+                <th className="text-right py-2 w-24 font-semibold">Unit $</th>
+                <th className="text-right py-2 w-24 font-semibold">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {order.lineItems.map((li) => (
+                <tr key={li.id} className="border-b border-marble-200">
+                  <td className="py-1.5 text-marble-900">{lineCategoryLabel(li.category)}</td>
+                  <td className="py-1.5 text-marble-700">{[li.brand, li.style].filter(Boolean).join(" — ")}</td>
+                  <td className="py-1.5 text-marble-700">{li.color ?? ""}</td>
+                  <td className="py-1.5 text-marble-700">{li.sizeSpec ?? ""}</td>
+                  <td className="py-1.5 text-right tabular-money">{li.quantity ?? ""}</td>
+                  <td className="py-1.5 text-marble-700">{unitShort(li.unit)}</td>
+                  <td className="py-1.5 text-right tabular-money">{li.unitPriceCents != null ? centsToDollarString(li.unitPriceCents) : ""}</td>
+                  <td className="py-1.5 text-right tabular-money">{li.lineTotalCents != null ? centsToDollarString(li.lineTotalCents) : ""}</td>
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : null}
+
+      {/* Inclusions / Exclusions */}
+      {(order.inclusions.length > 0 || order.exclusions.length > 0) ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          {order.inclusions.length > 0 ? (
+            <div className="bg-marble-100 border border-marble-200 rounded p-3">
+              <p className="text-xs text-marble-700 uppercase tracking-wide font-semibold mb-1">Price includes</p>
+              <p className="text-marble-900 text-sm">
+                {order.inclusions.map((i) => i.type === "customNote" ? i.customText : inclusionLabel(i.type)).filter(Boolean).join(", ")}
+              </p>
+            </div>
+          ) : null}
+          {order.exclusions.length > 0 ? (
+            <div className="bg-marble-100/60 border border-marble-200 rounded p-3">
+              <p className="text-xs text-marble-700 uppercase tracking-wide font-semibold mb-1">Not included</p>
+              <p className="text-marble-900 text-sm">
+                {order.exclusions.map((e) => e.type === "customNote" ? e.customText : exclusionLabel(e.type)).filter(Boolean).join(", ")}
+              </p>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
 
       {/* Footer */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -147,6 +185,9 @@ export function InvoiceView({ order }: { order: FullOrder }) {
           {order.remarks ? <p className="mt-2 text-marble-900">{order.remarks}</p> : null}
           {order.balanceTerm ? (
             <p className="mt-2 text-marble-700">Balance terms: <span className="text-marble-900">{balanceTermLabels[order.balanceTerm]}</span></p>
+          ) : null}
+          {order.depositInstructions ? (
+            <p className="mt-2 text-marble-700 italic">Deposit: {order.depositInstructions}</p>
           ) : null}
         </div>
         <div className="border-l border-marble-200 pl-4">
@@ -176,7 +217,7 @@ export function DocumentTabs({
   basePath,
   active,
 }: {
-  basePath: string; // e.g. /admin/orders/abc-123 or /sales/orders/abc-123
+  basePath: string;
   active: "invoice" | "workorder" | "dailyworkorder" | "vendor";
 }) {
   const tabs: { key: typeof active; label: string }[] = [
