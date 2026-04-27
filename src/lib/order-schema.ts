@@ -5,8 +5,8 @@
 
 import { z } from "zod";
 import {
-  BalanceTerm, ExclusionType, InclusionType, LineCategory,
-  PricingMode, RoomName, UnitOfMeasure,
+  BalanceTerm, CarpetType, ExclusionType, InclusionType, InstallMethod,
+  LineCategory, MoldingType, FixtureType, PricingMode, RoomName, UnitOfMeasure,
 } from "@prisma/client";
 import { dollarsToCents } from "./money";
 
@@ -64,6 +64,15 @@ const optInt = z
     return Number.isFinite(n) ? n : null;
   });
 
+const optBool = z
+  .string()
+  .optional()
+  .transform((v) => {
+    if (v === "yes") return true;
+    if (v === "no") return false;
+    return null;
+  });
+
 // ---------- Sub-schemas ----------
 
 export const orderRoomInput = z.object({
@@ -83,7 +92,15 @@ export const orderLineItemInput = z.object({
   quantity: optFloat,
   unit:     z.nativeEnum(UnitOfMeasure).optional().nullable().transform((v) => v || null),
   unitPriceCents: optMoneyCents,
+  carpetType:       z.nativeEnum(CarpetType).optional().nullable().transform((v) => v || null),
+  pad:              optStr,
+  lineInstallMethod: z.nativeEnum(InstallMethod).optional().nullable().transform((v) => v || null),
   notes:    optStr,
+});
+
+export const orderMoldingInput = z.object({
+  type:     z.nativeEnum(MoldingType),
+  quantity: optStr,
 });
 
 export const orderInclusionInput = z.object({
@@ -147,6 +164,22 @@ export const orderInput = z.object({
   inclusions: z.array(orderInclusionInput).default([]),
   exclusions: z.array(orderExclusionInput).default([]),
 
+  // moldings (work-order internal)
+  moldingsRemoveReplace: z.boolean().default(false),
+  moldings: z.array(orderMoldingInput).default([]),
+
+  // fixtures (work-order internal)
+  fixtures: z.array(z.nativeEnum(FixtureType)).default([]),
+
+  // other instructions (work-order internal)
+  removeOldCarpetAndPad: optBool,
+  removeOldTagStrip:     optBool,
+  hasSteps:              optBool,
+  numSteps:              optInt,
+  newTackStripType:      optStr,
+  emptyHouse:            optBool,
+  heavyFurniture:        optBool,
+
   // pricing & money
   pricingMode: z.nativeEnum(PricingMode).default(PricingMode.itemized),
   taxPercent: z
@@ -164,7 +197,6 @@ export const orderInput = z.object({
     }),
   flatTotalCents: moneyString.optional().default(0),
   depositCents:   moneyString.default(0),
-  basedOn:        z.enum(["Square Yards", "Square Feet", "Total"]).optional().nullable().transform((v) => v || null),
   remarks:        optStr,
   balanceTerm:    z.nativeEnum(BalanceTerm).optional().nullable().transform((v) => v || null),
 });
@@ -173,5 +205,6 @@ export type OrderInput = z.input<typeof orderInput>;
 export type OrderInputParsed = z.output<typeof orderInput>;
 export type OrderRoomInputParsed = z.output<typeof orderRoomInput>;
 export type OrderLineItemInputParsed = z.output<typeof orderLineItemInput>;
+export type OrderMoldingInputParsed = z.output<typeof orderMoldingInput>;
 export type OrderInclusionInputParsed = z.output<typeof orderInclusionInput>;
 export type OrderExclusionInputParsed = z.output<typeof orderExclusionInput>;

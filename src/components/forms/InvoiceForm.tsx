@@ -2,7 +2,7 @@
 
 import { useActionState, useState } from "react";
 import Link from "next/link";
-import { ExclusionType, InclusionType, LineCategory, RoomName, UnitOfMeasure } from "@prisma/client";
+import { CarpetType, ExclusionType, InclusionType, InstallMethod, LineCategory, RoomName, UnitOfMeasure } from "@prisma/client";
 import { Field, inputCls, requiredInputCls, requiredSelectCls, selectCls } from "./Field";
 import { centsToDollarString } from "@/lib/money";
 import { ROOMS } from "@/lib/rooms";
@@ -10,13 +10,27 @@ import { LINE_CATEGORIES, lineCategoryLabel } from "@/lib/line-categories";
 import { UNITS } from "@/lib/units";
 import { INCLUSION_CHIPS, EXCLUSION_CHIPS } from "@/lib/inclusions";
 import {
-  emptyLineItem, type LineItemFormValue,
+  emptyLineItem, type LineItemFormValue, type MoldingsFormValue,
+  type FixturesFormValue, type OtherInstructionsFormValue,
   type OrderInitialValues, type ActionState,
   type SalespersonOption, type AdvSourceOption,
 } from "./InvoiceForm.shared";
 
 export type { OrderInitialValues, ActionState } from "./InvoiceForm.shared";
 export { emptyInitialValues, orderToInitial } from "./InvoiceForm.shared";
+
+const CARPET_TYPES: { value: CarpetType; label: string }[] = [
+  { value: CarpetType.plush, label: "Plush" },
+  { value: CarpetType.berber, label: "Berber" },
+  { value: CarpetType.glueDown, label: "Glue Down" },
+  { value: CarpetType.plushWP, label: "Plush W/P" },
+  { value: CarpetType.berberWP, label: "Berber W/P" },
+];
+
+const INSTALL_CATEGORIES = new Set<LineCategory>([
+  LineCategory.vinyl, LineCategory.wood, LineCategory.ceramic,
+  LineCategory.tile, LineCategory.stone,
+]);
 
 type Props = {
   initial: OrderInitialValues;
@@ -47,13 +61,16 @@ export function InvoiceForm({
   const [exclusions, setExclusions] = useState<Set<ExclusionType>>(new Set(initial.exclusions));
   const [inclusionNotes, setInclusionNotes] = useState<string[]>(initial.inclusionNotes);
   const [exclusionNotes, setExclusionNotes] = useState<string[]>(initial.exclusionNotes);
+  const [moldings, setMoldings] = useState<MoldingsFormValue>(initial.moldings);
+  const [fixtures, setFixtures] = useState<FixturesFormValue>(initial.fixtures);
+  const [otherInstr, setOtherInstr] = useState<OtherInstructionsFormValue>(initial.otherInstructions);
 
   const errs = state && !state.ok ? state.errors ?? {} : {};
   const fieldErr = (k: string) => errs[k];
 
   return (
     <form action={formAction} className="flex flex-col gap-6">
-      {/* Salesperson — sticky required first field */}
+      {/* Salesperson */}
       <div className="sticky top-0 z-10 bg-marble-50 -mx-4 sm:mx-0 px-4 sm:px-0 py-3 sm:py-0 sm:static border-b border-marble-200 sm:border-0">
         <Field label="Salesperson" htmlFor="salespersonId" required error={fieldErr("salespersonId")}>
           <select
@@ -169,16 +186,16 @@ export function InvoiceForm({
             </div>
             <Field label="Site contact name" htmlFor="siteContactName"><input id="siteContactName" name="siteContactName" defaultValue={initial.siteContactName} className={inputCls} /></Field>
             <Field label="Site contact phone" htmlFor="siteContactPhone"><input id="siteContactPhone" name="siteContactPhone" defaultValue={initial.siteContactPhone} className={inputCls} /></Field>
-            <Field label="Access instructions" htmlFor="accessInstructions" hint="e.g. Ask for Irwin, side gate, lockbox 1234" className="sm:col-span-2">
+            <Field label="Access instructions" htmlFor="accessInstructions" className="sm:col-span-2">
               <textarea id="accessInstructions" name="accessInstructions" rows={2} defaultValue={initial.accessInstructions} className={inputCls} />
             </Field>
           </div>
         ) : null}
       </fieldset>
 
-      {/* Section 3 — Rooms involved */}
+      {/* Section 3 — Area (formerly Rooms involved) */}
       <fieldset className="bg-marble-100 border border-marble-200 rounded-lg p-4">
-        <legend className="px-2 text-sm font-semibold text-brand-700">Rooms involved</legend>
+        <legend className="px-2 text-sm font-semibold text-brand-700">Area</legend>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           {ROOMS.map((spec) => {
             const value = rooms.find((r) => r.room === spec.value)!;
@@ -253,17 +270,162 @@ export function InvoiceForm({
         />
       </div>
 
-      {/* Section 6 — Remarks + Section 7 — Totals */}
+      {/* ─── INTERNAL SECTIONS — Work Order only, not printed on invoice ─── */}
+      <div className="rounded-lg border-2 border-dashed border-amber-300 bg-amber-50 p-1">
+        <p className="text-xs font-semibold text-amber-700 uppercase tracking-wide px-3 pt-2 pb-1">
+          Work Order — internal use only (not printed on invoice)
+        </p>
+
+        {/* Moldings */}
+        <fieldset className="bg-white border border-amber-200 rounded-lg p-4 m-2">
+          <legend className="px-2 text-sm font-semibold text-amber-800">Moldings</legend>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2">
+            <div className="flex flex-col gap-2">
+              <MoldCheckbox
+                name="moldingsRemoveReplace" label="Remove and replace existing"
+                checked={moldings.removeReplace}
+                onChange={(v) => setMoldings((m) => ({ ...m, removeReplace: v }))}
+              />
+              <MoldCheckbox
+                name="mold_baseShoe" label="Base Shoes"
+                checked={moldings.baseShoe}
+                onChange={(v) => setMoldings((m) => ({ ...m, baseShoe: v }))}
+              />
+              <MoldCheckbox
+                name="mold_baseboard" label="Baseboard"
+                checked={moldings.baseboard}
+                onChange={(v) => setMoldings((m) => ({ ...m, baseboard: v }))}
+              />
+              <MoldCheckbox
+                name="mold_rubberCover4in" label='4" Rubber Cover'
+                checked={moldings.rubberCover4in}
+                onChange={(v) => setMoldings((m) => ({ ...m, rubberCover4in: v }))}
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-x-4 gap-y-1">
+              {([
+                ["mold_quarterRound", "1/4 Round", "quarterRound"],
+                ["mold_wallBase", "Wall Base", "wallBase"],
+                ["mold_filmOnly", "Film Only", "filmOnly"],
+                ["mold_filmAndFoam", "Film & Foam", "filmAndFoam"],
+                ["mold_endMolding", "End Molding", "endMolding"],
+                ["mold_stairNosing", "Stair Nosing", "stairNosing"],
+                ["mold_tMolding", "T-Molding", "tMolding"],
+                ["mold_reducer", "Reducer", "reducer"],
+              ] as [string, string, keyof MoldingsFormValue][]).map(([name, label, key]) => (
+                <div key={name} className="flex items-center gap-1">
+                  <label className="text-xs text-marble-700 w-24 shrink-0">{label}</label>
+                  <input
+                    type="text"
+                    name={name}
+                    value={moldings[key] as string}
+                    onChange={(e) => setMoldings((m) => ({ ...m, [key]: e.target.value }))}
+                    placeholder="LF"
+                    className="w-16 bg-marble-50 border border-marble-200 rounded px-2 py-0.5 text-xs"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </fieldset>
+
+        {/* Fixtures */}
+        <fieldset className="bg-white border border-amber-200 rounded-lg p-4 m-2">
+          <legend className="px-2 text-sm font-semibold text-amber-800">Fixtures</legend>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            {([
+              ["fix_stove", "Stove", "stove"],
+              ["fix_fridge", "Ref", "fridge"],
+              ["fix_washer", "Washer", "washer"],
+              ["fix_dryer", "Dryer", "dryer"],
+              ["fix_waterbed", "Waterbed", "waterbed"],
+              ["fix_piano", "Piano", "piano"],
+              ["fix_organ", "Organ", "organ"],
+              ["fix_tablesChairs", "Tables & Chairs", "tablesChairs"],
+            ] as [string, string, keyof FixturesFormValue][]).map(([name, label, key]) => (
+              <label key={name} className="flex items-center gap-2 text-sm text-marble-900 bg-marble-50 border border-marble-200 rounded p-2">
+                <input
+                  type="checkbox"
+                  name={name}
+                  checked={fixtures[key] as boolean}
+                  onChange={(e) => setFixtures((f) => ({ ...f, [key]: e.target.checked }))}
+                  className="rounded border-marble-300"
+                />
+                {label}
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        {/* Other Instructions */}
+        <fieldset className="bg-white border border-amber-200 rounded-lg p-4 m-2">
+          <legend className="px-2 text-sm font-semibold text-amber-800">Other Instructions</legend>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <YesNoField
+              label="Remove Old Carpet & Pad"
+              name="oi_removeOldCarpetAndPad"
+              value={otherInstr.removeOldCarpetAndPad}
+              onChange={(v) => setOtherInstr((o) => ({ ...o, removeOldCarpetAndPad: v as "" | "yes" | "no" }))}
+            />
+            <YesNoField
+              label="Remove Old Tack Strip"
+              name="oi_removeOldTagStrip"
+              value={otherInstr.removeOldTagStrip}
+              onChange={(v) => setOtherInstr((o) => ({ ...o, removeOldTagStrip: v as "" | "yes" | "no" }))}
+            />
+            <div className="flex items-end gap-3">
+              <YesNoField
+                label="Steps"
+                name="oi_hasSteps"
+                value={otherInstr.hasSteps}
+                onChange={(v) => setOtherInstr((o) => ({ ...o, hasSteps: v as "" | "yes" | "no" }))}
+              />
+              {otherInstr.hasSteps === "yes" ? (
+                <div className="flex items-center gap-1 pb-1">
+                  <label className="text-xs text-marble-700 whitespace-nowrap"># steps</label>
+                  <input
+                    type="number"
+                    name="oi_numSteps"
+                    value={otherInstr.numSteps}
+                    onChange={(e) => setOtherInstr((o) => ({ ...o, numSteps: e.target.value }))}
+                    min={1}
+                    className="w-16 bg-marble-50 border border-marble-200 rounded px-2 py-1 text-xs"
+                  />
+                </div>
+              ) : null}
+            </div>
+            <div>
+              <label className="block text-xs text-marble-700 mb-1">New Tack Strip</label>
+              <select
+                name="oi_newTackStripType"
+                value={otherInstr.newTackStripType}
+                onChange={(e) => setOtherInstr((o) => ({ ...o, newTackStripType: e.target.value as "" | "wood" | "concrete" }))}
+                className="bg-marble-50 border border-marble-200 rounded px-2 py-1 text-sm text-marble-900"
+              >
+                <option value="">—</option>
+                <option value="wood">Wood</option>
+                <option value="concrete">Concrete</option>
+              </select>
+            </div>
+            <YesNoField
+              label="Empty House"
+              name="oi_emptyHouse"
+              value={otherInstr.emptyHouse}
+              onChange={(v) => setOtherInstr((o) => ({ ...o, emptyHouse: v as "" | "yes" | "no" }))}
+            />
+            <YesNoField
+              label="Heavy Furniture"
+              name="oi_heavyFurniture"
+              value={otherInstr.heavyFurniture}
+              onChange={(v) => setOtherInstr((o) => ({ ...o, heavyFurniture: v as "" | "yes" | "no" }))}
+            />
+          </div>
+        </fieldset>
+      </div>
+
+      {/* Section 6 — Remarks + Totals */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="lg:col-span-2 bg-marble-100 border border-marble-200 rounded-lg p-4 flex flex-col gap-4">
-          <Field label="Based on" htmlFor="basedOn" hint="Square Yards / Square Feet / Total — subject to measurement">
-            <select id="basedOn" name="basedOn" defaultValue={initial.basedOn} className={selectCls}>
-              <option value="">—</option>
-              <option value="Square Yards">Square Yards</option>
-              <option value="Square Feet">Square Feet</option>
-              <option value="Total">Total</option>
-            </select>
-          </Field>
           <Field label="Remarks" htmlFor="remarks">
             <textarea id="remarks" name="remarks" rows={4} defaultValue={initial.remarks} className={inputCls} />
           </Field>
@@ -291,10 +453,53 @@ export function InvoiceForm({
 
 // ---------- Sub-components ----------
 
+function MoldCheckbox({ name, label, checked, onChange }: {
+  name: string; label: string; checked: boolean; onChange: (v: boolean) => void;
+}) {
+  return (
+    <label className="flex items-center gap-2 text-sm text-marble-900">
+      <input
+        type="checkbox"
+        name={name}
+        checked={checked}
+        onChange={(e) => onChange(e.target.checked)}
+        className="rounded border-marble-300"
+      />
+      {label}
+    </label>
+  );
+}
+
+function YesNoField({ label, name, value, onChange }: {
+  label: string; name: string; value: string; onChange: (v: string) => void;
+}) {
+  return (
+    <div>
+      <label className="block text-xs text-marble-700 mb-1">{label}</label>
+      <div className="flex gap-3">
+        {(["yes", "no"] as const).map((opt) => (
+          <label key={opt} className="flex items-center gap-1 text-sm text-marble-900 cursor-pointer">
+            <input
+              type="radio"
+              name={name}
+              value={opt}
+              checked={value === opt}
+              onChange={() => onChange(opt)}
+              className="accent-brand-700"
+            />
+            {opt.charAt(0).toUpperCase() + opt.slice(1)}
+          </label>
+        ))}
+        {value ? (
+          <button type="button" onClick={() => onChange("")} className="text-xs text-marble-500 hover:text-marble-700">clear</button>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
 function RoomCheckbox({
-  spec,
-  value,
-  onChange,
+  spec, value, onChange,
 }: {
   spec: { value: RoomName; label: string; countable: boolean };
   value: { room: RoomName; on: boolean; quantity: string; notes: string };
@@ -347,18 +552,12 @@ function RoomCheckbox({
   );
 }
 
-/** Format a money string in accounting style: "1234.5" → "1,234.50". Empty
- *  / non-numeric strings pass through unchanged so the user can still
- *  delete + retype. */
 function formatAccounting(raw: string): string {
   const cleaned = raw.replace(/[$,\s]/g, "");
   if (!cleaned) return "";
   const n = Number(cleaned);
   if (!Number.isFinite(n)) return raw;
-  return n.toLocaleString("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
+  return n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 function LineItemRow({
@@ -371,22 +570,24 @@ function LineItemRow({
 }) {
   const cellInput = "w-full bg-white border border-marble-200 rounded px-2 py-1 text-marble-900 text-xs focus:outline-none focus:ring-1 focus:ring-brand-700";
 
-  // Live line total. Quantity is a unit count; price is in dollars (user-typed).
-  // centsToDollarString takes cents, so multiply by 100 once at the end.
   const qty = Number((value.quantity || "0").replace(/[,\s]/g, ""));
   const price = Number((value.unitPriceCents || "0").replace(/[$,\s]/g, ""));
   const lineTotalCents =
     Number.isFinite(qty) && Number.isFinite(price) ? Math.round(qty * price * 100) : 0;
 
+  const isCarpet = value.category === LineCategory.carpet;
+  const hasInstallMethod = value.category ? INSTALL_CATEGORIES.has(value.category as LineCategory) : false;
+
   return (
     <div className="border-t border-marble-200 first:border-t-0 py-3">
+      {/* Main row */}
       <div className="grid grid-cols-12 gap-2 items-end">
         <div className="col-span-12 sm:col-span-2">
           <label className="block text-xs text-marble-700 mb-1">Category</label>
           <select
             name={`li_${index}_category`}
             value={value.category}
-            onChange={(e) => onChange({ ...value, category: e.target.value as LineCategory })}
+            onChange={(e) => onChange({ ...value, category: e.target.value as LineCategory, carpetType: "", pad: "", lineInstallMethod: "" })}
             className={cellInput}
           >
             <option value="">—</option>
@@ -394,7 +595,7 @@ function LineItemRow({
           </select>
         </div>
         <div className="col-span-6 sm:col-span-2">
-          <label className="block text-xs text-marble-700 mb-1">Brand</label>
+          <label className="block text-xs text-marble-700 mb-1">{isCarpet ? "Mill" : "Brand"}</label>
           <input type="text" name={`li_${index}_brand`} value={value.brand} onChange={(e) => onChange({ ...value, brand: e.target.value })} className={cellInput} />
         </div>
         <div className="col-span-6 sm:col-span-2">
@@ -410,7 +611,7 @@ function LineItemRow({
           <input type="text" name={`li_${index}_sizeSpec`} value={value.sizeSpec} onChange={(e) => onChange({ ...value, sizeSpec: e.target.value })} className={cellInput} />
         </div>
         <div className="col-span-3 sm:col-span-1">
-          <label className="block text-xs text-marble-700 mb-1">SKU</label>
+          <label className="block text-xs text-marble-700 mb-1">{isCarpet ? "Ref #" : "SKU"}</label>
           <input type="text" name={`li_${index}_sku`} value={value.sku} onChange={(e) => onChange({ ...value, sku: e.target.value })} className={cellInput} />
         </div>
         <div className="col-span-2 sm:col-span-1">
@@ -427,8 +628,7 @@ function LineItemRow({
         <div className="col-span-3 sm:col-span-1">
           <label className="block text-xs text-marble-700 mb-1">Unit $</label>
           <input
-            type="text"
-            inputMode="decimal"
+            type="text" inputMode="decimal"
             name={`li_${index}_unitPriceCents`}
             value={value.unitPriceCents}
             onChange={(e) => onChange({ ...value, unitPriceCents: e.target.value })}
@@ -452,6 +652,66 @@ function LineItemRow({
           </button>
         </div>
       </div>
+
+      {/* Category-specific extras row */}
+      {(isCarpet || hasInstallMethod) ? (
+        <div className="mt-2 flex flex-wrap gap-4 pl-1">
+          {isCarpet ? (
+            <>
+              <div className="flex items-center gap-1">
+                <label className="text-xs text-marble-700 whitespace-nowrap">Type</label>
+                <select
+                  name={`li_${index}_carpetType`}
+                  value={value.carpetType}
+                  onChange={(e) => onChange({ ...value, carpetType: e.target.value as CarpetType })}
+                  className="bg-white border border-marble-200 rounded px-2 py-1 text-xs text-marble-900 focus:outline-none focus:ring-1 focus:ring-brand-700"
+                >
+                  <option value="">— Type —</option>
+                  {CARPET_TYPES.map((t) => (<option key={t.value} value={t.value}>{t.label}</option>))}
+                </select>
+              </div>
+              <div className="flex items-center gap-1">
+                <label className="text-xs text-marble-700 whitespace-nowrap">Pad</label>
+                <input
+                  type="text"
+                  name={`li_${index}_pad`}
+                  value={value.pad}
+                  onChange={(e) => onChange({ ...value, pad: e.target.value })}
+                  placeholder="Pad spec"
+                  className="bg-white border border-marble-200 rounded px-2 py-1 text-xs text-marble-900 w-36 focus:outline-none focus:ring-1 focus:ring-brand-700"
+                />
+              </div>
+            </>
+          ) : null}
+          {hasInstallMethod ? (
+            <div className="flex items-center gap-1">
+              <label className="text-xs text-marble-700 whitespace-nowrap">Install Method</label>
+              <select
+                name={`li_${index}_lineInstallMethod`}
+                value={value.lineInstallMethod}
+                onChange={(e) => onChange({ ...value, lineInstallMethod: e.target.value as InstallMethod })}
+                className="bg-white border border-marble-200 rounded px-2 py-1 text-xs text-marble-900 focus:outline-none focus:ring-1 focus:ring-brand-700"
+              >
+                <option value="">— Method —</option>
+                <option value="glueDown">Glue Down</option>
+                <option value="nailDown">Nail Down</option>
+                <option value="click">Click</option>
+              </select>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+
+      {/* Hidden fields for category-specific extras (ensure they submit even when empty) */}
+      {!isCarpet ? (
+        <>
+          <input type="hidden" name={`li_${index}_carpetType`} value="" />
+          <input type="hidden" name={`li_${index}_pad`} value="" />
+        </>
+      ) : null}
+      {!hasInstallMethod ? (
+        <input type="hidden" name={`li_${index}_lineInstallMethod`} value="" />
+      ) : null}
     </div>
   );
 }
@@ -551,14 +811,9 @@ function Totals({
       <div className="grid grid-cols-2 gap-3 items-end">
         <Field label="Tax %" htmlFor="taxPercent" hint="Default 7.75%">
           <input
-            id="taxPercent"
-            name="taxPercent"
-            type="text"
-            inputMode="decimal"
-            value={taxPercent}
-            onChange={(e) => setTaxPercent(e.target.value)}
-            placeholder="7.75"
-            className={`${inputCls} text-right tabular-money`}
+            id="taxPercent" name="taxPercent" type="text" inputMode="decimal"
+            value={taxPercent} onChange={(e) => setTaxPercent(e.target.value)}
+            placeholder="7.75" className={`${inputCls} text-right tabular-money`}
           />
         </Field>
         <div className="pb-2">
@@ -569,15 +824,10 @@ function Totals({
       <Row label="Total" value={centsToDollarString(totalCents)} bold />
       <Field label="Deposit ($)" htmlFor="depositCents">
         <input
-          id="depositCents"
-          name="depositCents"
-          type="text"
-          inputMode="decimal"
-          value={deposit}
-          onChange={(e) => setDeposit(e.target.value)}
+          id="depositCents" name="depositCents" type="text" inputMode="decimal"
+          value={deposit} onChange={(e) => setDeposit(e.target.value)}
           onBlur={(e) => setDeposit(formatAccounting(e.target.value))}
-          placeholder="0.00"
-          className={`${inputCls} text-right tabular-money`}
+          placeholder="0.00" className={`${inputCls} text-right tabular-money`}
         />
       </Field>
       <Row label="Balance" value={centsToDollarString(balanceCents)} bold />

@@ -6,8 +6,11 @@
 //   - Line items: `li_<i>_<field>` (i = 0..N-1)
 //   - Inclusions: `inc_<InclusionType>` (chip), `inc_custom_<i>` (custom-note text)
 //   - Exclusions: `exc_<ExclusionType>` (chip), `exc_custom_<i>` (custom-note text)
+//   - Moldings:   `mold_<MoldingType>` (checkbox or text for quantity types)
+//   - Fixtures:   `fix_<FixtureType>` (checkbox)
+//   - Other inst: `oi_<field>` (select: yes/no/"")
 
-import { ExclusionType, InclusionType, RoomName } from "@prisma/client";
+import { ExclusionType, FixtureType, InclusionType, MoldingType, RoomName } from "@prisma/client";
 import { orderInput, type OrderInputParsed } from "./order-schema";
 
 function bool(formData: FormData, key: string): boolean {
@@ -29,6 +32,37 @@ function getCustomNotes(formData: FormData, prefix: string): string[] {
   return notes;
 }
 
+// Molding types that are checkboxes (present = checked)
+const MOLDING_CHECKBOXES: MoldingType[] = [
+  MoldingType.baseShoe,
+  MoldingType.baseboard,
+  MoldingType.rubberCover4in,
+];
+
+// Molding types that are text fields (value = quantity/LF)
+const MOLDING_QUANTITIES: MoldingType[] = [
+  MoldingType.quarterRound,
+  MoldingType.wallBase,
+  MoldingType.filmOnly,
+  MoldingType.filmAndFoam,
+  MoldingType.endMolding,
+  MoldingType.stairNosing,
+  MoldingType.tMolding,
+  MoldingType.reducer,
+];
+
+// Fixtures shown in the form
+const FIXTURE_CHECKBOXES: FixtureType[] = [
+  FixtureType.stove,
+  FixtureType.fridge,
+  FixtureType.washer,
+  FixtureType.dryer,
+  FixtureType.waterbed,
+  FixtureType.piano,
+  FixtureType.organ,
+  FixtureType.tablesChairs,
+];
+
 export function parseOrderForm(formData: FormData):
   | { ok: true; data: OrderInputParsed }
   | { ok: false; errors: Record<string, string>; message?: string } {
@@ -42,13 +76,11 @@ export function parseOrderForm(formData: FormData):
     }));
 
   // --- line items ---
-  // The form sends `li_count` so we know how many rows there are. Empty rows
-  // (no category change + nothing typed) are dropped before validation.
   const liCount = Number(s(formData, "li_count")) || 0;
   const lineItems = [];
   for (let i = 0; i < liCount; i++) {
     const category = s(formData, `li_${i}_category`);
-    if (!category) continue; // empty row
+    if (!category) continue;
     const brand    = s(formData, `li_${i}_brand`);
     const style    = s(formData, `li_${i}_style`);
     const color    = s(formData, `li_${i}_color`);
@@ -57,8 +89,10 @@ export function parseOrderForm(formData: FormData):
     const quantity = s(formData, `li_${i}_quantity`);
     const unit     = s(formData, `li_${i}_unit`);
     const unitPrice = s(formData, `li_${i}_unitPriceCents`);
+    const carpetType = s(formData, `li_${i}_carpetType`);
+    const pad      = s(formData, `li_${i}_pad`);
+    const lineInstallMethod = s(formData, `li_${i}_lineInstallMethod`);
     const notes    = s(formData, `li_${i}_notes`);
-    // Drop wholly-blank rows
     if (!brand && !style && !color && !sizeSpec && !sku && !quantity && !unitPrice && !notes) continue;
     lineItems.push({
       position: i,
@@ -67,6 +101,9 @@ export function parseOrderForm(formData: FormData):
       quantity,
       unit: unit || null,
       unitPriceCents: unitPrice,
+      carpetType: carpetType || null,
+      pad: pad || null,
+      lineInstallMethod: lineInstallMethod || null,
       notes,
     });
   }
@@ -92,6 +129,28 @@ export function parseOrderForm(formData: FormData):
   }
   for (const note of getCustomNotes(formData, "exc_custom_")) {
     exclusions.push({ type: ExclusionType.customNote, customText: note });
+  }
+
+  // --- moldings ---
+  const moldings: Array<{ type: MoldingType; quantity: string | null }> = [];
+  for (const t of MOLDING_CHECKBOXES) {
+    if (bool(formData, `mold_${t}`)) {
+      moldings.push({ type: t, quantity: null });
+    }
+  }
+  for (const t of MOLDING_QUANTITIES) {
+    const qty = s(formData, `mold_${t}`).trim();
+    if (qty) {
+      moldings.push({ type: t, quantity: qty });
+    }
+  }
+
+  // --- fixtures ---
+  const fixtures: FixtureType[] = [];
+  for (const t of FIXTURE_CHECKBOXES) {
+    if (bool(formData, `fix_${t}`)) {
+      fixtures.push(t);
+    }
   }
 
   const raw = {
@@ -129,11 +188,20 @@ export function parseOrderForm(formData: FormData):
     lineItems,
     inclusions,
     exclusions,
+    moldingsRemoveReplace: bool(formData, "moldingsRemoveReplace"),
+    moldings,
+    fixtures,
+    removeOldCarpetAndPad: s(formData, "oi_removeOldCarpetAndPad") || undefined,
+    removeOldTagStrip:     s(formData, "oi_removeOldTagStrip") || undefined,
+    hasSteps:              s(formData, "oi_hasSteps") || undefined,
+    numSteps:              s(formData, "oi_numSteps") || undefined,
+    newTackStripType:      s(formData, "oi_newTackStripType") || undefined,
+    emptyHouse:            s(formData, "oi_emptyHouse") || undefined,
+    heavyFurniture:        s(formData, "oi_heavyFurniture") || undefined,
     pricingMode:    s(formData, "pricingMode") || "itemized",
     taxPercent:     s(formData, "taxPercent"),
     flatTotalCents: s(formData, "flatTotalCents") || "0",
     depositCents:   s(formData, "depositCents") || "0",
-    basedOn:        s(formData, "basedOn") || null,
     remarks:        s(formData, "remarks") || null,
     balanceTerm:    s(formData, "balanceTerm") || null,
   };
@@ -148,17 +216,14 @@ export function parseOrderForm(formData: FormData):
     return { ok: false, errors, message: "Please fix the highlighted fields." };
   }
 
-  // Application-level validation that doesn't fit cleanly in Zod:
-  // require at least one room OR one line item.
   if (parsed.data.rooms.length === 0 && parsed.data.lineItems.length === 0) {
     return {
       ok: false,
-      errors: { _root: "Add at least one room or one line item." },
-      message: "An order needs at least one room or one line item.",
+      errors: { _root: "Add at least one area or one line item." },
+      message: "An order needs at least one area or one line item.",
     };
   }
 
-  // Itemized mode: every line with quantity must have unitPriceCents and vice-versa.
   if (parsed.data.pricingMode === "itemized") {
     const bad: Record<string, string> = {};
     parsed.data.lineItems.forEach((li, i) => {

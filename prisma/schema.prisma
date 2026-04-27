@@ -101,6 +101,14 @@ enum InstallMethod {
   other
 }
 
+enum CarpetType {
+  plush
+  berber
+  glueDown
+  plushWP
+  berberWP
+}
+
 enum PricingMode {
   itemized   // total = sum(lineItems) + tax. Lines must have unit prices.
   flatTotal  // salesperson types totalCents directly. Lines are reference-only.
@@ -177,8 +185,9 @@ model Order {
   heavyFurniture        Boolean?
   heavyFurnitureType    String?
 
-  installMethod       InstallMethod?
-  specialInstructions String?
+  installMethod         InstallMethod?
+  specialInstructions   String?
+  moldingsRemoveReplace Boolean        @default(false)
 
   // Children
   rooms        OrderRoom[]
@@ -285,6 +294,11 @@ model OrderLineItem {
   unit           UnitOfMeasure?
   unitPriceCents Int?
   lineTotalCents Int?
+
+  // Category-specific detail fields
+  carpetType        CarpetType?
+  pad               String?
+  lineInstallMethod InstallMethod?
 
   notes String?
 
@@ -395,6 +409,7 @@ enum FixtureType {
   waterbed
   piano
   organ
+  tablesChairs
   stool
   other
 }

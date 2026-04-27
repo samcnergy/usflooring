@@ -202,16 +202,9 @@ export function InvoicePDF({
           ))}
         </View>
 
-        {/* Based-on / Remarks + Totals */}
+        {/* Remarks + Totals */}
         <View style={[styles.twoCol, { marginTop: 8 }]}>
           <View style={styles.col}>
-            <Text>
-              Based on{" "}
-              <Text style={{ fontFamily: "Helvetica-Bold" }}>
-                {order.basedOn ?? "_______________"}
-              </Text>{" "}
-              — Square Yards / Square Feet / Total — Subject to measurement
-            </Text>
             {order.remarks ? <Text style={{ marginTop: 4 }}>Remarks: {order.remarks}</Text> : null}
             {order.depositInstructions ? <Text style={{ marginTop: 4, fontStyle: "italic" }}>Deposit: {order.depositInstructions}</Text> : null}
           </View>

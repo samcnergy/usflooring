@@ -23,7 +23,6 @@ function computeTotals(input: OrderInputParsed) {
     const balanceCents = totalCents - (input.depositCents ?? 0);
     return { subtotalCents, taxCents, totalCents, balanceCents };
   }
-  // flatTotal: salesperson types totalCents directly. Subtotal = total - tax.
   const totalCents = input.flatTotalCents ?? 0;
   const taxCents = Math.round((totalCents * input.taxPercent) / (100 + input.taxPercent));
   const subtotalCents = totalCents - taxCents;
@@ -89,14 +88,31 @@ function lineItemCreateData(input: OrderInputParsed) {
       li.quantity != null && li.unitPriceCents != null
         ? Math.round(li.quantity * li.unitPriceCents)
         : null,
+    carpetType: li.carpetType,
+    pad: li.pad,
+    lineInstallMethod: li.lineInstallMethod,
     notes: li.notes,
   }));
+}
+
+function orderInstructionFields(input: OrderInputParsed) {
+  return {
+    moldingsRemoveReplace: input.moldingsRemoveReplace,
+    removeOldCarpetAndPad: input.removeOldCarpetAndPad ?? null,
+    removeOldTagStrip:     input.removeOldTagStrip ?? null,
+    hasSteps:              input.hasSteps ?? null,
+    numSteps:              input.numSteps ?? null,
+    newTackStripType:      input.newTackStripType ?? null,
+    emptyHouse:            input.emptyHouse ?? null,
+    heavyFurniture:        input.heavyFurniture ?? null,
+  };
 }
 
 export async function createOrder(input: OrderInputParsed) {
   const totals = computeTotals(input);
   const ship = shipFields(input);
   const site = jobSiteFields(input);
+  const instructions = orderInstructionFields(input);
 
   const order = await prisma.$transaction(async (tx) => {
     const invoiceNumber = await nextInvoiceNumber(tx);
@@ -131,10 +147,10 @@ export async function createOrder(input: OrderInputParsed) {
         subtotalCents: totals.subtotalCents,
         totalCents: totals.totalCents,
         balanceCents: totals.balanceCents,
-        basedOn:     input.basedOn,
         remarks:     input.remarks,
         balanceTerm: input.balanceTerm,
         ...site,
+        ...instructions,
         siteContactName:     input.siteContactName,
         siteContactPhone:    input.siteContactPhone,
         accessInstructions:  input.accessInstructions,
@@ -161,14 +177,21 @@ export async function createOrder(input: OrderInputParsed) {
             customText: exc.customText,
           })),
         },
+        moldings: {
+          create: input.moldings.map((m) => ({
+            type: m.type,
+            quantity: m.quantity,
+          })),
+        },
+        fixtures: {
+          create: input.fixtures.map((f) => ({ type: f })),
+        },
       },
     });
 
     return created;
   });
 
-  // Phase 2 plumbing: feed MaterialSuggestion. Outside the transaction —
-  // failures here never roll back the order.
   await ingestSuggestions({
     lineItems: input.lineItems.map((li) => ({
       category: li.category,
@@ -188,6 +211,7 @@ export async function updateOrder(id: string, input: OrderInputParsed) {
   const totals = computeTotals(input);
   const ship = shipFields(input);
   const site = jobSiteFields(input);
+  const instructions = orderInstructionFields(input);
 
   const order = await prisma.$transaction(async (tx) => {
     const existing = await tx.order.findUniqueOrThrow({ where: { id } });
@@ -209,11 +233,12 @@ export async function updateOrder(id: string, input: OrderInputParsed) {
       },
     });
 
-    // Replace children entirely (simpler than diffing in v1).
     await tx.orderRoom.deleteMany({ where: { orderId: id } });
     await tx.orderLineItem.deleteMany({ where: { orderId: id } });
     await tx.orderInclusion.deleteMany({ where: { orderId: id } });
     await tx.orderExclusion.deleteMany({ where: { orderId: id } });
+    await tx.orderMolding.deleteMany({ where: { orderId: id } });
+    await tx.orderFixture.deleteMany({ where: { orderId: id } });
 
     const updated = await tx.order.update({
       where: { id },
@@ -228,10 +253,10 @@ export async function updateOrder(id: string, input: OrderInputParsed) {
         subtotalCents: totals.subtotalCents,
         totalCents: totals.totalCents,
         balanceCents: totals.balanceCents,
-        basedOn:     input.basedOn,
         remarks:     input.remarks,
         balanceTerm: input.balanceTerm,
         ...site,
+        ...instructions,
         siteContactName:     input.siteContactName,
         siteContactPhone:    input.siteContactPhone,
         accessInstructions:  input.accessInstructions,
@@ -257,6 +282,15 @@ export async function updateOrder(id: string, input: OrderInputParsed) {
             type: exc.type,
             customText: exc.customText,
           })),
+        },
+        moldings: {
+          create: input.moldings.map((m) => ({
+            type: m.type,
+            quantity: m.quantity,
+          })),
+        },
+        fixtures: {
+          create: input.fixtures.map((f) => ({ type: f })),
         },
       },
     });
@@ -339,6 +373,8 @@ export async function getOrder(id: string) {
       lineItems: { orderBy: { position: "asc" } },
       inclusions: { orderBy: { id: "asc" } },
       exclusions: { orderBy: { id: "asc" } },
+      moldings: { orderBy: { id: "asc" } },
+      fixtures: { orderBy: { id: "asc" } },
     },
   });
 }

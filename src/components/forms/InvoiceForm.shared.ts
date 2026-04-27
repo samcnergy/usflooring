@@ -3,8 +3,8 @@
 // imports + re-exports them.
 
 import {
-  ExclusionType, InclusionType, LineCategory, PricingMode,
-  RoomName, UnitOfMeasure,
+  CarpetType, ExclusionType, InclusionType, InstallMethod,
+  LineCategory, PricingMode, RoomName, UnitOfMeasure,
 } from "@prisma/client";
 
 export type SalespersonOption = { id: string; fullName: string };
@@ -18,7 +18,6 @@ export type RoomFormValue = {
 };
 
 export type LineItemFormValue = {
-  // Stable client-side key for React; not persisted.
   key: string;
   category: LineCategory | "";
   brand: string;
@@ -29,7 +28,46 @@ export type LineItemFormValue = {
   quantity: string;
   unit: UnitOfMeasure | "";
   unitPriceCents: string;
+  carpetType: CarpetType | "";
+  pad: string;
+  lineInstallMethod: InstallMethod | "";
   notes: string;
+};
+
+export type MoldingsFormValue = {
+  removeReplace: boolean;
+  baseShoe: boolean;
+  baseboard: boolean;
+  rubberCover4in: boolean;
+  quarterRound: string;
+  wallBase: string;
+  filmOnly: string;
+  filmAndFoam: string;
+  endMolding: string;
+  stairNosing: string;
+  tMolding: string;
+  reducer: string;
+};
+
+export type FixturesFormValue = {
+  stove: boolean;
+  fridge: boolean;
+  washer: boolean;
+  dryer: boolean;
+  waterbed: boolean;
+  piano: boolean;
+  organ: boolean;
+  tablesChairs: boolean;
+};
+
+export type OtherInstructionsFormValue = {
+  removeOldCarpetAndPad: "" | "yes" | "no";
+  removeOldTagStrip: "" | "yes" | "no";
+  hasSteps: "" | "yes" | "no";
+  numSteps: string;
+  newTackStripType: "" | "wood" | "concrete";
+  emptyHouse: "" | "yes" | "no";
+  heavyFurniture: "" | "yes" | "no";
 };
 
 export type OrderInitialValues = {
@@ -38,7 +76,7 @@ export type OrderInitialValues = {
 
   salespersonId: string;
   advertisingSourceId: string | null;
-  dateOfSale: string;          // yyyy-mm-dd
+  dateOfSale: string;
 
   // sold-to
   firstName: string;
@@ -76,17 +114,21 @@ export type OrderInitialValues = {
   // children
   rooms: RoomFormValue[];
   lineItems: LineItemFormValue[];
-  inclusions: InclusionType[];          // chips
-  inclusionNotes: string[];             // custom notes
+  inclusions: InclusionType[];
+  inclusionNotes: string[];
   exclusions: ExclusionType[];
   exclusionNotes: string[];
+
+  // work-order internal sections
+  moldings: MoldingsFormValue;
+  fixtures: FixturesFormValue;
+  otherInstructions: OtherInstructionsFormValue;
 
   // money + pricing
   pricingMode: PricingMode;
   taxPercent: string;
   flatTotalCents: string;
   depositCents: string;
-  basedOn: string;
   remarks: string;
   balanceTerm: "" | "cash" | "cod" | "finance";
 };
@@ -95,6 +137,29 @@ export type ActionState =
   | { ok: true; orderId: string }
   | { ok: false; errors?: Record<string, string>; message?: string }
   | null;
+
+function emptyMoldings(): MoldingsFormValue {
+  return {
+    removeReplace: false, baseShoe: false, baseboard: false, rubberCover4in: false,
+    quarterRound: "", wallBase: "", filmOnly: "", filmAndFoam: "",
+    endMolding: "", stairNosing: "", tMolding: "", reducer: "",
+  };
+}
+
+function emptyFixtures(): FixturesFormValue {
+  return {
+    stove: false, fridge: false, washer: false, dryer: false,
+    waterbed: false, piano: false, organ: false, tablesChairs: false,
+  };
+}
+
+function emptyOtherInstructions(): OtherInstructionsFormValue {
+  return {
+    removeOldCarpetAndPad: "", removeOldTagStrip: "",
+    hasSteps: "", numSteps: "",
+    newTackStripType: "", emptyHouse: "", heavyFurniture: "",
+  };
+}
 
 export const emptyInitialValues = (defaultSalespersonId: string): OrderInitialValues => ({
   salespersonId: defaultSalespersonId,
@@ -118,11 +183,13 @@ export const emptyInitialValues = (defaultSalespersonId: string): OrderInitialVa
   inclusionNotes: [],
   exclusions: [],
   exclusionNotes: [],
+  moldings: emptyMoldings(),
+  fixtures: emptyFixtures(),
+  otherInstructions: emptyOtherInstructions(),
   pricingMode: PricingMode.itemized,
   taxPercent: "7.75",
   flatTotalCents: "",
   depositCents: "",
-  basedOn: "",
   remarks: "",
   balanceTerm: "",
 });
@@ -134,6 +201,7 @@ export function emptyLineItem(): LineItemFormValue {
     brand: "", style: "", color: "", sizeSpec: "", sku: "",
     quantity: "", unit: "",
     unitPriceCents: "",
+    carpetType: "", pad: "", lineInstallMethod: "",
     notes: "",
   };
 }
@@ -147,6 +215,8 @@ function cryptoRandomKey(): string {
 
 const moneyToInput = (cents: number | null | undefined) => (cents ? (cents / 100).toFixed(2) : "");
 const numToInput = (n: number | null | undefined) => (n != null ? String(n) : "");
+const boolToYesNo = (v: boolean | null | undefined): "" | "yes" | "no" =>
+  v === true ? "yes" : v === false ? "no" : "";
 
 export function orderToInitial(order: {
   id: string;
@@ -158,7 +228,6 @@ export function orderToInitial(order: {
   taxPercent: number;
   totalCents: number;
   depositCents: number;
-  basedOn: string | null;
   remarks: string | null;
   balanceTerm: "cash" | "cod" | "finance" | null;
   jobSiteSameAsBilling: boolean;
@@ -170,6 +239,15 @@ export function orderToInitial(order: {
   siteContactPhone: string | null;
   accessInstructions: string | null;
   depositInstructions: string | null;
+  // work-order internal
+  moldingsRemoveReplace: boolean;
+  removeOldCarpetAndPad: boolean | null;
+  removeOldTagStrip: boolean | null;
+  hasSteps: boolean | null;
+  numSteps: number | null;
+  newTackStripType: string | null;
+  emptyHouse: boolean | null;
+  heavyFurniture: boolean | null;
   customer: {
     firstName: string; lastName: string; addressLine1: string; city: string; state: string; zip: string;
     phoneHome: string | null; phoneWork: string | null; phoneExt: string | null; email: string | null;
@@ -183,9 +261,12 @@ export function orderToInitial(order: {
     sizeSpec: string | null; sku: string | null;
     quantity: number | null; unit: UnitOfMeasure | null;
     unitPriceCents: number | null; notes: string | null;
+    carpetType: CarpetType | null; pad: string | null; lineInstallMethod: InstallMethod | null;
   }[];
   inclusions: { type: InclusionType; customText: string | null }[];
   exclusions: { type: ExclusionType; customText: string | null }[];
+  moldings: { type: string; quantity: string | null }[];
+  fixtures: { type: string }[];
 }): OrderInitialValues {
   const c = order.customer;
   const same =
@@ -193,7 +274,6 @@ export function orderToInitial(order: {
     c.shipLastName === c.lastName &&
     c.shipAddressLine1 === c.addressLine1;
 
-  // Rooms: make a value for every enum entry, mark `on` true for those that exist.
   const roomMap = new Map(order.rooms.map((r) => [r.room, r]));
   const rooms = Object.values(RoomName).map((rname) => {
     const r = roomMap.get(rname);
@@ -204,6 +284,45 @@ export function orderToInitial(order: {
       notes: r?.notes ?? "",
     };
   });
+
+  // Reconstruct moldings form value from DB rows
+  const moldingMap = new Map(order.moldings.map((m) => [m.type, m]));
+  const moldings: MoldingsFormValue = {
+    removeReplace: order.moldingsRemoveReplace,
+    baseShoe: moldingMap.has("baseShoe"),
+    baseboard: moldingMap.has("baseboard"),
+    rubberCover4in: moldingMap.has("rubberCover4in"),
+    quarterRound: moldingMap.get("quarterRound")?.quantity ?? "",
+    wallBase: moldingMap.get("wallBase")?.quantity ?? "",
+    filmOnly: moldingMap.get("filmOnly")?.quantity ?? "",
+    filmAndFoam: moldingMap.get("filmAndFoam")?.quantity ?? "",
+    endMolding: moldingMap.get("endMolding")?.quantity ?? "",
+    stairNosing: moldingMap.get("stairNosing")?.quantity ?? "",
+    tMolding: moldingMap.get("tMolding")?.quantity ?? "",
+    reducer: moldingMap.get("reducer")?.quantity ?? "",
+  };
+
+  const fixtureSet = new Set(order.fixtures.map((f) => f.type));
+  const fixtures: FixturesFormValue = {
+    stove: fixtureSet.has("stove"),
+    fridge: fixtureSet.has("fridge"),
+    washer: fixtureSet.has("washer"),
+    dryer: fixtureSet.has("dryer"),
+    waterbed: fixtureSet.has("waterbed"),
+    piano: fixtureSet.has("piano"),
+    organ: fixtureSet.has("organ"),
+    tablesChairs: fixtureSet.has("tablesChairs"),
+  };
+
+  const otherInstructions: OtherInstructionsFormValue = {
+    removeOldCarpetAndPad: boolToYesNo(order.removeOldCarpetAndPad),
+    removeOldTagStrip: boolToYesNo(order.removeOldTagStrip),
+    hasSteps: boolToYesNo(order.hasSteps),
+    numSteps: numToInput(order.numSteps),
+    newTackStripType: (order.newTackStripType as "" | "wood" | "concrete") ?? "",
+    emptyHouse: boolToYesNo(order.emptyHouse),
+    heavyFurniture: boolToYesNo(order.heavyFurniture),
+  };
 
   return {
     id: order.id,
@@ -242,6 +361,9 @@ export function orderToInitial(order: {
           quantity: numToInput(li.quantity),
           unit: li.unit ?? "",
           unitPriceCents: moneyToInput(li.unitPriceCents),
+          carpetType: li.carpetType ?? "",
+          pad: li.pad ?? "",
+          lineInstallMethod: li.lineInstallMethod ?? "",
           notes: li.notes ?? "",
         }))
       : [emptyLineItem()],
@@ -249,11 +371,13 @@ export function orderToInitial(order: {
     inclusionNotes: order.inclusions.filter((i) => i.type === InclusionType.customNote).map((i) => i.customText ?? ""),
     exclusions: order.exclusions.filter((e) => e.type !== ExclusionType.customNote).map((e) => e.type),
     exclusionNotes: order.exclusions.filter((e) => e.type === ExclusionType.customNote).map((e) => e.customText ?? ""),
+    moldings,
+    fixtures,
+    otherInstructions,
     pricingMode: order.pricingMode,
     taxPercent: order.taxPercent != null ? String(order.taxPercent) : "7.75",
-    flatTotalCents: order.pricingMode === PricingMode.flatTotal ? moneyToInput(order.totalCents) : "",
+    flatTotalCents: "",
     depositCents: moneyToInput(order.depositCents),
-    basedOn: order.basedOn ?? "",
     remarks: order.remarks ?? "",
     balanceTerm: order.balanceTerm ?? "",
   };

@@ -21,6 +21,29 @@ type FullOrder = Prisma.OrderGetPayload<{
   };
 }>;
 
+const CARPET_TYPE_LABELS: Record<string, string> = {
+  plush: "Plush", berber: "Berber", glueDown: "Glue Down",
+  plushWP: "Plush W/P", berberWP: "Berber W/P",
+};
+
+const INSTALL_METHOD_LABELS: Record<string, string> = {
+  glueDown: "Glue Down", nailDown: "Nail Down", click: "Click",
+  clip: "Clip", other: "Other",
+};
+
+const MOLDING_LABELS: Record<string, string> = {
+  baseShoe: "Base Shoes", baseboard: "Baseboard", rubberCover4in: '4" Rubber Cover',
+  quarterRound: "1/4 Round", wallBase: "Wall Base", filmOnly: "Film Only",
+  filmAndFoam: "Film & Foam", endMolding: "End Molding", stairNosing: "Stair Nosing",
+  tMolding: "T-Molding", reducer: "Reducer",
+};
+
+const FIXTURE_LABELS: Record<string, string> = {
+  stove: "Stove", fridge: "Ref", washer: "Washer", dryer: "Dryer",
+  waterbed: "Waterbed", piano: "Piano", organ: "Organ", tablesChairs: "Tables & Chairs",
+  stool: "Stool", other: "Other",
+};
+
 export function WorkOrderPDF({
   order,
   showPrices,
@@ -31,6 +54,15 @@ export function WorkOrderPDF({
   downloadedBy?: string;
 }) {
   const cust = order.customer;
+
+  // Separate moldings: checkboxes vs. quantity fields
+  const moldingCheckboxTypes = new Set(["baseShoe", "baseboard", "rubberCover4in"]);
+  const checkboxMoldings = order.moldings.filter((m) => moldingCheckboxTypes.has(m.type));
+  const quantityMoldings = order.moldings.filter((m) => !moldingCheckboxTypes.has(m.type) && m.quantity);
+
+  const activeFixtures = order.fixtures.filter((f) =>
+    ["stove", "fridge", "washer", "dryer", "waterbed", "piano", "organ", "tablesChairs"].includes(f.type)
+  );
 
   return (
     <Document title={`USFKB Work Order ${order.invoiceNumber}`}>
@@ -82,24 +114,48 @@ export function WorkOrderPDF({
           </View>
         )}
 
+        {/* Line Items */}
         <View style={styles.tableHead}>
-          <Text style={{ width: 60 }}>CATEGORY</Text>
-          <Text style={{ flex: 1 }}>BRAND/STYLE</Text>
+          <Text style={{ width: 56 }}>CATEGORY</Text>
+          <Text style={{ flex: 1 }}>MILL/BRAND — STYLE</Text>
           <Text style={{ width: 60 }}>SIZE</Text>
-          <Text style={{ width: 70 }}>COLOR</Text>
-          <Text style={{ width: 50 }}>REF #</Text>
-          <Text style={{ width: 30, textAlign: "right" }}>QTY</Text>
-          <Text style={{ width: 28 }}>UNIT</Text>
+          <Text style={{ width: 60 }}>COLOR</Text>
+          <Text style={{ width: 44 }}>REF #</Text>
+          <Text style={{ width: 28, textAlign: "right" }}>QTY</Text>
+          <Text style={{ width: 26 }}>UNIT</Text>
         </View>
         {order.lineItems.slice(0, 8).map((li) => (
-          <View key={li.id} style={styles.tableRow}>
-            <Text style={{ width: 60 }}>{lineCategoryLabel(li.category)}</Text>
-            <Text style={{ flex: 1 }}>{[li.brand, li.style].filter(Boolean).join(" — ")}</Text>
-            <Text style={{ width: 60 }}>{li.sizeSpec ?? ""}</Text>
-            <Text style={{ width: 70 }}>{li.color ?? ""}</Text>
-            <Text style={{ width: 50 }}>{li.sku ?? ""}</Text>
-            <Text style={{ width: 30, textAlign: "right" }}>{li.quantity ?? ""}</Text>
-            <Text style={{ width: 28 }}>{unitShort(li.unit)}</Text>
+          <View key={li.id}>
+            <View style={styles.tableRow}>
+              <Text style={{ width: 56 }}>{lineCategoryLabel(li.category)}</Text>
+              <Text style={{ flex: 1 }}>{[li.brand, li.style].filter(Boolean).join(" — ")}</Text>
+              <Text style={{ width: 60 }}>{li.sizeSpec ?? ""}</Text>
+              <Text style={{ width: 60 }}>{li.color ?? ""}</Text>
+              <Text style={{ width: 44 }}>{li.sku ?? ""}</Text>
+              <Text style={{ width: 28, textAlign: "right" }}>{li.quantity ?? ""}</Text>
+              <Text style={{ width: 26 }}>{unitShort(li.unit)}</Text>
+            </View>
+            {/* Carpet extras */}
+            {(li.carpetType || li.pad) ? (
+              <View style={{ flexDirection: "row", gap: 12, marginLeft: 56, marginBottom: 2 }}>
+                {li.carpetType ? (
+                  <Text style={{ fontSize: 7, color: COLORS.muted }}>
+                    Type: {CARPET_TYPE_LABELS[li.carpetType] ?? li.carpetType}
+                  </Text>
+                ) : null}
+                {li.pad ? (
+                  <Text style={{ fontSize: 7, color: COLORS.muted }}>Pad: {li.pad}</Text>
+                ) : null}
+              </View>
+            ) : null}
+            {/* Install method */}
+            {li.lineInstallMethod ? (
+              <View style={{ marginLeft: 56, marginBottom: 2 }}>
+                <Text style={{ fontSize: 7, color: COLORS.muted }}>
+                  Install: {INSTALL_METHOD_LABELS[li.lineInstallMethod] ?? li.lineInstallMethod}
+                </Text>
+              </View>
+            ) : null}
           </View>
         ))}
         {order.lineItems.length > 8 ? (
@@ -151,6 +207,7 @@ export function WorkOrderPDF({
           )}
         </View>
 
+        {/* Inclusions / Exclusions */}
         {(order.inclusions.length > 0 || order.exclusions.length > 0) ? (
           <View style={{ marginTop: 8 }}>
             {order.inclusions.length > 0 ? (
@@ -168,13 +225,80 @@ export function WorkOrderPDF({
           </View>
         ) : null}
 
-        {/* Scope of Work (per Invoice) */}
+        {/* Moldings */}
+        {(order.moldingsRemoveReplace || checkboxMoldings.length > 0 || quantityMoldings.length > 0) ? (
+          <View style={{ marginTop: 8, paddingTop: 6, borderTopWidth: 0.5, borderColor: COLORS.borderLight }}>
+            <Text style={[styles.sectionLabel, { marginBottom: 4 }]}>MOLDINGS</Text>
+            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+              {order.moldingsRemoveReplace ? (
+                <Text style={{ fontSize: 8 }}>☑ Remove &amp; Replace Existing</Text>
+              ) : null}
+              {checkboxMoldings.map((m) => (
+                <Text key={m.id} style={{ fontSize: 8 }}>☑ {MOLDING_LABELS[m.type] ?? m.type}</Text>
+              ))}
+            </View>
+            {quantityMoldings.length > 0 ? (
+              <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 12, marginTop: 4 }}>
+                {quantityMoldings.map((m) => (
+                  <Text key={m.id} style={{ fontSize: 8 }}>
+                    {MOLDING_LABELS[m.type] ?? m.type}: {m.quantity}
+                  </Text>
+                ))}
+              </View>
+            ) : null}
+          </View>
+        ) : null}
+
+        {/* Fixtures */}
+        {activeFixtures.length > 0 ? (
+          <View style={{ marginTop: 8, paddingTop: 6, borderTopWidth: 0.5, borderColor: COLORS.borderLight }}>
+            <Text style={[styles.sectionLabel, { marginBottom: 4 }]}>FIXTURES</Text>
+            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 12 }}>
+              {activeFixtures.map((f) => (
+                <Text key={f.id} style={{ fontSize: 8 }}>☑ {FIXTURE_LABELS[f.type] ?? f.type}</Text>
+              ))}
+            </View>
+          </View>
+        ) : null}
+
+        {/* Other Instructions */}
+        {(order.removeOldCarpetAndPad != null || order.removeOldTagStrip != null ||
+          order.hasSteps != null || order.newTackStripType || order.emptyHouse != null ||
+          order.heavyFurniture != null) ? (
+          <View style={{ marginTop: 8, paddingTop: 6, borderTopWidth: 0.5, borderColor: COLORS.borderLight }}>
+            <Text style={[styles.sectionLabel, { marginBottom: 4 }]}>OTHER INSTRUCTIONS</Text>
+            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 16 }}>
+              {order.removeOldCarpetAndPad != null ? (
+                <Text style={{ fontSize: 8 }}>Remove Old Carpet &amp; Pad: {boolLabel(order.removeOldCarpetAndPad)}</Text>
+              ) : null}
+              {order.removeOldTagStrip != null ? (
+                <Text style={{ fontSize: 8 }}>Remove Old Tack Strip: {boolLabel(order.removeOldTagStrip)}</Text>
+              ) : null}
+              {order.hasSteps != null ? (
+                <Text style={{ fontSize: 8 }}>
+                  Steps: {boolLabel(order.hasSteps)}{order.hasSteps && order.numSteps ? ` (${order.numSteps})` : ""}
+                </Text>
+              ) : null}
+              {order.newTackStripType ? (
+                <Text style={{ fontSize: 8 }}>New Tack Strip: {order.newTackStripType.charAt(0).toUpperCase() + order.newTackStripType.slice(1)}</Text>
+              ) : null}
+              {order.emptyHouse != null ? (
+                <Text style={{ fontSize: 8 }}>Empty House: {boolLabel(order.emptyHouse)}</Text>
+              ) : null}
+              {order.heavyFurniture != null ? (
+                <Text style={{ fontSize: 8 }}>Heavy Furniture: {boolLabel(order.heavyFurniture)}</Text>
+              ) : null}
+            </View>
+          </View>
+        ) : null}
+
+        {/* Scope of Work */}
         <View style={{ marginTop: 8, paddingTop: 6, borderTopWidth: 0.5, borderColor: COLORS.borderLight }}>
           <Text style={[styles.sectionLabel, { color: COLORS.brand, fontSize: 10, marginBottom: 3 }]}>
             SCOPE OF WORK (per Invoice)
           </Text>
           {(order.scopeOverride ?? generateScopeOfWork({
-            rooms: [], // Work Order's order has no rooms loaded in this query;
+            rooms: [],
             lineItems: order.lineItems,
             inclusions: order.inclusions,
             exclusions: order.exclusions,
