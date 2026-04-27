@@ -196,6 +196,7 @@ model Order {
   exclusions   OrderExclusion[]
   moldings     OrderMolding[]
   fixtures     OrderFixture[]
+  installNotes OrderInstallNote[]
   showerSpec   OrderShower?
   tileSpec     OrderTileStone?
   removals     OrderRemoval[]
@@ -363,6 +364,18 @@ model OrderExclusion {
   createdAt  DateTime      @default(now())
 
   @@unique([orderId, type, customText])
+}
+
+// ---------- Installation notes (editable per category, for installer sheets) ----------
+
+model OrderInstallNote {
+  id       String       @id @default(uuid())
+  orderId  String
+  order    Order        @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  category LineCategory
+  notes    String       @default("")
+
+  @@unique([orderId, category])
 }
 
 // ---------- Other order children (unchanged) ----------

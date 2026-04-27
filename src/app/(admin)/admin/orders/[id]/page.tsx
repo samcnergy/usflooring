@@ -6,9 +6,13 @@ import { InvoiceView, DocumentTabs } from "@/components/OrderDetail";
 import { DocumentToolbar } from "@/components/DocumentToolbar";
 import { PdfPreview } from "@/components/PdfPreview";
 import { ScopeOfWork } from "@/components/ScopeOfWork";
+import { InstallationInstruction } from "@/components/InstallationInstruction";
 import { generateScopeOfWork } from "@/lib/scope";
+import { lineCategoryLabel } from "@/lib/line-categories";
+import type { LineCategory } from "@prisma/client";
 import { voidOrderAction, unvoidOrderAction, deleteOrderAction } from "../actions";
 import { saveScopeAction, resetScopeAction } from "./scope/actions";
+import { saveInstallNoteAction } from "./install/actions";
 
 type Params = Promise<{ id: string }>;
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
@@ -28,7 +32,8 @@ export default async function AdminOrderDetailPage({
     | "scope"
     | "workorder"
     | "dailyworkorder"
-    | "vendor";
+    | "vendor"
+    | "install";
 
   const order = await getOrder(id);
   if (!order) notFound();
@@ -87,6 +92,8 @@ export default async function AdminOrderDetailPage({
         />
       ) : doc === "vendor" ? (
         <VendorTab orderId={order.id} />
+      ) : doc === "install" ? (
+        <InstallTab order={order} />
       ) : (
         <>
           <DocumentToolbar orderId={order.id} doc={doc} />
@@ -94,6 +101,25 @@ export default async function AdminOrderDetailPage({
         </>
       )}
     </div>
+  );
+}
+
+function InstallTab({ order }: { order: NonNullable<Awaited<ReturnType<typeof getOrder>>> }) {
+  const seen = new Set<string>();
+  const noteMap = new Map(order.installNotes.map((n) => [n.category as string, n.notes]));
+  const categories = order.lineItems
+    .filter((li) => { if (seen.has(li.category)) return false; seen.add(li.category); return true; })
+    .map((li) => ({
+      category: li.category as LineCategory,
+      label: lineCategoryLabel(li.category as LineCategory),
+      notes: noteMap.get(li.category) ?? "",
+    }));
+  return (
+    <InstallationInstruction
+      orderId={order.id}
+      categories={categories}
+      saveAction={saveInstallNoteAction}
+    />
   );
 }
 

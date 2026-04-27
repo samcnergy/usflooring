@@ -1,7 +1,7 @@
 // Server functions for Order CRUD against the post-restructure schema.
 // Always called from server actions or route handlers — never from a client.
 
-import { PricingMode } from "@prisma/client";
+import { LineCategory, PricingMode } from "@prisma/client";
 import { prisma } from "./prisma";
 import { nextInvoiceNumber } from "./invoice-number";
 import { ingestSuggestions } from "./material-suggestion";
@@ -375,6 +375,15 @@ export async function getOrder(id: string) {
       exclusions: { orderBy: { id: "asc" } },
       moldings: { orderBy: { id: "asc" } },
       fixtures: { orderBy: { id: "asc" } },
+      installNotes: { orderBy: { category: "asc" } },
     },
+  });
+}
+
+export async function upsertInstallNote(orderId: string, category: LineCategory, notes: string) {
+  return prisma.orderInstallNote.upsert({
+    where: { orderId_category: { orderId, category } },
+    create: { orderId, category, notes },
+    update: { notes },
   });
 }

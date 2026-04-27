@@ -5,6 +5,7 @@ import { InvoicePDF } from "@/pdf/InvoicePDF";
 import { WorkOrderPDF } from "@/pdf/WorkOrderPDF";
 import { DailyWorkOrderPDF } from "@/pdf/DailyWorkOrderPDF";
 import { VendorOrderPDF } from "@/pdf/VendorOrderPDF";
+import { InstallationInstructionPDF } from "@/pdf/InstallationInstructionPDF";
 
 type Params = Promise<{ id: string }>;
 
@@ -30,6 +31,7 @@ export async function GET(req: Request, { params }: { params: Params }) {
       exclusions: true,
       moldings: true,
       fixtures: true,
+      installNotes: true,
       showerSpec: true,
       tileSpec: true,
       removals: true,
@@ -65,6 +67,12 @@ export async function GET(req: Request, { params }: { params: Params }) {
         <DailyWorkOrderPDF order={order} downloadedBy={me.fullName} />,
       );
       filename = `USFKB-${order.invoiceNumber}-dailyworkorder.pdf`;
+      break;
+    case "install":
+      stream = await renderToStream(
+        <InstallationInstructionPDF order={order} downloadedBy={me.fullName} />,
+      );
+      filename = `USFKB-${order.invoiceNumber}-install-instructions.pdf`;
       break;
     case "vendor": {
       if (!vendorOrderId) return new Response("vendorOrderId required for vendor PDF", { status: 400 });

@@ -218,7 +218,7 @@ export function DocumentTabs({
   active,
 }: {
   basePath: string;
-  active: "invoice" | "scope" | "workorder" | "dailyworkorder" | "vendor";
+  active: "invoice" | "scope" | "workorder" | "dailyworkorder" | "vendor" | "install";
 }) {
   const tabs: { key: typeof active; label: string }[] = [
     { key: "invoice",         label: "Invoice" },
@@ -226,6 +226,7 @@ export function DocumentTabs({
     { key: "workorder",       label: "Work Order" },
     { key: "dailyworkorder",  label: "Daily Work Order" },
     { key: "vendor",          label: "Vendor Order(s)" },
+    { key: "install",         label: "Install Instructions" },
   ];
   return (
     <div className="flex border-b border-marble-200 mb-4 overflow-x-auto">
