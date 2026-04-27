@@ -10,8 +10,9 @@ import { LINE_CATEGORIES, lineCategoryLabel } from "@/lib/line-categories";
 import { UNITS } from "@/lib/units";
 import { INCLUSION_CHIPS, EXCLUSION_CHIPS } from "@/lib/inclusions";
 import {
-  emptyLineItem, type LineItemFormValue, type MoldingsFormValue,
-  type FixturesFormValue, type OtherInstructionsFormValue,
+  emptyLineItem, cryptoRandomKey,
+  type AreaGroupFormValue, type LineItemFormValue,
+  type MoldingsFormValue, type FixturesFormValue, type OtherInstructionsFormValue,
   type OrderInitialValues, type ActionState,
   type SalespersonOption, type AdvSourceOption,
 } from "./InvoiceForm.shared";
@@ -31,6 +32,11 @@ const INSTALL_CATEGORIES = new Set<LineCategory>([
   LineCategory.vinyl, LineCategory.wood, LineCategory.ceramic,
   LineCategory.tile, LineCategory.stone,
 ]);
+
+// Room names that have a countable quantity field
+const COUNTABLE_ROOMS = new Set(
+  ROOMS.filter((r) => r.countable).map((r) => r.value)
+);
 
 type Props = {
   initial: OrderInitialValues;
@@ -54,9 +60,7 @@ export function InvoiceForm({
   const [state, formAction, pending] = useActionState<ActionState, FormData>(action, null);
 
   const [sameAs, setSameAs] = useState(initial.sameAsSoldTo);
-  const [siteSame, setSiteSame] = useState(initial.jobSiteSameAsBilling);
-  const [rooms, setRooms] = useState(initial.rooms);
-  const [lineItems, setLineItems] = useState<LineItemFormValue[]>(initial.lineItems);
+  const [areaGroups, setAreaGroups] = useState<AreaGroupFormValue[]>(initial.areaGroups);
   const [inclusions, setInclusions] = useState<Set<InclusionType>>(new Set(initial.inclusions));
   const [exclusions, setExclusions] = useState<Set<ExclusionType>>(new Set(initial.exclusions));
   const [inclusionNotes, setInclusionNotes] = useState<string[]>(initial.inclusionNotes);
@@ -67,6 +71,8 @@ export function InvoiceForm({
 
   const errs = state && !state.ok ? state.errors ?? {} : {};
   const fieldErr = (k: string) => errs[k];
+
+  const allLineItems = areaGroups.flatMap((g) => g.lineItems);
 
   return (
     <form action={formAction} className="flex flex-col gap-6">
@@ -105,7 +111,7 @@ export function InvoiceForm({
         </Field>
       </div>
 
-      {/* Section 2 — Sold To / Ship To / Job Site */}
+      {/* Section 2 — Sold To / Ship To */}
       <fieldset className="bg-marble-100 border border-marble-200 rounded-lg p-4">
         <legend className="px-2 text-sm font-semibold text-brand-700">Sold to</legend>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -167,75 +173,42 @@ export function InvoiceForm({
         ) : null}
       </fieldset>
 
-      <fieldset className="bg-marble-100 border border-marble-200 rounded-lg p-4">
-        <legend className="px-2 text-sm font-semibold text-brand-700">Job site</legend>
-        <Field label="Deposit notes" htmlFor="depositInstructions" hint="e.g. Customer to bring deposit on 8-19-24" className="mb-3">
-          <textarea id="depositInstructions" name="depositInstructions" rows={2} defaultValue={initial.depositInstructions} className={inputCls} />
-        </Field>
-        <label className="flex items-center gap-2 text-sm text-marble-700 mb-3">
-          <input type="checkbox" name="jobSiteSameAsBilling" checked={siteSame} onChange={(e) => setSiteSame(e.target.checked)} className="rounded border-marble-200" />
-          Same as billing
-        </label>
-        {!siteSame ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Field label="Address" htmlFor="jobSiteAddressLine1" className="sm:col-span-2"><input id="jobSiteAddressLine1" name="jobSiteAddressLine1" defaultValue={initial.jobSiteAddressLine1} className={inputCls} /></Field>
-            <Field label="City" htmlFor="jobSiteCity"><input id="jobSiteCity" name="jobSiteCity" defaultValue={initial.jobSiteCity} className={inputCls} /></Field>
-            <div className="grid grid-cols-2 gap-4">
-              <Field label="State" htmlFor="jobSiteState"><input id="jobSiteState" name="jobSiteState" maxLength={2} defaultValue={initial.jobSiteState} className={inputCls} /></Field>
-              <Field label="Zip" htmlFor="jobSiteZip"><input id="jobSiteZip" name="jobSiteZip" defaultValue={initial.jobSiteZip} className={inputCls} /></Field>
-            </div>
-            <Field label="Site contact name" htmlFor="siteContactName"><input id="siteContactName" name="siteContactName" defaultValue={initial.siteContactName} className={inputCls} /></Field>
-            <Field label="Site contact phone" htmlFor="siteContactPhone"><input id="siteContactPhone" name="siteContactPhone" defaultValue={initial.siteContactPhone} className={inputCls} /></Field>
-            <Field label="Access instructions" htmlFor="accessInstructions" className="sm:col-span-2">
-              <textarea id="accessInstructions" name="accessInstructions" rows={2} defaultValue={initial.accessInstructions} className={inputCls} />
-            </Field>
-          </div>
-        ) : null}
-      </fieldset>
-
-      {/* Section 3 — Area (formerly Rooms involved) */}
-      <fieldset className="bg-marble-100 border border-marble-200 rounded-lg p-4">
-        <legend className="px-2 text-sm font-semibold text-brand-700">Area</legend>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-          {ROOMS.map((spec) => {
-            const value = rooms.find((r) => r.room === spec.value)!;
-            return (
-              <RoomCheckbox
-                key={spec.value}
-                spec={spec}
-                value={value}
-                onChange={(updates) =>
-                  setRooms((prev) => prev.map((r) => (r.room === spec.value ? { ...r, ...updates } : r)))
-                }
-              />
-            );
-          })}
+      {/* Section 3 — Area Groups */}
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center justify-between">
+          <p className="text-sm font-semibold text-brand-700">Areas &amp; Line Items</p>
         </div>
-      </fieldset>
-
-      {/* Section 4 — Line items */}
-      <fieldset className="bg-marble-100 border border-marble-200 rounded-lg p-4">
-        <legend className="px-2 text-sm font-semibold text-brand-700">Line items</legend>
-        <input type="hidden" name="li_count" value={lineItems.length} />
-        {lineItems.map((li, i) => (
-          <LineItemRow
-            key={li.key}
-            index={i}
-            value={li}
-            onChange={(next) => setLineItems((prev) => prev.map((x, j) => (j === i ? next : x)))}
-            onRemove={() => setLineItems((prev) => prev.filter((_, j) => j !== i))}
+        <input type="hidden" name="ag_count" value={areaGroups.length} />
+        {areaGroups.map((group, i) => (
+          <AreaGroupCard
+            key={group.key}
+            groupIndex={i}
+            value={group}
+            onChange={(updated) =>
+              setAreaGroups((prev) => prev.map((g, j) => (j === i ? updated : g)))
+            }
+            onRemove={
+              areaGroups.length > 1
+                ? () => setAreaGroups((prev) => prev.filter((_, j) => j !== i))
+                : undefined
+            }
           />
         ))}
         <button
           type="button"
-          onClick={() => setLineItems((prev) => [...prev, emptyLineItem()])}
-          className="mt-3 inline-flex items-center justify-center min-h-11 px-4 rounded border border-brand-700 text-brand-700 hover:bg-brand-100 font-medium text-sm"
+          onClick={() =>
+            setAreaGroups((prev) => [
+              ...prev,
+              { key: cryptoRandomKey(), room: "", quantity: "", notes: "", lineItems: [emptyLineItem()] },
+            ])
+          }
+          className="inline-flex items-center justify-center min-h-11 px-4 rounded border border-brand-700 text-brand-700 hover:bg-brand-100 font-medium text-sm self-start"
         >
-          + Add line item
+          + Add Area
         </button>
-      </fieldset>
+      </div>
 
-      {/* Section 5 — Includes / Excludes */}
+      {/* Section 4 — Includes / Excludes */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <ChipsPanel
           title="Price includes"
@@ -423,11 +396,14 @@ export function InvoiceForm({
         </fieldset>
       </div>
 
-      {/* Section 6 — Remarks + Totals */}
+      {/* Section 5 — Remarks + Totals */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="lg:col-span-2 bg-marble-100 border border-marble-200 rounded-lg p-4 flex flex-col gap-4">
           <Field label="Remarks" htmlFor="remarks">
             <textarea id="remarks" name="remarks" rows={4} defaultValue={initial.remarks} className={inputCls} />
+          </Field>
+          <Field label="Deposit notes" htmlFor="depositInstructions" hint="e.g. Customer to bring deposit on 8-19-24">
+            <textarea id="depositInstructions" name="depositInstructions" rows={2} defaultValue={initial.depositInstructions} className={inputCls} />
           </Field>
           <Field label="Balance terms" htmlFor="balanceTerm">
             <select id="balanceTerm" name="balanceTerm" defaultValue={initial.balanceTerm} className={selectCls}>
@@ -438,7 +414,7 @@ export function InvoiceForm({
             </select>
           </Field>
         </div>
-        <Totals initial={initial} lineItems={lineItems} />
+        <Totals initial={initial} lineItems={allLineItems} />
       </div>
 
       <div className="flex items-center justify-end gap-3 pb-12">
@@ -448,6 +424,111 @@ export function InvoiceForm({
         </button>
       </div>
     </form>
+  );
+}
+
+// ---------- AreaGroupCard ----------
+
+function AreaGroupCard({
+  groupIndex,
+  value,
+  onChange,
+  onRemove,
+}: {
+  groupIndex: number;
+  value: AreaGroupFormValue;
+  onChange: (updated: AreaGroupFormValue) => void;
+  onRemove?: () => void;
+}) {
+  const isCountable = value.room ? COUNTABLE_ROOMS.has(value.room as RoomName) : false;
+
+  return (
+    <div className="bg-marble-100 border border-marble-200 rounded-lg p-4">
+      {/* Header row: area dropdown, qty, notes, remove button */}
+      <div className="flex flex-wrap gap-3 items-end mb-3">
+        <div className="flex-1 min-w-[160px]">
+          <label className="block text-xs text-marble-700 mb-1">Area</label>
+          <select
+            value={value.room}
+            onChange={(e) => onChange({ ...value, room: e.target.value as RoomName | "", quantity: "", notes: "" })}
+            className="w-full bg-white border border-marble-200 rounded px-2 py-1.5 text-sm text-marble-900 focus:outline-none focus:ring-1 focus:ring-brand-700"
+          >
+            <option value="">— No specific area —</option>
+            {ROOMS.map((r) => (
+              <option key={r.value} value={r.value}>{r.label}</option>
+            ))}
+          </select>
+          <input type="hidden" name={`ag_${groupIndex}_room`} value={value.room} />
+        </div>
+        {isCountable ? (
+          <div className="w-20">
+            <label className="block text-xs text-marble-700 mb-1">Qty</label>
+            <input
+              type="number"
+              value={value.quantity}
+              onChange={(e) => onChange({ ...value, quantity: e.target.value })}
+              min={1}
+              placeholder="#"
+              className="w-full bg-white border border-marble-200 rounded px-2 py-1.5 text-sm text-marble-900 focus:outline-none focus:ring-1 focus:ring-brand-700"
+            />
+          </div>
+        ) : null}
+        <input type="hidden" name={`ag_${groupIndex}_quantity`} value={value.quantity} />
+        <div className="flex-1 min-w-[160px]">
+          <label className="block text-xs text-marble-700 mb-1">Notes</label>
+          <input
+            type="text"
+            value={value.notes}
+            onChange={(e) => onChange({ ...value, notes: e.target.value })}
+            placeholder="optional note"
+            className="w-full bg-white border border-marble-200 rounded px-2 py-1.5 text-sm text-marble-900 focus:outline-none focus:ring-1 focus:ring-brand-700"
+          />
+        </div>
+        <input type="hidden" name={`ag_${groupIndex}_notes`} value={value.notes} />
+        {onRemove ? (
+          <button
+            type="button"
+            onClick={onRemove}
+            aria-label="Remove area group"
+            className="text-marble-700 hover:text-danger text-sm px-2 py-1.5 mb-0.5"
+          >
+            ✕
+          </button>
+        ) : null}
+      </div>
+
+      {/* Line items for this area group */}
+      <input type="hidden" name={`ag_${groupIndex}_li_count`} value={value.lineItems.length} />
+      {value.lineItems.map((li, j) => (
+        <LineItemRow
+          key={li.key}
+          groupIndex={groupIndex}
+          liIndex={j}
+          value={li}
+          onChange={(next) =>
+            onChange({
+              ...value,
+              lineItems: value.lineItems.map((x, k) => (k === j ? next : x)),
+            })
+          }
+          onRemove={() =>
+            onChange({
+              ...value,
+              lineItems: value.lineItems.filter((_, k) => k !== j),
+            })
+          }
+        />
+      ))}
+      <button
+        type="button"
+        onClick={() =>
+          onChange({ ...value, lineItems: [...value.lineItems, emptyLineItem()] })
+        }
+        className="mt-3 inline-flex items-center justify-center min-h-9 px-3 rounded border border-brand-700 text-brand-700 hover:bg-brand-100 font-medium text-xs"
+      >
+        + Add line item
+      </button>
+    </div>
   );
 }
 
@@ -498,60 +579,6 @@ function YesNoField({ label, name, value, onChange }: {
   );
 }
 
-function RoomCheckbox({
-  spec, value, onChange,
-}: {
-  spec: { value: RoomName; label: string; countable: boolean };
-  value: { room: RoomName; on: boolean; quantity: string; notes: string };
-  onChange: (updates: Partial<{ on: boolean; quantity: string; notes: string }>) => void;
-}) {
-  const [showNote, setShowNote] = useState(!!value.notes);
-  return (
-    <div className="bg-white border border-marble-200 rounded p-2">
-      <label className="flex items-center gap-2 text-sm text-marble-900">
-        <input
-          type="checkbox"
-          name={`room_${spec.value}_on`}
-          checked={value.on}
-          onChange={(e) => onChange({ on: e.target.checked })}
-          className="rounded border-marble-200"
-        />
-        {spec.label}
-      </label>
-      {value.on && spec.countable ? (
-        <input
-          type="number"
-          name={`room_${spec.value}_quantity`}
-          value={value.quantity}
-          onChange={(e) => onChange({ quantity: e.target.value })}
-          placeholder="#"
-          className="mt-1 w-16 bg-white border border-marble-200 rounded px-2 py-0.5 text-marble-900 text-xs"
-          min={1}
-        />
-      ) : null}
-      {value.on ? (
-        <>
-          {!showNote ? (
-            <button type="button" onClick={() => setShowNote(true)} className="block mt-1 text-xs text-brand-700 hover:underline">
-              + note
-            </button>
-          ) : (
-            <input
-              type="text"
-              name={`room_${spec.value}_notes`}
-              value={value.notes}
-              onChange={(e) => onChange({ notes: e.target.value })}
-              placeholder="note"
-              className="mt-1 w-full bg-white border border-marble-200 rounded px-2 py-0.5 text-marble-900 text-xs"
-              autoFocus
-            />
-          )}
-        </>
-      ) : null}
-    </div>
-  );
-}
-
 function formatAccounting(raw: string): string {
   const cleaned = raw.replace(/[$,\s]/g, "");
   if (!cleaned) return "";
@@ -561,13 +588,15 @@ function formatAccounting(raw: string): string {
 }
 
 function LineItemRow({
-  index, value, onChange, onRemove,
+  groupIndex, liIndex, value, onChange, onRemove,
 }: {
-  index: number;
+  groupIndex: number;
+  liIndex: number;
   value: LineItemFormValue;
   onChange: (next: LineItemFormValue) => void;
   onRemove: () => void;
 }) {
+  const prefix = `ag_${groupIndex}_li_${liIndex}`;
   const cellInput = "w-full bg-white border border-marble-200 rounded px-2 py-1 text-marble-900 text-xs focus:outline-none focus:ring-1 focus:ring-brand-700";
 
   const qty = Number((value.quantity || "0").replace(/[,\s]/g, ""));
@@ -585,7 +614,7 @@ function LineItemRow({
         <div className="col-span-12 sm:col-span-2">
           <label className="block text-xs text-marble-700 mb-1">Category</label>
           <select
-            name={`li_${index}_category`}
+            name={`${prefix}_category`}
             value={value.category}
             onChange={(e) => onChange({ ...value, category: e.target.value as LineCategory, carpetType: "", pad: "", lineInstallMethod: "" })}
             className={cellInput}
@@ -596,31 +625,31 @@ function LineItemRow({
         </div>
         <div className="col-span-6 sm:col-span-2">
           <label className="block text-xs text-marble-700 mb-1">{isCarpet ? "Mill" : "Brand"}</label>
-          <input type="text" name={`li_${index}_brand`} value={value.brand} onChange={(e) => onChange({ ...value, brand: e.target.value })} className={cellInput} />
+          <input type="text" name={`${prefix}_brand`} value={value.brand} onChange={(e) => onChange({ ...value, brand: e.target.value })} className={cellInput} />
         </div>
         <div className="col-span-6 sm:col-span-2">
           <label className="block text-xs text-marble-700 mb-1">Style</label>
-          <input type="text" name={`li_${index}_style`} value={value.style} onChange={(e) => onChange({ ...value, style: e.target.value })} className={cellInput} />
+          <input type="text" name={`${prefix}_style`} value={value.style} onChange={(e) => onChange({ ...value, style: e.target.value })} className={cellInput} />
         </div>
         <div className="col-span-6 sm:col-span-2">
           <label className="block text-xs text-marble-700 mb-1">Color</label>
-          <input type="text" name={`li_${index}_color`} value={value.color} onChange={(e) => onChange({ ...value, color: e.target.value })} className={cellInput} />
+          <input type="text" name={`${prefix}_color`} value={value.color} onChange={(e) => onChange({ ...value, color: e.target.value })} className={cellInput} />
         </div>
         <div className="col-span-3 sm:col-span-1">
           <label className="block text-xs text-marble-700 mb-1">Size</label>
-          <input type="text" name={`li_${index}_sizeSpec`} value={value.sizeSpec} onChange={(e) => onChange({ ...value, sizeSpec: e.target.value })} className={cellInput} />
+          <input type="text" name={`${prefix}_sizeSpec`} value={value.sizeSpec} onChange={(e) => onChange({ ...value, sizeSpec: e.target.value })} className={cellInput} />
         </div>
         <div className="col-span-3 sm:col-span-1">
           <label className="block text-xs text-marble-700 mb-1">{isCarpet ? "Ref #" : "SKU"}</label>
-          <input type="text" name={`li_${index}_sku`} value={value.sku} onChange={(e) => onChange({ ...value, sku: e.target.value })} className={cellInput} />
+          <input type="text" name={`${prefix}_sku`} value={value.sku} onChange={(e) => onChange({ ...value, sku: e.target.value })} className={cellInput} />
         </div>
         <div className="col-span-2 sm:col-span-1">
           <label className="block text-xs text-marble-700 mb-1">Qty</label>
-          <input type="text" inputMode="decimal" name={`li_${index}_quantity`} value={value.quantity} onChange={(e) => onChange({ ...value, quantity: e.target.value })} className={`${cellInput} text-right tabular-money`} />
+          <input type="text" inputMode="decimal" name={`${prefix}_quantity`} value={value.quantity} onChange={(e) => onChange({ ...value, quantity: e.target.value })} className={`${cellInput} text-right tabular-money`} />
         </div>
         <div className="col-span-2 sm:col-span-1">
           <label className="block text-xs text-marble-700 mb-1">Unit</label>
-          <select name={`li_${index}_unit`} value={value.unit} onChange={(e) => onChange({ ...value, unit: e.target.value as UnitOfMeasure })} className={cellInput}>
+          <select name={`${prefix}_unit`} value={value.unit} onChange={(e) => onChange({ ...value, unit: e.target.value as UnitOfMeasure })} className={cellInput}>
             <option value="">—</option>
             {UNITS.map((u) => (<option key={u.value} value={u.value}>{u.short}</option>))}
           </select>
@@ -629,7 +658,7 @@ function LineItemRow({
           <label className="block text-xs text-marble-700 mb-1">Unit $</label>
           <input
             type="text" inputMode="decimal"
-            name={`li_${index}_unitPriceCents`}
+            name={`${prefix}_unitPriceCents`}
             value={value.unitPriceCents}
             onChange={(e) => onChange({ ...value, unitPriceCents: e.target.value })}
             onBlur={(e) => onChange({ ...value, unitPriceCents: formatAccounting(e.target.value) })}
@@ -644,7 +673,7 @@ function LineItemRow({
         </div>
         <div className="col-span-12 sm:col-span-3">
           <label className="block text-xs text-marble-700 mb-1">Notes</label>
-          <input type="text" name={`li_${index}_notes`} value={value.notes} onChange={(e) => onChange({ ...value, notes: e.target.value })} className={cellInput} />
+          <input type="text" name={`${prefix}_notes`} value={value.notes} onChange={(e) => onChange({ ...value, notes: e.target.value })} className={cellInput} />
         </div>
         <div className="col-span-12 sm:col-span-1 flex sm:justify-end">
           <button type="button" onClick={onRemove} aria-label="Remove line item" className="text-marble-700 hover:text-danger text-sm px-2 py-1">
@@ -661,7 +690,7 @@ function LineItemRow({
               <div className="flex items-center gap-1">
                 <label className="text-xs text-marble-700 whitespace-nowrap">Type</label>
                 <select
-                  name={`li_${index}_carpetType`}
+                  name={`${prefix}_carpetType`}
                   value={value.carpetType}
                   onChange={(e) => onChange({ ...value, carpetType: e.target.value as CarpetType })}
                   className="bg-white border border-marble-200 rounded px-2 py-1 text-xs text-marble-900 focus:outline-none focus:ring-1 focus:ring-brand-700"
@@ -674,7 +703,7 @@ function LineItemRow({
                 <label className="text-xs text-marble-700 whitespace-nowrap">Pad</label>
                 <input
                   type="text"
-                  name={`li_${index}_pad`}
+                  name={`${prefix}_pad`}
                   value={value.pad}
                   onChange={(e) => onChange({ ...value, pad: e.target.value })}
                   placeholder="Pad spec"
@@ -687,7 +716,7 @@ function LineItemRow({
             <div className="flex items-center gap-1">
               <label className="text-xs text-marble-700 whitespace-nowrap">Install Method</label>
               <select
-                name={`li_${index}_lineInstallMethod`}
+                name={`${prefix}_lineInstallMethod`}
                 value={value.lineInstallMethod}
                 onChange={(e) => onChange({ ...value, lineInstallMethod: e.target.value as InstallMethod })}
                 className="bg-white border border-marble-200 rounded px-2 py-1 text-xs text-marble-900 focus:outline-none focus:ring-1 focus:ring-brand-700"
@@ -705,12 +734,12 @@ function LineItemRow({
       {/* Hidden fields for category-specific extras (ensure they submit even when empty) */}
       {!isCarpet ? (
         <>
-          <input type="hidden" name={`li_${index}_carpetType`} value="" />
-          <input type="hidden" name={`li_${index}_pad`} value="" />
+          <input type="hidden" name={`${prefix}_carpetType`} value="" />
+          <input type="hidden" name={`${prefix}_pad`} value="" />
         </>
       ) : null}
       {!hasInstallMethod ? (
-        <input type="hidden" name={`li_${index}_lineInstallMethod`} value="" />
+        <input type="hidden" name={`${prefix}_lineInstallMethod`} value="" />
       ) : null}
     </div>
   );

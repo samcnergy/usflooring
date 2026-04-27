@@ -26,7 +26,7 @@ export async function GET(req: Request, { params }: { params: Params }) {
       salesperson: { select: { id: true, fullName: true, email: true } },
       advertisingSource: true,
       rooms: true,
-      lineItems: { orderBy: { position: "asc" } },
+      lineItems: { orderBy: { position: "asc" }, include: { room: true } },
       inclusions: true,
       exclusions: true,
       moldings: true,

@@ -96,6 +96,7 @@ export const orderLineItemInput = z.object({
   pad:              optStr,
   lineInstallMethod: z.nativeEnum(InstallMethod).optional().nullable().transform((v) => v || null),
   notes:    optStr,
+  roomIndex: z.number().int().min(0).optional().nullable(),
 });
 
 export const orderMoldingInput = z.object({
@@ -147,15 +148,7 @@ export const orderInput = z.object({
   shipZip:          optStr,
   shipPhone:        optStr,
 
-  // job-site
-  jobSiteSameAsBilling: z.boolean().default(true),
-  jobSiteAddressLine1:  optStr,
-  jobSiteCity:          optStr,
-  jobSiteState:         optStr,
-  jobSiteZip:           optStr,
-  siteContactName:      optStr,
-  siteContactPhone:     optStr,
-  accessInstructions:   optStr,
+  // deposit instructions (in Remarks section)
   depositInstructions:  optStr,
 
   // children

@@ -16,7 +16,7 @@ type FullOrder = Prisma.OrderGetPayload<{
     customer: true;
     salesperson: { select: { id: true; fullName: true; email: true } };
     rooms: true;
-    lineItems: true;
+    lineItems: { include: { room: true } };
     inclusions: true;
     moldings: true;
     fixtures: true;
@@ -70,6 +70,9 @@ export function InstallationInstructionPDF({
   const categories = Array.from(categoryMap.entries());
 
   const noteMap = new Map(order.installNotes.map((n) => [n.category, n.notes]));
+
+  // Build roomId → room lookup for area labels on line items
+  const roomMap = new Map(order.rooms.map((r) => [r.id, r]));
 
   const moldingCheckboxTypes = new Set(["baseShoe", "baseboard", "rubberCover4in"]);
   const checkboxMoldings = order.moldings.filter((m) => moldingCheckboxTypes.has(m.type));
@@ -174,31 +177,36 @@ export function InstallationInstructionPDF({
                 <Text style={{ width: 30, textAlign: "right" }}>QTY</Text>
                 <Text style={{ width: 26 }}>UNIT</Text>
               </View>
-              {items.map((li) => (
-                <View key={li.id} style={styles.tableRow}>
-                  <Text style={{ flex: 1 }}>{[li.brand, li.style].filter(Boolean).join(" — ")}</Text>
-                  <Text style={{ width: 60, color: COLORS.muted }}>{li.color ?? ""}</Text>
-                  <Text style={{ width: 48, color: COLORS.muted }}>{li.sizeSpec ?? ""}</Text>
-                  {isCarpet ? (
-                    <Text style={{ width: 50, color: COLORS.muted }}>{li.sku ?? ""}</Text>
-                  ) : null}
-                  {isCarpet ? (
-                    <Text style={{ width: 50, color: COLORS.muted }}>
-                      {li.carpetType ? (CARPET_TYPE_LABELS[li.carpetType] ?? li.carpetType) : ""}
-                    </Text>
-                  ) : null}
-                  {isCarpet ? (
-                    <Text style={{ width: 50, color: COLORS.muted }}>{li.pad ?? ""}</Text>
-                  ) : null}
-                  {!isCarpet ? (
-                    <Text style={{ width: 70, color: COLORS.muted }}>
-                      {li.lineInstallMethod ? (INSTALL_METHOD_LABELS[li.lineInstallMethod] ?? li.lineInstallMethod) : ""}
-                    </Text>
-                  ) : null}
-                  <Text style={{ width: 30, textAlign: "right" }}>{li.quantity ?? ""}</Text>
-                  <Text style={{ width: 26 }}>{unitShort(li.unit)}</Text>
-                </View>
-              ))}
+              {items.map((li) => {
+                const liRoom = li.roomId ? roomMap.get(li.roomId) : null;
+                const brandStyle = [li.brand, li.style].filter(Boolean).join(" — ");
+                const areaLabel = liRoom ? ` (${roomLabel(liRoom.room)})` : "";
+                return (
+                  <View key={li.id} style={styles.tableRow}>
+                    <Text style={{ flex: 1 }}>{brandStyle}{areaLabel ? <Text style={{ color: COLORS.muted, fontSize: 7 }}>{areaLabel}</Text> : null}</Text>
+                    <Text style={{ width: 60, color: COLORS.muted }}>{li.color ?? ""}</Text>
+                    <Text style={{ width: 48, color: COLORS.muted }}>{li.sizeSpec ?? ""}</Text>
+                    {isCarpet ? (
+                      <Text style={{ width: 50, color: COLORS.muted }}>{li.sku ?? ""}</Text>
+                    ) : null}
+                    {isCarpet ? (
+                      <Text style={{ width: 50, color: COLORS.muted }}>
+                        {li.carpetType ? (CARPET_TYPE_LABELS[li.carpetType] ?? li.carpetType) : ""}
+                      </Text>
+                    ) : null}
+                    {isCarpet ? (
+                      <Text style={{ width: 50, color: COLORS.muted }}>{li.pad ?? ""}</Text>
+                    ) : null}
+                    {!isCarpet ? (
+                      <Text style={{ width: 70, color: COLORS.muted }}>
+                        {li.lineInstallMethod ? (INSTALL_METHOD_LABELS[li.lineInstallMethod] ?? li.lineInstallMethod) : ""}
+                      </Text>
+                    ) : null}
+                    <Text style={{ width: 30, textAlign: "right" }}>{li.quantity ?? ""}</Text>
+                    <Text style={{ width: 26 }}>{unitShort(li.unit)}</Text>
+                  </View>
+                );
+              })}
             </View>
 
             {/* Moldings (carpet, vinyl, wood) */}

@@ -12,7 +12,7 @@ type FullOrder = Prisma.OrderGetPayload<{
     customer: true;
     salesperson: { select: { id: true; fullName: true; email: true } };
     rooms: true;
-    lineItems: true;
+    lineItems: { include: { room: true } };
     showerSpec: true;
     tileSpec: true;
     removals: true;
@@ -30,11 +30,47 @@ export function DailyWorkOrderPDF({
   const tile = order.tileSpec;
   const shower = order.showerSpec;
 
-  const linesByCategory = new Map<string, typeof order.lineItems>();
+  // Build roomId → room lookup
+  const roomMap = new Map(order.rooms.map((r) => [r.id, r]));
+
+  // Group line items by area, then by category within each area
+  type AreaSection = {
+    roomId: string | null;
+    roomLabel: string | null;
+    byCategory: Map<string, typeof order.lineItems>;
+  };
+
+  const areaMap = new Map<string | null, Map<string, typeof order.lineItems>>();
+  // Pre-seed in room order
+  for (const r of order.rooms) {
+    areaMap.set(r.id, new Map());
+  }
+  areaMap.set(null, new Map()); // orphans
+
   for (const li of order.lineItems) {
+    const roomId = li.roomId ?? null;
+    if (!areaMap.has(roomId)) areaMap.set(roomId, new Map());
+    const catMap = areaMap.get(roomId)!;
     const cat = lineCategoryLabel(li.category);
-    if (!linesByCategory.has(cat)) linesByCategory.set(cat, []);
-    linesByCategory.get(cat)!.push(li);
+    if (!catMap.has(cat)) catMap.set(cat, []);
+    catMap.get(cat)!.push(li);
+  }
+
+  // Build ordered sections (rooms first, then orphans)
+  const areaSections: AreaSection[] = [];
+  for (const r of order.rooms) {
+    const byCategory = areaMap.get(r.id);
+    if (byCategory && byCategory.size > 0) {
+      areaSections.push({
+        roomId: r.id,
+        roomLabel: `${roomLabel(r.room)}${r.quantity ? ` × ${r.quantity}` : ""}`,
+        byCategory,
+      });
+    }
+  }
+  const orphanMap = areaMap.get(null);
+  if (orphanMap && orphanMap.size > 0) {
+    areaSections.push({ roomId: null, roomLabel: null, byCategory: orphanMap });
   }
 
   return (
@@ -96,18 +132,27 @@ export function DailyWorkOrderPDF({
           </View>
         ) : null}
 
-        {linesByCategory.size > 0 ? (
+        {areaSections.length > 0 ? (
           <View style={{ marginBottom: 8 }}>
             <Text style={[styles.sectionLabel, { fontSize: 11 }]}>WHAT TO INSTALL</Text>
-            {Array.from(linesByCategory.entries()).map(([cat, lines]) => (
-              <View key={cat} style={{ marginTop: 4 }}>
-                <Text style={{ fontFamily: "Helvetica-Bold" }}>{cat}:</Text>
-                {lines.map((li) => (
-                  <Text key={li.id} style={{ color: COLORS.muted, marginLeft: 8 }}>
-                    • {[li.brand, li.style, li.color, li.sizeSpec].filter(Boolean).join(" — ")}
-                    {li.quantity != null ? ` (${li.quantity}${li.unit ? " " + unitShort(li.unit) : ""})` : ""}
-                    {li.notes ? ` · ${li.notes}` : ""}
+            {areaSections.map((section) => (
+              <View key={section.roomId ?? "_orphan"} style={{ marginTop: 4 }}>
+                {section.roomLabel ? (
+                  <Text style={{ fontFamily: "Helvetica-Bold", color: COLORS.brand, fontSize: 9, marginBottom: 2 }}>
+                    {section.roomLabel}
                   </Text>
+                ) : null}
+                {Array.from(section.byCategory.entries()).map(([cat, lines]) => (
+                  <View key={cat} style={{ marginTop: 2 }}>
+                    <Text style={{ fontFamily: "Helvetica-Bold", marginLeft: section.roomLabel ? 8 : 0 }}>{cat}:</Text>
+                    {lines.map((li) => (
+                      <Text key={li.id} style={{ color: COLORS.muted, marginLeft: section.roomLabel ? 16 : 8 }}>
+                        • {[li.brand, li.style, li.color, li.sizeSpec].filter(Boolean).join(" — ")}
+                        {li.quantity != null ? ` (${li.quantity}${li.unit ? " " + unitShort(li.unit) : ""})` : ""}
+                        {li.notes ? ` · ${li.notes}` : ""}
+                      </Text>
+                    ))}
+                  </View>
                 ))}
               </View>
             ))}

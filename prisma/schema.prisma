@@ -243,7 +243,9 @@ model OrderRoom {
   notes     String?  // optional per-room note ("master only", "downstairs", etc.)
   createdAt DateTime @default(now())
 
-  @@unique([orderId, room])
+  lineItems OrderLineItem[]
+
+  @@index([orderId])
 }
 
 // ---------- Line Items (the actual money) ----------
@@ -303,6 +305,10 @@ model OrderLineItem {
 
   notes String?
 
+  // Area group link — which room this line item belongs to
+  roomId String?
+  room   OrderRoom? @relation(fields: [roomId], references: [id], onDelete: SetNull)
+
   // PHASE 2 readiness
   materialId String?
 
@@ -310,6 +316,7 @@ model OrderLineItem {
   updatedAt DateTime @updatedAt
 
   @@index([orderId, position])
+  @@index([roomId])
 }
 
 // ---------- Inclusions / Exclusions (chips + custom notes) ----------

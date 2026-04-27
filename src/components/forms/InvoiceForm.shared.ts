@@ -10,13 +10,6 @@ import {
 export type SalespersonOption = { id: string; fullName: string };
 export type AdvSourceOption = { id: string; name: string };
 
-export type RoomFormValue = {
-  room: RoomName;
-  on: boolean;
-  quantity: string;
-  notes: string;
-};
-
 export type LineItemFormValue = {
   key: string;
   category: LineCategory | "";
@@ -32,6 +25,14 @@ export type LineItemFormValue = {
   pad: string;
   lineInstallMethod: InstallMethod | "";
   notes: string;
+};
+
+export type AreaGroupFormValue = {
+  key: string;
+  room: RoomName | "";
+  quantity: string;
+  notes: string;
+  lineItems: LineItemFormValue[];
 };
 
 export type MoldingsFormValue = {
@@ -100,20 +101,12 @@ export type OrderInitialValues = {
   shipZip: string;
   shipPhone: string;
 
-  // job-site
-  jobSiteSameAsBilling: boolean;
-  jobSiteAddressLine1: string;
-  jobSiteCity: string;
-  jobSiteState: string;
-  jobSiteZip: string;
-  siteContactName: string;
-  siteContactPhone: string;
-  accessInstructions: string;
+  // deposit instructions (formerly in job-site section, now in Remarks)
   depositInstructions: string;
 
-  // children
-  rooms: RoomFormValue[];
-  lineItems: LineItemFormValue[];
+  // area groups (rooms + line items combined)
+  areaGroups: AreaGroupFormValue[];
+
   inclusions: InclusionType[];
   inclusionNotes: string[];
   exclusions: ExclusionType[];
@@ -171,14 +164,8 @@ export const emptyInitialValues = (defaultSalespersonId: string): OrderInitialVa
   sameAsSoldTo: true,
   shipFirstName: "", shipLastName: "", shipAddressLine1: "",
   shipCity: "", shipState: "CA", shipZip: "", shipPhone: "",
-  jobSiteSameAsBilling: true,
-  jobSiteAddressLine1: "", jobSiteCity: "", jobSiteState: "CA", jobSiteZip: "",
-  siteContactName: "", siteContactPhone: "",
-  accessInstructions: "", depositInstructions: "",
-  rooms: Object.values(RoomName).map((r) => ({
-    room: r, on: false, quantity: "", notes: "",
-  })),
-  lineItems: [emptyLineItem()],
+  depositInstructions: "",
+  areaGroups: [{ key: cryptoRandomKey(), room: "", quantity: "", notes: "", lineItems: [emptyLineItem()] }],
   inclusions: [],
   inclusionNotes: [],
   exclusions: [],
@@ -206,7 +193,7 @@ export function emptyLineItem(): LineItemFormValue {
   };
 }
 
-function cryptoRandomKey(): string {
+export function cryptoRandomKey(): string {
   if (typeof globalThis !== "undefined" && globalThis.crypto?.randomUUID) {
     return globalThis.crypto.randomUUID();
   }
@@ -217,6 +204,42 @@ const moneyToInput = (cents: number | null | undefined) => (cents ? (cents / 100
 const numToInput = (n: number | null | undefined) => (n != null ? String(n) : "");
 const boolToYesNo = (v: boolean | null | undefined): "" | "yes" | "no" =>
   v === true ? "yes" : v === false ? "no" : "";
+
+function liToForm(li: {
+  id: string;
+  roomId: string | null;
+  position: number;
+  category: LineCategory;
+  brand: string | null;
+  style: string | null;
+  color: string | null;
+  sizeSpec: string | null;
+  sku: string | null;
+  quantity: number | null;
+  unit: UnitOfMeasure | null;
+  unitPriceCents: number | null;
+  carpetType: CarpetType | null;
+  pad: string | null;
+  lineInstallMethod: InstallMethod | null;
+  notes: string | null;
+}): LineItemFormValue {
+  return {
+    key: cryptoRandomKey(),
+    category: li.category,
+    brand: li.brand ?? "",
+    style: li.style ?? "",
+    color: li.color ?? "",
+    sizeSpec: li.sizeSpec ?? "",
+    sku: li.sku ?? "",
+    quantity: numToInput(li.quantity),
+    unit: li.unit ?? "",
+    unitPriceCents: moneyToInput(li.unitPriceCents),
+    carpetType: li.carpetType ?? "",
+    pad: li.pad ?? "",
+    lineInstallMethod: li.lineInstallMethod ?? "",
+    notes: li.notes ?? "",
+  };
+}
 
 export function orderToInitial(order: {
   id: string;
@@ -230,14 +253,6 @@ export function orderToInitial(order: {
   depositCents: number;
   remarks: string | null;
   balanceTerm: "cash" | "cod" | "finance" | null;
-  jobSiteSameAsBilling: boolean;
-  jobSiteAddressLine1: string | null;
-  jobSiteCity: string | null;
-  jobSiteState: string | null;
-  jobSiteZip: string | null;
-  siteContactName: string | null;
-  siteContactPhone: string | null;
-  accessInstructions: string | null;
   depositInstructions: string | null;
   // work-order internal
   moldingsRemoveReplace: boolean;
@@ -254,8 +269,10 @@ export function orderToInitial(order: {
     shipFirstName: string | null; shipLastName: string | null; shipAddressLine1: string | null;
     shipCity: string | null; shipState: string | null; shipZip: string | null; shipPhone: string | null;
   };
-  rooms: { room: RoomName; quantity: number | null; notes: string | null }[];
+  rooms: { id: string; room: RoomName; quantity: number | null; notes: string | null }[];
   lineItems: {
+    id: string;
+    roomId: string | null;
     position: number; category: LineCategory;
     brand: string | null; style: string | null; color: string | null;
     sizeSpec: string | null; sku: string | null;
@@ -274,16 +291,38 @@ export function orderToInitial(order: {
     c.shipLastName === c.lastName &&
     c.shipAddressLine1 === c.addressLine1;
 
-  const roomMap = new Map(order.rooms.map((r) => [r.room, r]));
-  const rooms = Object.values(RoomName).map((rname) => {
-    const r = roomMap.get(rname);
-    return {
-      room: rname,
-      on: !!r,
-      quantity: r?.quantity != null ? String(r.quantity) : "",
-      notes: r?.notes ?? "",
-    };
-  });
+  // Group line items by roomId
+  const linesByRoomId = new Map<string | null, typeof order.lineItems>();
+  for (const li of order.lineItems) {
+    const key = li.roomId ?? null;
+    if (!linesByRoomId.has(key)) linesByRoomId.set(key, []);
+    linesByRoomId.get(key)!.push(li);
+  }
+
+  // Build area groups from rooms
+  const areaGroups: AreaGroupFormValue[] = [];
+  for (const r of order.rooms) {
+    const roomItems = linesByRoomId.get(r.id) ?? [];
+    areaGroups.push({
+      key: cryptoRandomKey(),
+      room: r.room,
+      quantity: r.quantity != null ? String(r.quantity) : "",
+      notes: r.notes ?? "",
+      lineItems: roomItems.length > 0 ? roomItems.map(liToForm) : [emptyLineItem()],
+    });
+  }
+
+  // Orphaned line items (no roomId) go into a trailing "no area" group
+  const orphanItems = linesByRoomId.get(null) ?? [];
+  if (orphanItems.length > 0 || areaGroups.length === 0) {
+    areaGroups.push({
+      key: cryptoRandomKey(),
+      room: "",
+      quantity: "",
+      notes: "",
+      lineItems: orphanItems.length > 0 ? orphanItems.map(liToForm) : [emptyLineItem()],
+    });
+  }
 
   // Reconstruct moldings form value from DB rows
   const moldingMap = new Map(order.moldings.map((m) => [m.type, m]));
@@ -339,34 +378,8 @@ export function orderToInitial(order: {
     shipAddressLine1: c.shipAddressLine1 ?? "",
     shipCity: c.shipCity ?? "", shipState: c.shipState ?? "CA", shipZip: c.shipZip ?? "",
     shipPhone: c.shipPhone ?? "",
-    jobSiteSameAsBilling: order.jobSiteSameAsBilling,
-    jobSiteAddressLine1: order.jobSiteAddressLine1 ?? "",
-    jobSiteCity: order.jobSiteCity ?? "",
-    jobSiteState: order.jobSiteState ?? "CA",
-    jobSiteZip: order.jobSiteZip ?? "",
-    siteContactName: order.siteContactName ?? "",
-    siteContactPhone: order.siteContactPhone ?? "",
-    accessInstructions: order.accessInstructions ?? "",
     depositInstructions: order.depositInstructions ?? "",
-    rooms,
-    lineItems: order.lineItems.length > 0
-      ? order.lineItems.map((li) => ({
-          key: cryptoRandomKey(),
-          category: li.category,
-          brand: li.brand ?? "",
-          style: li.style ?? "",
-          color: li.color ?? "",
-          sizeSpec: li.sizeSpec ?? "",
-          sku: li.sku ?? "",
-          quantity: numToInput(li.quantity),
-          unit: li.unit ?? "",
-          unitPriceCents: moneyToInput(li.unitPriceCents),
-          carpetType: li.carpetType ?? "",
-          pad: li.pad ?? "",
-          lineInstallMethod: li.lineInstallMethod ?? "",
-          notes: li.notes ?? "",
-        }))
-      : [emptyLineItem()],
+    areaGroups,
     inclusions: order.inclusions.filter((i) => i.type !== InclusionType.customNote).map((i) => i.type),
     inclusionNotes: order.inclusions.filter((i) => i.type === InclusionType.customNote).map((i) => i.customText ?? ""),
     exclusions: order.exclusions.filter((e) => e.type !== ExclusionType.customNote).map((e) => e.type),

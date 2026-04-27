@@ -18,7 +18,7 @@ type FullOrder = Prisma.OrderGetPayload<{
     salesperson: { select: { id: true; fullName: true; email: true } };
     advertisingSource: true;
     rooms: true;
-    lineItems: true;
+    lineItems: { include: { room: true } };
     inclusions: true;
     exclusions: true;
   };
@@ -49,8 +49,8 @@ export function InvoiceView({ order }: { order: FullOrder }) {
         </div>
       </div>
 
-      {/* Sold/ship/job-site/salesperson */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      {/* Sold/ship/salesperson */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div>
           <p className="text-xs text-marble-700 uppercase tracking-wide font-semibold mb-1">Sold to</p>
           <p className="text-marble-900 font-medium">{cust.firstName} {cust.lastName}</p>
@@ -68,21 +68,6 @@ export function InvoiceView({ order }: { order: FullOrder }) {
             {(cust.shipCity ?? cust.city)}, {(cust.shipState ?? cust.state)} {(cust.shipZip ?? cust.zip)}
           </p>
           {cust.shipPhone ? <p className="text-marble-700 text-sm">{cust.shipPhone}</p> : null}
-        </div>
-        <div>
-          <p className="text-xs text-marble-700 uppercase tracking-wide font-semibold mb-1">Job site</p>
-          {order.jobSiteSameAsBilling ? (
-            <p className="text-marble-700 text-sm italic">Same as billing</p>
-          ) : (
-            <>
-              <p className="text-marble-900">{order.jobSiteAddressLine1 ?? "—"}</p>
-              <p className="text-marble-700 text-sm">
-                {order.jobSiteCity ?? ""}{order.jobSiteCity ? "," : ""} {order.jobSiteState ?? ""} {order.jobSiteZip ?? ""}
-              </p>
-            </>
-          )}
-          {order.siteContactName ? <p className="text-marble-900 text-sm mt-1">Contact: {order.siteContactName}{order.siteContactPhone ? ` · ${order.siteContactPhone}` : ""}</p> : null}
-          {order.accessInstructions ? <p className="text-marble-700 text-xs mt-1">Access: {order.accessInstructions}</p> : null}
         </div>
         <div>
           <p className="text-xs text-marble-700 uppercase tracking-wide font-semibold mb-1">Salesperson</p>
@@ -120,39 +105,73 @@ export function InvoiceView({ order }: { order: FullOrder }) {
         </div>
       ) : null}
 
-      {/* Line items */}
-      {order.lineItems.length > 0 ? (
-        <div className="overflow-x-auto mb-6">
-          <table className="w-full text-sm min-w-[820px]">
-            <thead className="border-b border-marble-700 text-marble-900">
-              <tr>
-                <th className="text-left py-2 w-28 font-semibold">Category</th>
-                <th className="text-left py-2 font-semibold">Brand / Style</th>
-                <th className="text-left py-2 w-28 font-semibold">Color</th>
-                <th className="text-left py-2 w-24 font-semibold">Size</th>
-                <th className="text-right py-2 w-20 font-semibold">Qty</th>
-                <th className="text-left py-2 w-16 font-semibold">Unit</th>
-                <th className="text-right py-2 w-24 font-semibold">Unit $</th>
-                <th className="text-right py-2 w-24 font-semibold">Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              {order.lineItems.map((li) => (
-                <tr key={li.id} className="border-b border-marble-200">
-                  <td className="py-1.5 text-marble-900">{lineCategoryLabel(li.category)}</td>
-                  <td className="py-1.5 text-marble-700">{[li.brand, li.style].filter(Boolean).join(" — ")}</td>
-                  <td className="py-1.5 text-marble-700">{li.color ?? ""}</td>
-                  <td className="py-1.5 text-marble-700">{li.sizeSpec ?? ""}</td>
-                  <td className="py-1.5 text-right tabular-money">{li.quantity ?? ""}</td>
-                  <td className="py-1.5 text-marble-700">{unitShort(li.unit)}</td>
-                  <td className="py-1.5 text-right tabular-money">{li.unitPriceCents != null ? centsToDollarString(li.unitPriceCents) : ""}</td>
-                  <td className="py-1.5 text-right tabular-money">{li.lineTotalCents != null ? centsToDollarString(li.lineTotalCents) : ""}</td>
+      {/* Line items grouped by area */}
+      {order.lineItems.length > 0 ? (() => {
+        // Build roomId → room lookup
+        const roomMap = new Map(order.rooms.map((r) => [r.id, r]));
+        // Group line items by roomId
+        const linesByRoomId = new Map<string | null, typeof order.lineItems>();
+        for (const li of order.lineItems) {
+          const key = li.roomId ?? null;
+          if (!linesByRoomId.has(key)) linesByRoomId.set(key, []);
+          linesByRoomId.get(key)!.push(li);
+        }
+        // Ordered sections: rooms first, then orphans
+        const sections: Array<{ roomId: string | null; items: typeof order.lineItems }> = [];
+        for (const r of order.rooms) {
+          const items = linesByRoomId.get(r.id);
+          if (items && items.length > 0) sections.push({ roomId: r.id, items });
+        }
+        const orphans = linesByRoomId.get(null);
+        if (orphans && orphans.length > 0) sections.push({ roomId: null, items: orphans });
+
+        return (
+          <div className="overflow-x-auto mb-6">
+            <table className="w-full text-sm min-w-[820px]">
+              <thead className="border-b border-marble-700 text-marble-900">
+                <tr>
+                  <th className="text-left py-2 w-28 font-semibold">Category</th>
+                  <th className="text-left py-2 font-semibold">Brand / Style</th>
+                  <th className="text-left py-2 w-28 font-semibold">Color</th>
+                  <th className="text-left py-2 w-24 font-semibold">Size</th>
+                  <th className="text-right py-2 w-20 font-semibold">Qty</th>
+                  <th className="text-left py-2 w-16 font-semibold">Unit</th>
+                  <th className="text-right py-2 w-24 font-semibold">Unit $</th>
+                  <th className="text-right py-2 w-24 font-semibold">Total</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) : null}
+              </thead>
+              <tbody>
+                {sections.map(({ roomId, items }) => {
+                  const room = roomId != null ? roomMap.get(roomId) : null;
+                  return (
+                    <>
+                      {room ? (
+                        <tr key={`room-${roomId}`}>
+                          <td colSpan={8} className="py-1.5 px-0 text-xs font-semibold text-brand-700 border-b border-marble-200">
+                            {roomLabel(room.room)}{room.quantity ? ` × ${room.quantity}` : ""}{room.notes ? ` — ${room.notes}` : ""}
+                          </td>
+                        </tr>
+                      ) : null}
+                      {items.map((li) => (
+                        <tr key={li.id} className="border-b border-marble-200">
+                          <td className="py-1.5 text-marble-900">{lineCategoryLabel(li.category)}</td>
+                          <td className="py-1.5 text-marble-700">{[li.brand, li.style].filter(Boolean).join(" — ")}</td>
+                          <td className="py-1.5 text-marble-700">{li.color ?? ""}</td>
+                          <td className="py-1.5 text-marble-700">{li.sizeSpec ?? ""}</td>
+                          <td className="py-1.5 text-right tabular-money">{li.quantity ?? ""}</td>
+                          <td className="py-1.5 text-marble-700">{unitShort(li.unit)}</td>
+                          <td className="py-1.5 text-right tabular-money">{li.unitPriceCents != null ? centsToDollarString(li.unitPriceCents) : ""}</td>
+                          <td className="py-1.5 text-right tabular-money">{li.lineTotalCents != null ? centsToDollarString(li.lineTotalCents) : ""}</td>
+                        </tr>
+                      ))}
+                    </>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        );
+      })() : null}
 
       {/* Inclusions / Exclusions */}
       {(order.inclusions.length > 0 || order.exclusions.length > 0) ? (

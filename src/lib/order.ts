@@ -53,48 +53,6 @@ function shipFields(input: OrderInputParsed) {
   };
 }
 
-function jobSiteFields(input: OrderInputParsed) {
-  if (input.jobSiteSameAsBilling) {
-    return {
-      jobSiteSameAsBilling: true,
-      jobSiteAddressLine1: null,
-      jobSiteCity:         null,
-      jobSiteState:        null,
-      jobSiteZip:          null,
-    };
-  }
-  return {
-    jobSiteSameAsBilling: false,
-    jobSiteAddressLine1: input.jobSiteAddressLine1,
-    jobSiteCity:         input.jobSiteCity,
-    jobSiteState:        input.jobSiteState,
-    jobSiteZip:          input.jobSiteZip,
-  };
-}
-
-function lineItemCreateData(input: OrderInputParsed) {
-  return input.lineItems.map((li, i) => ({
-    position: i,
-    category: li.category,
-    brand: li.brand,
-    style: li.style,
-    color: li.color,
-    sizeSpec: li.sizeSpec,
-    sku: li.sku,
-    quantity: li.quantity,
-    unit: li.unit,
-    unitPriceCents: li.unitPriceCents,
-    lineTotalCents:
-      li.quantity != null && li.unitPriceCents != null
-        ? Math.round(li.quantity * li.unitPriceCents)
-        : null,
-    carpetType: li.carpetType,
-    pad: li.pad,
-    lineInstallMethod: li.lineInstallMethod,
-    notes: li.notes,
-  }));
-}
-
 function orderInstructionFields(input: OrderInputParsed) {
   return {
     moldingsRemoveReplace: input.moldingsRemoveReplace,
@@ -111,7 +69,6 @@ function orderInstructionFields(input: OrderInputParsed) {
 export async function createOrder(input: OrderInputParsed) {
   const totals = computeTotals(input);
   const ship = shipFields(input);
-  const site = jobSiteFields(input);
   const instructions = orderInstructionFields(input);
 
   const order = await prisma.$transaction(async (tx) => {
@@ -133,6 +90,7 @@ export async function createOrder(input: OrderInputParsed) {
       },
     });
 
+    // Create order without rooms or lineItems nested
     const created = await tx.order.create({
       data: {
         invoiceNumber,
@@ -149,22 +107,8 @@ export async function createOrder(input: OrderInputParsed) {
         balanceCents: totals.balanceCents,
         remarks:     input.remarks,
         balanceTerm: input.balanceTerm,
-        ...site,
         ...instructions,
-        siteContactName:     input.siteContactName,
-        siteContactPhone:    input.siteContactPhone,
-        accessInstructions:  input.accessInstructions,
         depositInstructions: input.depositInstructions,
-        rooms: {
-          create: input.rooms.map((r) => ({
-            room: r.room,
-            quantity: r.quantity,
-            notes: r.notes,
-          })),
-        },
-        lineItems: {
-          create: lineItemCreateData(input),
-        },
         inclusions: {
           create: input.inclusions.map((inc) => ({
             type: inc.type,
@@ -188,6 +132,49 @@ export async function createOrder(input: OrderInputParsed) {
         },
       },
     });
+
+    // Create rooms and build roomId lookup map (index → id)
+    const roomIdByIndex = new Map<number, string>();
+    for (let idx = 0; idx < input.rooms.length; idx++) {
+      const r = input.rooms[idx];
+      const createdRoom = await tx.orderRoom.create({
+        data: {
+          orderId: created.id,
+          room: r.room,
+          quantity: r.quantity,
+          notes: r.notes,
+        },
+      });
+      roomIdByIndex.set(idx, createdRoom.id);
+    }
+
+    // Create line items with roomId resolved
+    if (input.lineItems.length > 0) {
+      await tx.orderLineItem.createMany({
+        data: input.lineItems.map((li, i) => ({
+          orderId: created.id,
+          position: i,
+          category: li.category,
+          brand: li.brand,
+          style: li.style,
+          color: li.color,
+          sizeSpec: li.sizeSpec,
+          sku: li.sku,
+          quantity: li.quantity,
+          unit: li.unit,
+          unitPriceCents: li.unitPriceCents,
+          lineTotalCents:
+            li.quantity != null && li.unitPriceCents != null
+              ? Math.round(li.quantity * li.unitPriceCents)
+              : null,
+          carpetType: li.carpetType,
+          pad: li.pad,
+          lineInstallMethod: li.lineInstallMethod,
+          notes: li.notes,
+          roomId: li.roomIndex != null ? (roomIdByIndex.get(li.roomIndex) ?? null) : null,
+        })),
+      });
+    }
 
     return created;
   });
@@ -210,7 +197,6 @@ export async function createOrder(input: OrderInputParsed) {
 export async function updateOrder(id: string, input: OrderInputParsed) {
   const totals = computeTotals(input);
   const ship = shipFields(input);
-  const site = jobSiteFields(input);
   const instructions = orderInstructionFields(input);
 
   const order = await prisma.$transaction(async (tx) => {
@@ -233,6 +219,7 @@ export async function updateOrder(id: string, input: OrderInputParsed) {
       },
     });
 
+    // Delete existing children first
     await tx.orderRoom.deleteMany({ where: { orderId: id } });
     await tx.orderLineItem.deleteMany({ where: { orderId: id } });
     await tx.orderInclusion.deleteMany({ where: { orderId: id } });
@@ -240,6 +227,7 @@ export async function updateOrder(id: string, input: OrderInputParsed) {
     await tx.orderMolding.deleteMany({ where: { orderId: id } });
     await tx.orderFixture.deleteMany({ where: { orderId: id } });
 
+    // Update order without rooms or lineItems nested
     const updated = await tx.order.update({
       where: { id },
       data: {
@@ -255,22 +243,8 @@ export async function updateOrder(id: string, input: OrderInputParsed) {
         balanceCents: totals.balanceCents,
         remarks:     input.remarks,
         balanceTerm: input.balanceTerm,
-        ...site,
         ...instructions,
-        siteContactName:     input.siteContactName,
-        siteContactPhone:    input.siteContactPhone,
-        accessInstructions:  input.accessInstructions,
         depositInstructions: input.depositInstructions,
-        rooms: {
-          create: input.rooms.map((r) => ({
-            room: r.room,
-            quantity: r.quantity,
-            notes: r.notes,
-          })),
-        },
-        lineItems: {
-          create: lineItemCreateData(input),
-        },
         inclusions: {
           create: input.inclusions.map((inc) => ({
             type: inc.type,
@@ -294,6 +268,49 @@ export async function updateOrder(id: string, input: OrderInputParsed) {
         },
       },
     });
+
+    // Create rooms and build roomId lookup map (index → id)
+    const roomIdByIndex = new Map<number, string>();
+    for (let idx = 0; idx < input.rooms.length; idx++) {
+      const r = input.rooms[idx];
+      const createdRoom = await tx.orderRoom.create({
+        data: {
+          orderId: id,
+          room: r.room,
+          quantity: r.quantity,
+          notes: r.notes,
+        },
+      });
+      roomIdByIndex.set(idx, createdRoom.id);
+    }
+
+    // Create line items with roomId resolved
+    if (input.lineItems.length > 0) {
+      await tx.orderLineItem.createMany({
+        data: input.lineItems.map((li, i) => ({
+          orderId: id,
+          position: i,
+          category: li.category,
+          brand: li.brand,
+          style: li.style,
+          color: li.color,
+          sizeSpec: li.sizeSpec,
+          sku: li.sku,
+          quantity: li.quantity,
+          unit: li.unit,
+          unitPriceCents: li.unitPriceCents,
+          lineTotalCents:
+            li.quantity != null && li.unitPriceCents != null
+              ? Math.round(li.quantity * li.unitPriceCents)
+              : null,
+          carpetType: li.carpetType,
+          pad: li.pad,
+          lineInstallMethod: li.lineInstallMethod,
+          notes: li.notes,
+          roomId: li.roomIndex != null ? (roomIdByIndex.get(li.roomIndex) ?? null) : null,
+        })),
+      });
+    }
 
     return updated;
   });
@@ -370,7 +387,7 @@ export async function getOrder(id: string) {
       salesperson: { select: { id: true, fullName: true, email: true } },
       advertisingSource: true,
       rooms: { orderBy: { id: "asc" } },
-      lineItems: { orderBy: { position: "asc" } },
+      lineItems: { orderBy: { position: "asc" }, include: { room: true } },
       inclusions: { orderBy: { id: "asc" } },
       exclusions: { orderBy: { id: "asc" } },
       moldings: { orderBy: { id: "asc" } },

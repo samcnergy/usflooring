@@ -17,7 +17,7 @@ type FullOrder = Prisma.OrderGetPayload<{
     salesperson: { select: { id: true; fullName: true; email: true } };
     advertisingSource: true;
     rooms: true;
-    lineItems: true;
+    lineItems: { include: { room: true } };
     inclusions: true;
     exclusions: true;
   };
@@ -105,25 +105,6 @@ export function InvoicePDF({
           </View>
         </View>
 
-        {!order.jobSiteSameAsBilling || order.siteContactName || order.accessInstructions ? (
-          <View style={{ borderTopWidth: 0.5, borderColor: COLORS.borderLight, paddingTop: 4, marginBottom: 4 }}>
-            <Text style={styles.sectionLabel}>JOB SITE:</Text>
-            {!order.jobSiteSameAsBilling ? (
-              <Text style={{ color: COLORS.muted }}>
-                {order.jobSiteAddressLine1}, {order.jobSiteCity}, {order.jobSiteState} {order.jobSiteZip}
-              </Text>
-            ) : null}
-            {order.siteContactName ? (
-              <Text style={{ color: COLORS.muted }}>
-                Contact: {order.siteContactName}{order.siteContactPhone ? ` · ${order.siteContactPhone}` : ""}
-              </Text>
-            ) : null}
-            {order.accessInstructions ? (
-              <Text style={{ color: COLORS.muted }}>Access: {order.accessInstructions}</Text>
-            ) : null}
-          </View>
-        ) : null}
-
         {/* Categories (derived from line items) */}
         <View style={styles.categoryRow}>
           {PRINTED_CATEGORY_CHECKBOXES.map((c) => (
@@ -134,47 +115,67 @@ export function InvoicePDF({
           ))}
         </View>
 
-        {/* Rooms summary */}
-        {order.rooms.length > 0 ? (
-          <View style={{ marginBottom: 6 }}>
-            <Text style={{ fontFamily: "Helvetica-Bold" }}>
-              ROOMS:{" "}
-              <Text style={{ fontFamily: "Helvetica" }}>
-                {order.rooms.map((r) => `${roomLabel(r.room)}${r.quantity ? ` × ${r.quantity}` : ""}`).join(", ")}
-              </Text>
-            </Text>
-          </View>
-        ) : null}
+        {/* Line items grouped by area */}
+        {order.lineItems.length > 0 ? (() => {
+          // Build roomId → room lookup
+          const roomMap = new Map(order.rooms.map((r) => [r.id, r]));
+          // Group line items by roomId (null = no specific area)
+          const linesByRoomId = new Map<string | null, typeof order.lineItems>();
+          for (const li of order.lineItems) {
+            const key = li.roomId ?? null;
+            if (!linesByRoomId.has(key)) linesByRoomId.set(key, []);
+            linesByRoomId.get(key)!.push(li);
+          }
+          // Ordered list of [roomId, lines] — rooms in order.rooms order, then null
+          const sections: Array<[string | null, typeof order.lineItems]> = [];
+          for (const r of order.rooms) {
+            const items = linesByRoomId.get(r.id);
+            if (items && items.length > 0) sections.push([r.id, items]);
+          }
+          const orphans = linesByRoomId.get(null);
+          if (orphans && orphans.length > 0) sections.push([null, orphans]);
 
-        {/* Line items */}
-        {order.lineItems.length > 0 ? (
-          <>
-            <View style={styles.tableHead}>
-              <Text style={{ width: 56 }}>CATEGORY</Text>
-              <Text style={{ flex: 1.2 }}>BRAND / STYLE</Text>
-              <Text style={{ width: 70 }}>COLOR</Text>
-              <Text style={{ width: 50 }}>SIZE</Text>
-              <Text style={{ width: 30, textAlign: "right" }}>QTY</Text>
-              <Text style={{ width: 30 }}>UNIT</Text>
-              {showPrices ? <Text style={{ width: 56, textAlign: "right" }}>UNIT $</Text> : null}
-              {showPrices ? <Text style={{ width: 56, textAlign: "right" }}>TOTAL</Text> : null}
-            </View>
-            {order.lineItems.map((li) => (
-              <View key={li.id} style={styles.tableRow}>
-                <Text style={{ width: 56 }}>{lineCategoryLabel(li.category)}</Text>
-                <Text style={{ flex: 1.2, color: COLORS.muted }}>
-                  {[li.brand, li.style].filter(Boolean).join(" — ")}
-                </Text>
-                <Text style={{ width: 70, color: COLORS.muted }}>{li.color ?? ""}</Text>
-                <Text style={{ width: 50, color: COLORS.muted }}>{li.sizeSpec ?? ""}</Text>
-                <Text style={{ width: 30, textAlign: "right" }}>{li.quantity ?? ""}</Text>
-                <Text style={{ width: 30 }}>{unitShort(li.unit)}</Text>
-                {showPrices ? <Text style={{ width: 56, textAlign: "right" }}>{li.unitPriceCents != null ? centsToDollarString(li.unitPriceCents) : ""}</Text> : null}
-                {showPrices ? <Text style={{ width: 56, textAlign: "right" }}>{li.lineTotalCents != null ? centsToDollarString(li.lineTotalCents) : ""}</Text> : null}
+          return (
+            <>
+              <View style={styles.tableHead}>
+                <Text style={{ width: 56 }}>CATEGORY</Text>
+                <Text style={{ flex: 1.2 }}>BRAND / STYLE</Text>
+                <Text style={{ width: 70 }}>COLOR</Text>
+                <Text style={{ width: 50 }}>SIZE</Text>
+                <Text style={{ width: 30, textAlign: "right" }}>QTY</Text>
+                <Text style={{ width: 30 }}>UNIT</Text>
+                {showPrices ? <Text style={{ width: 56, textAlign: "right" }}>UNIT $</Text> : null}
+                {showPrices ? <Text style={{ width: 56, textAlign: "right" }}>TOTAL</Text> : null}
               </View>
-            ))}
-          </>
-        ) : null}
+              {sections.map(([roomId, items]) => {
+                const room = roomId != null ? roomMap.get(roomId) : null;
+                return (
+                  <View key={roomId ?? "_orphan"}>
+                    {room ? (
+                      <Text style={{ fontFamily: "Helvetica-Bold", fontSize: 8, color: COLORS.brand, marginTop: 4, marginBottom: 1 }}>
+                        {roomLabel(room.room)}{room.quantity ? ` × ${room.quantity}` : ""}{room.notes ? ` — ${room.notes}` : ""}
+                      </Text>
+                    ) : null}
+                    {items.map((li) => (
+                      <View key={li.id} style={styles.tableRow}>
+                        <Text style={{ width: 56 }}>{lineCategoryLabel(li.category)}</Text>
+                        <Text style={{ flex: 1.2, color: COLORS.muted }}>
+                          {[li.brand, li.style].filter(Boolean).join(" — ")}
+                        </Text>
+                        <Text style={{ width: 70, color: COLORS.muted }}>{li.color ?? ""}</Text>
+                        <Text style={{ width: 50, color: COLORS.muted }}>{li.sizeSpec ?? ""}</Text>
+                        <Text style={{ width: 30, textAlign: "right" }}>{li.quantity ?? ""}</Text>
+                        <Text style={{ width: 30 }}>{unitShort(li.unit)}</Text>
+                        {showPrices ? <Text style={{ width: 56, textAlign: "right" }}>{li.unitPriceCents != null ? centsToDollarString(li.unitPriceCents) : ""}</Text> : null}
+                        {showPrices ? <Text style={{ width: 56, textAlign: "right" }}>{li.lineTotalCents != null ? centsToDollarString(li.lineTotalCents) : ""}</Text> : null}
+                      </View>
+                    ))}
+                  </View>
+                );
+              })}
+            </>
+          );
+        })() : null}
 
         {/* Inclusions / Exclusions */}
         {(order.inclusions.length > 0 || order.exclusions.length > 0) ? (

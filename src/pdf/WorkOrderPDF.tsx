@@ -13,7 +13,8 @@ type FullOrder = Prisma.OrderGetPayload<{
   include: {
     customer: true;
     salesperson: { select: { id: true; fullName: true; email: true } };
-    lineItems: true;
+    rooms: true;
+    lineItems: { include: { room: true } };
     inclusions: true;
     exclusions: true;
     moldings: true;

@@ -2,8 +2,8 @@
 // `orderInput` (Zod schema) expects, then validates it.
 //
 // Field-naming conventions used by the form:
-//   - Rooms:      `room_<RoomName>_on` (checkbox), `room_<RoomName>_quantity`, `room_<RoomName>_notes`
-//   - Line items: `li_<i>_<field>` (i = 0..N-1)
+//   - Area groups: `ag_count`, `ag_<i>_room`, `ag_<i>_quantity`, `ag_<i>_notes`
+//                  `ag_<i>_li_count`, `ag_<i>_li_<j>_<field>`
 //   - Inclusions: `inc_<InclusionType>` (chip), `inc_custom_<i>` (custom-note text)
 //   - Exclusions: `exc_<ExclusionType>` (chip), `exc_custom_<i>` (custom-note text)
 //   - Moldings:   `mold_<MoldingType>` (checkbox or text for quantity types)
@@ -66,46 +66,76 @@ const FIXTURE_CHECKBOXES: FixtureType[] = [
 export function parseOrderForm(formData: FormData):
   | { ok: true; data: OrderInputParsed }
   | { ok: false; errors: Record<string, string>; message?: string } {
-  // --- rooms ---
-  const rooms = Object.values(RoomName)
-    .filter((r) => bool(formData, `room_${r}_on`))
-    .map((r) => ({
-      room: r as RoomName,
-      quantity: s(formData, `room_${r}_quantity`),
-      notes:    s(formData, `room_${r}_notes`),
-    }));
 
-  // --- line items ---
-  const liCount = Number(s(formData, "li_count")) || 0;
-  const lineItems = [];
-  for (let i = 0; i < liCount; i++) {
-    const category = s(formData, `li_${i}_category`);
-    if (!category) continue;
-    const brand    = s(formData, `li_${i}_brand`);
-    const style    = s(formData, `li_${i}_style`);
-    const color    = s(formData, `li_${i}_color`);
-    const sizeSpec = s(formData, `li_${i}_sizeSpec`);
-    const sku      = s(formData, `li_${i}_sku`);
-    const quantity = s(formData, `li_${i}_quantity`);
-    const unit     = s(formData, `li_${i}_unit`);
-    const unitPrice = s(formData, `li_${i}_unitPriceCents`);
-    const carpetType = s(formData, `li_${i}_carpetType`);
-    const pad      = s(formData, `li_${i}_pad`);
-    const lineInstallMethod = s(formData, `li_${i}_lineInstallMethod`);
-    const notes    = s(formData, `li_${i}_notes`);
-    if (!brand && !style && !color && !sizeSpec && !sku && !quantity && !unitPrice && !notes) continue;
-    lineItems.push({
-      position: i,
-      category,
-      brand, style, color, sizeSpec, sku,
-      quantity,
-      unit: unit || null,
-      unitPriceCents: unitPrice,
-      carpetType: carpetType || null,
-      pad: pad || null,
-      lineInstallMethod: lineInstallMethod || null,
-      notes,
-    });
+  // --- area groups → rooms + line items ---
+  const agCount = Number(s(formData, "ag_count")) || 0;
+  const rooms: Array<{ room: RoomName; quantity: string; notes: string }> = [];
+  const lineItems: Array<{
+    position: number;
+    category: string;
+    brand: string;
+    style: string;
+    color: string;
+    sizeSpec: string;
+    sku: string;
+    quantity: string;
+    unit: string | null;
+    unitPriceCents: string;
+    carpetType: string | null;
+    pad: string | null;
+    lineInstallMethod: string | null;
+    notes: string;
+    roomIndex: number | null;
+  }> = [];
+
+  let linePosition = 0;
+
+  for (let i = 0; i < agCount; i++) {
+    const roomValue = s(formData, `ag_${i}_room`);
+    const qty = s(formData, `ag_${i}_quantity`);
+    const notes = s(formData, `ag_${i}_notes`);
+
+    let roomIndex: number | null = null;
+    if (roomValue && Object.values(RoomName).includes(roomValue as RoomName)) {
+      roomIndex = rooms.length;
+      rooms.push({
+        room: roomValue as RoomName,
+        quantity: qty,
+        notes,
+      });
+    }
+
+    const liCount = Number(s(formData, `ag_${i}_li_count`)) || 0;
+    for (let j = 0; j < liCount; j++) {
+      const category = s(formData, `ag_${i}_li_${j}_category`);
+      if (!category) continue;
+      const brand    = s(formData, `ag_${i}_li_${j}_brand`);
+      const style    = s(formData, `ag_${i}_li_${j}_style`);
+      const color    = s(formData, `ag_${i}_li_${j}_color`);
+      const sizeSpec = s(formData, `ag_${i}_li_${j}_sizeSpec`);
+      const sku      = s(formData, `ag_${i}_li_${j}_sku`);
+      const quantity = s(formData, `ag_${i}_li_${j}_quantity`);
+      const unit     = s(formData, `ag_${i}_li_${j}_unit`);
+      const unitPrice = s(formData, `ag_${i}_li_${j}_unitPriceCents`);
+      const carpetType = s(formData, `ag_${i}_li_${j}_carpetType`);
+      const pad      = s(formData, `ag_${i}_li_${j}_pad`);
+      const lineInstallMethod = s(formData, `ag_${i}_li_${j}_lineInstallMethod`);
+      const liNotes  = s(formData, `ag_${i}_li_${j}_notes`);
+      if (!brand && !style && !color && !sizeSpec && !sku && !quantity && !unitPrice && !liNotes) continue;
+      lineItems.push({
+        position: linePosition++,
+        category,
+        brand, style, color, sizeSpec, sku,
+        quantity,
+        unit: unit || null,
+        unitPriceCents: unitPrice,
+        carpetType: carpetType || null,
+        pad: pad || null,
+        lineInstallMethod: lineInstallMethod || null,
+        notes: liNotes,
+        roomIndex,
+      });
+    }
   }
 
   // --- inclusions / exclusions ---
@@ -175,14 +205,6 @@ export function parseOrderForm(formData: FormData):
     shipState:           s(formData, "shipState"),
     shipZip:             s(formData, "shipZip"),
     shipPhone:           s(formData, "shipPhone"),
-    jobSiteSameAsBilling: bool(formData, "jobSiteSameAsBilling"),
-    jobSiteAddressLine1:  s(formData, "jobSiteAddressLine1"),
-    jobSiteCity:          s(formData, "jobSiteCity"),
-    jobSiteState:         s(formData, "jobSiteState"),
-    jobSiteZip:           s(formData, "jobSiteZip"),
-    siteContactName:      s(formData, "siteContactName"),
-    siteContactPhone:     s(formData, "siteContactPhone"),
-    accessInstructions:   s(formData, "accessInstructions"),
     depositInstructions:  s(formData, "depositInstructions"),
     rooms,
     lineItems,
@@ -216,11 +238,11 @@ export function parseOrderForm(formData: FormData):
     return { ok: false, errors, message: "Please fix the highlighted fields." };
   }
 
-  if (parsed.data.rooms.length === 0 && parsed.data.lineItems.length === 0) {
+  if (parsed.data.lineItems.length === 0) {
     return {
       ok: false,
-      errors: { _root: "Add at least one area or one line item." },
-      message: "An order needs at least one area or one line item.",
+      errors: { _root: "Add at least one line item." },
+      message: "An order needs at least one line item.",
     };
   }
 
