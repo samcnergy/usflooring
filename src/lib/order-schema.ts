@@ -6,7 +6,7 @@
 import { z } from "zod";
 import {
   BalanceTerm, CarpetType, ExclusionType, InclusionType, InstallMethod,
-  LineCategory, MoldingType, FixtureType, PricingMode, RoomName, UnitOfMeasure,
+  LineCategory, MoldingType, FixtureType, PricingMode, RoomName, SubfloorType, UnitOfMeasure,
 } from "@prisma/client";
 import { dollarsToCents } from "./money";
 
@@ -182,6 +182,13 @@ export const orderInput = z.object({
 
   // fixtures (work-order internal)
   fixtures: z.array(z.nativeEnum(FixtureType)).default([]),
+
+  // floor condition (work-order internal)
+  subfloorType:        z.nativeEnum(SubfloorType).optional().nullable().transform((v) => v || null),
+  installSubfloor:     optBool,
+  pullOldFloor:        optBool,
+  installMethod:       z.nativeEnum(InstallMethod).optional().nullable().transform((v) => v || null),
+  specialInstructions: optStr,
 
   // other instructions (work-order internal)
   removeOldCarpetAndPad: optBool,

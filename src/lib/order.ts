@@ -55,6 +55,11 @@ function shipFields(input: OrderInputParsed) {
 
 function orderInstructionFields(input: OrderInputParsed) {
   return {
+    subfloorType:        input.subfloorType ?? null,
+    installSubfloor:     input.installSubfloor ?? null,
+    pullOldFloor:        input.pullOldFloor ?? null,
+    installMethod:       input.installMethod ?? null,
+    specialInstructions: input.specialInstructions ?? null,
     moldingsRemoveReplace: input.moldingsRemoveReplace,
     removeOldCarpetAndPad: input.removeOldCarpetAndPad ?? null,
     removeOldTagStrip:     input.removeOldTagStrip ?? null,

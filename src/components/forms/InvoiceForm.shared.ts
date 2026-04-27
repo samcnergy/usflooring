@@ -4,7 +4,7 @@
 
 import {
   CarpetType, ExclusionType, InclusionType, InstallMethod,
-  LineCategory, PricingMode, RoomName, UnitOfMeasure,
+  LineCategory, PricingMode, RoomName, SubfloorType, UnitOfMeasure,
 } from "@prisma/client";
 
 export type SalespersonOption = { id: string; fullName: string };
@@ -80,6 +80,14 @@ export type FixturesFormValue = {
   tablesChairs: boolean;
 };
 
+export type FloorConditionFormValue = {
+  subfloorType: "" | SubfloorType;
+  installSubfloor: "" | "yes" | "no";
+  pullOldFloor: "" | "yes" | "no";
+  installMethod: "" | InstallMethod;
+  specialInstructions: string;
+};
+
 export type OtherInstructionsFormValue = {
   removeOldCarpetAndPad: "" | "yes" | "no";
   removeOldTagStrip: "" | "yes" | "no";
@@ -132,6 +140,7 @@ export type OrderInitialValues = {
   exclusionNotes: string[];
 
   // work-order internal sections
+  floorCondition: FloorConditionFormValue;
   moldings: MoldingsFormValue;
   fixtures: FixturesFormValue;
   otherInstructions: OtherInstructionsFormValue;
@@ -149,6 +158,13 @@ export type ActionState =
   | { ok: true; orderId: string }
   | { ok: false; errors?: Record<string, string>; message?: string }
   | null;
+
+function emptyFloorCondition(): FloorConditionFormValue {
+  return {
+    subfloorType: "", installSubfloor: "", pullOldFloor: "",
+    installMethod: "", specialInstructions: "",
+  };
+}
 
 function emptyMoldings(): MoldingsFormValue {
   return {
@@ -189,6 +205,7 @@ export const emptyInitialValues = (defaultSalespersonId: string): OrderInitialVa
   inclusionNotes: [],
   exclusions: [],
   exclusionNotes: [],
+  floorCondition: emptyFloorCondition(),
   moldings: emptyMoldings(),
   fixtures: emptyFixtures(),
   otherInstructions: emptyOtherInstructions(),
@@ -331,6 +348,11 @@ export function orderToInitial(order: {
   balanceTerm: "cash" | "cod" | "finance" | null;
   depositInstructions: string | null;
   // work-order internal
+  subfloorType: SubfloorType | null;
+  installSubfloor: boolean | null;
+  pullOldFloor: boolean | null;
+  installMethod: InstallMethod | null;
+  specialInstructions: string | null;
   moldingsRemoveReplace: boolean;
   removeOldCarpetAndPad: boolean | null;
   removeOldTagStrip: boolean | null;
@@ -448,6 +470,14 @@ export function orderToInitial(order: {
     tablesChairs: fixtureSet.has("tablesChairs"),
   };
 
+  const floorCondition: FloorConditionFormValue = {
+    subfloorType: order.subfloorType ?? "",
+    installSubfloor: boolToYesNo(order.installSubfloor),
+    pullOldFloor: boolToYesNo(order.pullOldFloor),
+    installMethod: order.installMethod ?? "",
+    specialInstructions: order.specialInstructions ?? "",
+  };
+
   const otherInstructions: OtherInstructionsFormValue = {
     removeOldCarpetAndPad: boolToYesNo(order.removeOldCarpetAndPad),
     removeOldTagStrip: boolToYesNo(order.removeOldTagStrip),
@@ -479,6 +509,7 @@ export function orderToInitial(order: {
     inclusionNotes: order.inclusions.filter((i) => i.type === InclusionType.customNote).map((i) => i.customText ?? ""),
     exclusions: order.exclusions.filter((e) => e.type !== ExclusionType.customNote).map((e) => e.type),
     exclusionNotes: order.exclusions.filter((e) => e.type === ExclusionType.customNote).map((e) => e.customText ?? ""),
+    floorCondition,
     moldings,
     fixtures,
     otherInstructions,

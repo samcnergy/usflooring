@@ -2,7 +2,7 @@
 
 import { useActionState, useState } from "react";
 import Link from "next/link";
-import { CarpetType, ExclusionType, InclusionType, InstallMethod, LineCategory, RoomName, UnitOfMeasure } from "@prisma/client";
+import { CarpetType, ExclusionType, InclusionType, InstallMethod, LineCategory, RoomName, SubfloorType, UnitOfMeasure } from "@prisma/client";
 import { Field, inputCls, requiredInputCls, requiredSelectCls, selectCls } from "./Field";
 import { centsToDollarString } from "@/lib/money";
 import { ROOMS } from "@/lib/rooms";
@@ -12,7 +12,7 @@ import { INCLUSION_CHIPS, EXCLUSION_CHIPS } from "@/lib/inclusions";
 import {
   emptyLineItem, cryptoRandomKey,
   type AreaGroupFormValue, type LineItemFormValue,
-  type MoldingsFormValue, type FixturesFormValue, type OtherInstructionsFormValue,
+  type FloorConditionFormValue, type MoldingsFormValue, type FixturesFormValue, type OtherInstructionsFormValue,
   type OrderInitialValues, type ActionState,
   type SalespersonOption, type AdvSourceOption,
 } from "./InvoiceForm.shared";
@@ -64,6 +64,7 @@ export function InvoiceForm({
   const [exclusions, setExclusions] = useState<Set<ExclusionType>>(new Set(initial.exclusions));
   const [inclusionNotes, setInclusionNotes] = useState<string[]>(initial.inclusionNotes);
   const [exclusionNotes, setExclusionNotes] = useState<string[]>(initial.exclusionNotes);
+  const [floorCond, setFloorCond] = useState<FloorConditionFormValue>(initial.floorCondition);
   const [moldings, setMoldings] = useState<MoldingsFormValue>(initial.moldings);
   const [fixtures, setFixtures] = useState<FixturesFormValue>(initial.fixtures);
   const [otherInstr, setOtherInstr] = useState<OtherInstructionsFormValue>(initial.otherInstructions);
@@ -247,6 +248,66 @@ export function InvoiceForm({
         <p className="text-xs font-semibold text-amber-700 uppercase tracking-wide px-3 pt-2 pb-1">
           Work Order — internal use only (not printed on invoice)
         </p>
+
+        {/* Floor Condition */}
+        <fieldset className="bg-white border border-amber-200 rounded-lg p-4 m-2">
+          <legend className="px-2 text-sm font-semibold text-amber-800">Floor Condition</legend>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs text-marble-700 mb-1">Subfloor</label>
+              <select
+                name="oi_subfloorType"
+                value={floorCond.subfloorType}
+                onChange={(e) => setFloorCond((f) => ({ ...f, subfloorType: e.target.value as "" | SubfloorType }))}
+                className="bg-marble-50 border border-marble-200 rounded px-2 py-1 text-sm text-marble-900"
+              >
+                <option value="">—</option>
+                <option value="wood">Wood</option>
+                <option value="concrete">Concrete</option>
+                <option value="softConcrete">Soft Concrete</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <YesNoField
+              label="Install Subfloor"
+              name="oi_installSubfloor"
+              value={floorCond.installSubfloor}
+              onChange={(v) => setFloorCond((f) => ({ ...f, installSubfloor: v as "" | "yes" | "no" }))}
+            />
+            <YesNoField
+              label="Pull Old Floor"
+              name="oi_pullOldFloor"
+              value={floorCond.pullOldFloor}
+              onChange={(v) => setFloorCond((f) => ({ ...f, pullOldFloor: v as "" | "yes" | "no" }))}
+            />
+            <div>
+              <label className="block text-xs text-marble-700 mb-1">Installation Method</label>
+              <select
+                name="oi_installMethod"
+                value={floorCond.installMethod}
+                onChange={(e) => setFloorCond((f) => ({ ...f, installMethod: e.target.value as "" | InstallMethod }))}
+                className="bg-marble-50 border border-marble-200 rounded px-2 py-1 text-sm text-marble-900"
+              >
+                <option value="">—</option>
+                <option value="glueDown">Glue Down</option>
+                <option value="nailDown">Nail Down</option>
+                <option value="click">Click</option>
+                <option value="clip">Clip</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div className="sm:col-span-2">
+              <label className="block text-xs text-marble-700 mb-1">Special Instructions</label>
+              <textarea
+                name="oi_specialInstructions"
+                value={floorCond.specialInstructions}
+                onChange={(e) => setFloorCond((f) => ({ ...f, specialInstructions: e.target.value }))}
+                rows={2}
+                className="w-full bg-marble-50 border border-marble-200 rounded px-2 py-1 text-sm text-marble-900"
+              />
+            </div>
+          </div>
+        </fieldset>
 
         {/* Moldings */}
         <fieldset className="bg-white border border-amber-200 rounded-lg p-4 m-2">
