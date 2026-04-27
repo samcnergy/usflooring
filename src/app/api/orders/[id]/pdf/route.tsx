@@ -17,6 +17,7 @@ export async function GET(req: Request, { params }: { params: Params }) {
   const url = new URL(req.url);
   const doc = url.searchParams.get("doc") ?? "invoice";
   const vendorOrderId = url.searchParams.get("vendorOrderId");
+  const categoryFilter = url.searchParams.get("category");
 
   // Fetch order with everything; ownership-check for salespeople.
   const order = await prisma.order.findFirst({
@@ -59,12 +60,18 @@ export async function GET(req: Request, { params }: { params: Params }) {
       );
       filename = `USFKB-${order.invoiceNumber}-workorder.pdf`;
       break;
-    case "install":
+    case "install": {
+      const orderForPdf = categoryFilter
+        ? { ...order, lineItems: order.lineItems.filter((li) => li.category === categoryFilter) }
+        : order;
       stream = await renderToStream(
-        <InstallationInstructionPDF order={order} downloadedBy={me.fullName} />,
+        <InstallationInstructionPDF order={orderForPdf} downloadedBy={me.fullName} />,
       );
-      filename = `USFKB-${order.invoiceNumber}-install-instructions.pdf`;
+      filename = categoryFilter
+        ? `USFKB-${order.invoiceNumber}-install-${categoryFilter}.pdf`
+        : `USFKB-${order.invoiceNumber}-install-instructions.pdf`;
       break;
+    }
     case "vendor": {
       if (!vendorOrderId) return new Response("vendorOrderId required for vendor PDF", { status: 400 });
       const vo = await prisma.vendorOrder.findFirst({

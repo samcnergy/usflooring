@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import type { LineCategory } from "@prisma/client";
 
 export type SaveInstallNoteState =
@@ -67,6 +67,10 @@ function CategoryCard({
 
   const saved = state?.ok && state.category === cat.category;
   const errored = state && !state.ok && state.category === cat.category;
+
+  useEffect(() => {
+    if (saved) setEditing(false);
+  }, [saved]);
 
   return (
     <div className="bg-marble-100 border border-marble-200 rounded-lg p-4">
