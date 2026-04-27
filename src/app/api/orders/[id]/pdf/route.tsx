@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getSessionUser } from "@/lib/auth";
 import { InvoicePDF } from "@/pdf/InvoicePDF";
 import { WorkOrderPDF } from "@/pdf/WorkOrderPDF";
-import { DailyWorkOrderPDF } from "@/pdf/DailyWorkOrderPDF";
+
 import { VendorOrderPDF } from "@/pdf/VendorOrderPDF";
 import { InstallationInstructionPDF } from "@/pdf/InstallationInstructionPDF";
 
@@ -32,9 +32,6 @@ export async function GET(req: Request, { params }: { params: Params }) {
       moldings: true,
       fixtures: true,
       installNotes: true,
-      showerSpec: true,
-      tileSpec: true,
-      removals: true,
     },
   });
   if (!order) return new Response("Not found", { status: 404 });
@@ -61,12 +58,6 @@ export async function GET(req: Request, { params }: { params: Params }) {
         />,
       );
       filename = `USFKB-${order.invoiceNumber}-workorder.pdf`;
-      break;
-    case "dailyworkorder":
-      stream = await renderToStream(
-        <DailyWorkOrderPDF order={order} downloadedBy={me.fullName} />,
-      );
-      filename = `USFKB-${order.invoiceNumber}-dailyworkorder.pdf`;
       break;
     case "install":
       stream = await renderToStream(

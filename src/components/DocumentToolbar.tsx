@@ -4,12 +4,11 @@
 
 import { PrintButton } from "./PrintButton";
 
-type DocType = "invoice" | "workorder" | "dailyworkorder" | "vendor" | "install";
+type DocType = "invoice" | "workorder" | "vendor" | "install";
 
 const docFilenameSuffix: Record<DocType, string> = {
   invoice: "invoice",
   workorder: "workorder",
-  dailyworkorder: "dailyworkorder",
   vendor: "vendor",
   install: "install",
 };

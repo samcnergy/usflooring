@@ -7,7 +7,7 @@ export function PdfPreview({
   vendorOrderId,
 }: {
   orderId: string;
-  doc: "workorder" | "dailyworkorder" | "vendor";
+  doc: "workorder" | "vendor";
   vendorOrderId?: string;
 }) {
   const params = new URLSearchParams({ doc, inline: "1" });
