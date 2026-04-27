@@ -56,7 +56,7 @@ export async function GET(req: Request, { params }: { params: Params }) {
       stream = await renderToStream(
         <WorkOrderPDF
           order={order}
-          showPrices={me.role === "admin"}
+          showPrices={false}
           downloadedBy={me.fullName}
         />,
       );
