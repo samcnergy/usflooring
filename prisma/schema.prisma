@@ -305,6 +305,28 @@ model OrderLineItem {
 
   notes String?
 
+  // Shower-specific (category = shower)
+  showerWallSqft        Float?
+  showerWallMaterial    String?
+  showerPan             Boolean?
+  showerPanMaterial     String?
+  showerSoapBoxMaterial String?
+  showerBench           Boolean?
+  bathroomFloorSqft     Float?
+  bathroomFloorMaterial String?
+  showerSchluterSize    String?
+  showerSchluterColor   String?
+  showerGroutColor      String?
+  showerTileVertical    Boolean?
+  showerTileHorizontal  Boolean?
+
+  // Wood-specific (category = wood)
+  woodWhiteRisers     Boolean?
+  woodMoistureBarrier Boolean?
+
+  // Counter top-specific (category = counterTop)
+  counterTopSeal      Boolean?
+
   // Area group link — which room this line item belongs to
   roomId String?
   room   OrderRoom? @relation(fields: [roomId], references: [id], onDelete: SetNull)

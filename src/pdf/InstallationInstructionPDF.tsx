@@ -109,6 +109,8 @@ export function InstallationInstructionPDF({
         const showOtherInstr = hasOtherInstructions && isCarpet;
         const installerNotes = noteMap.get(category as import("@prisma/client").LineCategory) ?? "";
 
+        const isInstallMethod = category === "vinyl" || category === "wood";
+
         return (
           <Page key={category} size="LETTER" style={styles.page}>
             {/* Header */}
@@ -173,7 +175,7 @@ export function InstallationInstructionPDF({
                 {isCarpet ? <Text style={{ width: 50 }}>REF #</Text> : null}
                 {isCarpet ? <Text style={{ width: 50 }}>TYPE</Text> : null}
                 {isCarpet ? <Text style={{ width: 50 }}>PAD</Text> : null}
-                {!isCarpet ? <Text style={{ width: 70 }}>INSTALL METHOD</Text> : null}
+                {isInstallMethod ? <Text style={{ width: 70 }}>INSTALL METHOD</Text> : null}
                 <Text style={{ width: 30, textAlign: "right" }}>QTY</Text>
                 <Text style={{ width: 26 }}>UNIT</Text>
               </View>
@@ -197,7 +199,7 @@ export function InstallationInstructionPDF({
                     {isCarpet ? (
                       <Text style={{ width: 50, color: COLORS.muted }}>{li.pad ?? ""}</Text>
                     ) : null}
-                    {!isCarpet ? (
+                    {isInstallMethod ? (
                       <Text style={{ width: 70, color: COLORS.muted }}>
                         {li.lineInstallMethod ? (INSTALL_METHOD_LABELS[li.lineInstallMethod] ?? li.lineInstallMethod) : ""}
                       </Text>
@@ -208,6 +210,68 @@ export function InstallationInstructionPDF({
                 );
               })}
             </View>
+
+            {/* Shower Specification */}
+            {category === "shower" && items.some((li) => li.showerWallSqft != null || li.showerWallMaterial || li.showerPan != null || li.showerGroutColor) ? (
+              <View style={{ marginBottom: 8, paddingBottom: 6, borderBottomWidth: 0.5, borderColor: COLORS.borderLight }}>
+                <Text style={[styles.sectionLabel, { marginBottom: 4 }]}>SHOWER SPECIFICATION</Text>
+                {items.map((li) => (
+                  <View key={li.id + "-spec"} style={{ marginBottom: 4 }}>
+                    {items.length > 1 ? (
+                      <Text style={{ fontSize: 8, fontFamily: "Helvetica-Bold" }}>
+                        {[li.brand, li.style].filter(Boolean).join(" — ")}
+                      </Text>
+                    ) : null}
+                    <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 12 }}>
+                      {li.showerWallSqft != null ? <Text style={{ fontSize: 8 }}>Shower Wall: {li.showerWallSqft} sqft</Text> : null}
+                      {li.showerWallMaterial ? <Text style={{ fontSize: 8 }}>Wall Material: {li.showerWallMaterial}</Text> : null}
+                      {li.showerPan != null ? <Text style={{ fontSize: 8 }}>Shower Pan: {li.showerPan ? "Yes" : "No"}</Text> : null}
+                      {li.showerPanMaterial ? <Text style={{ fontSize: 8 }}>Pan Material: {li.showerPanMaterial}</Text> : null}
+                      {li.showerSoapBoxMaterial ? <Text style={{ fontSize: 8 }}>Soap Box: {li.showerSoapBoxMaterial}</Text> : null}
+                      {li.showerBench != null ? <Text style={{ fontSize: 8 }}>Bench: {li.showerBench ? "Yes" : "No"}</Text> : null}
+                      {li.bathroomFloorSqft != null ? <Text style={{ fontSize: 8 }}>Bath Floor: {li.bathroomFloorSqft} sqft</Text> : null}
+                      {li.bathroomFloorMaterial ? <Text style={{ fontSize: 8 }}>Floor Material: {li.bathroomFloorMaterial}</Text> : null}
+                      {li.showerSchluterSize ? <Text style={{ fontSize: 8 }}>Schluter: {li.showerSchluterSize}</Text> : null}
+                      {li.showerSchluterColor ? <Text style={{ fontSize: 8 }}>Schluter Color: {li.showerSchluterColor}</Text> : null}
+                      {li.showerGroutColor ? <Text style={{ fontSize: 8 }}>Grout Color: {li.showerGroutColor}</Text> : null}
+                      {li.showerTileVertical ? <Text style={{ fontSize: 8 }}>&#9745; Vertical</Text> : null}
+                      {li.showerTileHorizontal ? <Text style={{ fontSize: 8 }}>&#9745; Horizontal</Text> : null}
+                    </View>
+                  </View>
+                ))}
+              </View>
+            ) : null}
+
+            {/* Wood Specification */}
+            {category === "wood" && items.some((li) => li.woodWhiteRisers != null || li.woodMoistureBarrier != null) ? (
+              <View style={{ marginBottom: 8, paddingBottom: 6, borderBottomWidth: 0.5, borderColor: COLORS.borderLight }}>
+                <Text style={[styles.sectionLabel, { marginBottom: 4 }]}>WOOD SPECIFICATION</Text>
+                <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 16 }}>
+                  {items.map((li) => (
+                    <View key={li.id + "-wood"} style={{ flexDirection: "row", gap: 12 }}>
+                      {items.length > 1 ? <Text style={{ fontSize: 8, fontFamily: "Helvetica-Bold" }}>{[li.brand, li.style].filter(Boolean).join(" — ")}: </Text> : null}
+                      {li.woodWhiteRisers != null ? <Text style={{ fontSize: 8 }}>White Risers: {li.woodWhiteRisers ? "Yes" : "No"}</Text> : null}
+                      {li.woodMoistureBarrier != null ? <Text style={{ fontSize: 8 }}>Moisture Barrier: {li.woodMoistureBarrier ? "Yes" : "No"}</Text> : null}
+                    </View>
+                  ))}
+                </View>
+              </View>
+            ) : null}
+
+            {/* Counter Top Specification */}
+            {category === "counterTop" && items.some((li) => li.counterTopSeal != null) ? (
+              <View style={{ marginBottom: 8, paddingBottom: 6, borderBottomWidth: 0.5, borderColor: COLORS.borderLight }}>
+                <Text style={[styles.sectionLabel, { marginBottom: 4 }]}>COUNTER TOP SPECIFICATION</Text>
+                <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 16 }}>
+                  {items.map((li) => (
+                    <View key={li.id + "-ct"} style={{ flexDirection: "row", gap: 12 }}>
+                      {items.length > 1 ? <Text style={{ fontSize: 8, fontFamily: "Helvetica-Bold" }}>{[li.brand, li.style].filter(Boolean).join(" — ")}: </Text> : null}
+                      {li.counterTopSeal != null ? <Text style={{ fontSize: 8 }}>Seal: {li.counterTopSeal ? "Yes" : "No"}</Text> : null}
+                    </View>
+                  ))}
+                </View>
+              </View>
+            ) : null}
 
             {/* Moldings (carpet, vinyl, wood) */}
             {showMoldings ? (

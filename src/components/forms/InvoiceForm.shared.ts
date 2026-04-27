@@ -25,6 +25,25 @@ export type LineItemFormValue = {
   pad: string;
   lineInstallMethod: InstallMethod | "";
   notes: string;
+  // Shower-specific
+  showerWallSqft: string;
+  showerWallMaterial: string;
+  showerPan: "" | "yes" | "no";
+  showerPanMaterial: string;
+  showerSoapBoxMaterial: string;
+  showerBench: "" | "yes" | "no";
+  bathroomFloorSqft: string;
+  bathroomFloorMaterial: string;
+  showerSchluterSize: string;
+  showerSchluterColor: string;
+  showerGroutColor: string;
+  showerTileVertical: "" | "yes" | "no";
+  showerTileHorizontal: "" | "yes" | "no";
+  // Wood-specific
+  woodWhiteRisers: "" | "yes" | "no";
+  woodMoistureBarrier: "" | "yes" | "no";
+  // Counter top-specific
+  counterTopSeal: "" | "yes" | "no";
 };
 
 export type AreaGroupFormValue = {
@@ -190,6 +209,25 @@ export function emptyLineItem(): LineItemFormValue {
     unitPriceCents: "",
     carpetType: "", pad: "", lineInstallMethod: "",
     notes: "",
+    // Shower-specific
+    showerWallSqft: "",
+    showerWallMaterial: "",
+    showerPan: "",
+    showerPanMaterial: "",
+    showerSoapBoxMaterial: "",
+    showerBench: "",
+    bathroomFloorSqft: "",
+    bathroomFloorMaterial: "",
+    showerSchluterSize: "",
+    showerSchluterColor: "",
+    showerGroutColor: "",
+    showerTileVertical: "",
+    showerTileHorizontal: "",
+    // Wood-specific
+    woodWhiteRisers: "",
+    woodMoistureBarrier: "",
+    // Counter top-specific
+    counterTopSeal: "",
   };
 }
 
@@ -222,6 +260,25 @@ function liToForm(li: {
   pad: string | null;
   lineInstallMethod: InstallMethod | null;
   notes: string | null;
+  // Shower-specific
+  showerWallSqft: number | null;
+  showerWallMaterial: string | null;
+  showerPan: boolean | null;
+  showerPanMaterial: string | null;
+  showerSoapBoxMaterial: string | null;
+  showerBench: boolean | null;
+  bathroomFloorSqft: number | null;
+  bathroomFloorMaterial: string | null;
+  showerSchluterSize: string | null;
+  showerSchluterColor: string | null;
+  showerGroutColor: string | null;
+  showerTileVertical: boolean | null;
+  showerTileHorizontal: boolean | null;
+  // Wood-specific
+  woodWhiteRisers: boolean | null;
+  woodMoistureBarrier: boolean | null;
+  // Counter top-specific
+  counterTopSeal: boolean | null;
 }): LineItemFormValue {
   return {
     key: cryptoRandomKey(),
@@ -238,6 +295,25 @@ function liToForm(li: {
     pad: li.pad ?? "",
     lineInstallMethod: li.lineInstallMethod ?? "",
     notes: li.notes ?? "",
+    // Shower-specific
+    showerWallSqft:        li.showerWallSqft != null ? String(li.showerWallSqft) : "",
+    showerWallMaterial:    li.showerWallMaterial ?? "",
+    showerPan:             boolToYesNo(li.showerPan),
+    showerPanMaterial:     li.showerPanMaterial ?? "",
+    showerSoapBoxMaterial: li.showerSoapBoxMaterial ?? "",
+    showerBench:           boolToYesNo(li.showerBench),
+    bathroomFloorSqft:     li.bathroomFloorSqft != null ? String(li.bathroomFloorSqft) : "",
+    bathroomFloorMaterial: li.bathroomFloorMaterial ?? "",
+    showerSchluterSize:    li.showerSchluterSize ?? "",
+    showerSchluterColor:   li.showerSchluterColor ?? "",
+    showerGroutColor:      li.showerGroutColor ?? "",
+    showerTileVertical:    boolToYesNo(li.showerTileVertical),
+    showerTileHorizontal:  boolToYesNo(li.showerTileHorizontal),
+    // Wood-specific
+    woodWhiteRisers:       boolToYesNo(li.woodWhiteRisers),
+    woodMoistureBarrier:   boolToYesNo(li.woodMoistureBarrier),
+    // Counter top-specific
+    counterTopSeal:        boolToYesNo(li.counterTopSeal),
   };
 }
 
@@ -279,6 +355,25 @@ export function orderToInitial(order: {
     quantity: number | null; unit: UnitOfMeasure | null;
     unitPriceCents: number | null; notes: string | null;
     carpetType: CarpetType | null; pad: string | null; lineInstallMethod: InstallMethod | null;
+    // Shower-specific
+    showerWallSqft: number | null;
+    showerWallMaterial: string | null;
+    showerPan: boolean | null;
+    showerPanMaterial: string | null;
+    showerSoapBoxMaterial: string | null;
+    showerBench: boolean | null;
+    bathroomFloorSqft: number | null;
+    bathroomFloorMaterial: string | null;
+    showerSchluterSize: string | null;
+    showerSchluterColor: string | null;
+    showerGroutColor: string | null;
+    showerTileVertical: boolean | null;
+    showerTileHorizontal: boolean | null;
+    // Wood-specific
+    woodWhiteRisers: boolean | null;
+    woodMoistureBarrier: boolean | null;
+    // Counter top-specific
+    counterTopSeal: boolean | null;
   }[];
   inclusions: { type: InclusionType; customText: string | null }[];
   exclusions: { type: ExclusionType; customText: string | null }[];

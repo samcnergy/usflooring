@@ -85,6 +85,25 @@ export function parseOrderForm(formData: FormData):
     pad: string | null;
     lineInstallMethod: string | null;
     notes: string;
+    // Shower-specific
+    showerWallSqft: string;
+    showerWallMaterial: string;
+    showerPan: string | undefined;
+    showerPanMaterial: string;
+    showerSoapBoxMaterial: string;
+    showerBench: string | undefined;
+    bathroomFloorSqft: string;
+    bathroomFloorMaterial: string;
+    showerSchluterSize: string;
+    showerSchluterColor: string;
+    showerGroutColor: string;
+    showerTileVertical: string | undefined;
+    showerTileHorizontal: string | undefined;
+    // Wood-specific
+    woodWhiteRisers: string | undefined;
+    woodMoistureBarrier: string | undefined;
+    // Counter top-specific
+    counterTopSeal: string | undefined;
     roomIndex: number | null;
   }> = [];
 
@@ -121,6 +140,23 @@ export function parseOrderForm(formData: FormData):
       const pad      = s(formData, `ag_${i}_li_${j}_pad`);
       const lineInstallMethod = s(formData, `ag_${i}_li_${j}_lineInstallMethod`);
       const liNotes  = s(formData, `ag_${i}_li_${j}_notes`);
+      // Shower spec
+      const showerWallSqft        = s(formData, `ag_${i}_li_${j}_showerWallSqft`);
+      const showerWallMaterial    = s(formData, `ag_${i}_li_${j}_showerWallMaterial`);
+      const showerPan             = s(formData, `ag_${i}_li_${j}_showerPan`) || undefined;
+      const showerPanMaterial     = s(formData, `ag_${i}_li_${j}_showerPanMaterial`);
+      const showerSoapBoxMaterial = s(formData, `ag_${i}_li_${j}_showerSoapBoxMaterial`);
+      const showerBench           = s(formData, `ag_${i}_li_${j}_showerBench`) || undefined;
+      const bathroomFloorSqft     = s(formData, `ag_${i}_li_${j}_bathroomFloorSqft`);
+      const bathroomFloorMaterial = s(formData, `ag_${i}_li_${j}_bathroomFloorMaterial`);
+      const showerSchluterSize    = s(formData, `ag_${i}_li_${j}_showerSchluterSize`);
+      const showerSchluterColor   = s(formData, `ag_${i}_li_${j}_showerSchluterColor`);
+      const showerGroutColor      = s(formData, `ag_${i}_li_${j}_showerGroutColor`);
+      const showerTileVertical    = s(formData, `ag_${i}_li_${j}_showerTileVertical`) || undefined;
+      const showerTileHorizontal  = s(formData, `ag_${i}_li_${j}_showerTileHorizontal`) || undefined;
+      const woodWhiteRisers       = s(formData, `ag_${i}_li_${j}_woodWhiteRisers`) || undefined;
+      const woodMoistureBarrier   = s(formData, `ag_${i}_li_${j}_woodMoistureBarrier`) || undefined;
+      const counterTopSeal        = s(formData, `ag_${i}_li_${j}_counterTopSeal`) || undefined;
       if (!brand && !style && !color && !sizeSpec && !sku && !quantity && !unitPrice && !liNotes) continue;
       lineItems.push({
         position: linePosition++,
@@ -133,6 +169,22 @@ export function parseOrderForm(formData: FormData):
         pad: pad || null,
         lineInstallMethod: lineInstallMethod || null,
         notes: liNotes,
+        showerWallSqft,
+        showerWallMaterial,
+        showerPan,
+        showerPanMaterial,
+        showerSoapBoxMaterial,
+        showerBench,
+        bathroomFloorSqft,
+        bathroomFloorMaterial,
+        showerSchluterSize,
+        showerSchluterColor,
+        showerGroutColor,
+        showerTileVertical,
+        showerTileHorizontal,
+        woodWhiteRisers,
+        woodMoistureBarrier,
+        counterTopSeal,
         roomIndex,
       });
     }

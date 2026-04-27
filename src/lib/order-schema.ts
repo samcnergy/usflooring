@@ -96,6 +96,25 @@ export const orderLineItemInput = z.object({
   pad:              optStr,
   lineInstallMethod: z.nativeEnum(InstallMethod).optional().nullable().transform((v) => v || null),
   notes:    optStr,
+  // Shower-specific
+  showerWallSqft:        optFloat,
+  showerWallMaterial:    optStr,
+  showerPan:             optBool,
+  showerPanMaterial:     optStr,
+  showerSoapBoxMaterial: optStr,
+  showerBench:           optBool,
+  bathroomFloorSqft:     optFloat,
+  bathroomFloorMaterial: optStr,
+  showerSchluterSize:    optStr,
+  showerSchluterColor:   optStr,
+  showerGroutColor:      optStr,
+  showerTileVertical:    optBool,
+  showerTileHorizontal:  optBool,
+  // Wood-specific
+  woodWhiteRisers:     optBool,
+  woodMoistureBarrier: optBool,
+  // Counter top-specific
+  counterTopSeal: optBool,
   roomIndex: z.number().int().min(0).optional().nullable(),
 });
 

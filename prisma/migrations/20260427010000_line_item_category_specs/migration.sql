@@ -1,0 +1,16 @@
+ALTER TABLE "OrderLineItem" ADD COLUMN "showerWallSqft" DOUBLE PRECISION;
+ALTER TABLE "OrderLineItem" ADD COLUMN "showerWallMaterial" TEXT;
+ALTER TABLE "OrderLineItem" ADD COLUMN "showerPan" BOOLEAN;
+ALTER TABLE "OrderLineItem" ADD COLUMN "showerPanMaterial" TEXT;
+ALTER TABLE "OrderLineItem" ADD COLUMN "showerSoapBoxMaterial" TEXT;
+ALTER TABLE "OrderLineItem" ADD COLUMN "showerBench" BOOLEAN;
+ALTER TABLE "OrderLineItem" ADD COLUMN "bathroomFloorSqft" DOUBLE PRECISION;
+ALTER TABLE "OrderLineItem" ADD COLUMN "bathroomFloorMaterial" TEXT;
+ALTER TABLE "OrderLineItem" ADD COLUMN "showerSchluterSize" TEXT;
+ALTER TABLE "OrderLineItem" ADD COLUMN "showerSchluterColor" TEXT;
+ALTER TABLE "OrderLineItem" ADD COLUMN "showerGroutColor" TEXT;
+ALTER TABLE "OrderLineItem" ADD COLUMN "showerTileVertical" BOOLEAN;
+ALTER TABLE "OrderLineItem" ADD COLUMN "showerTileHorizontal" BOOLEAN;
+ALTER TABLE "OrderLineItem" ADD COLUMN "woodWhiteRisers" BOOLEAN;
+ALTER TABLE "OrderLineItem" ADD COLUMN "woodMoistureBarrier" BOOLEAN;
+ALTER TABLE "OrderLineItem" ADD COLUMN "counterTopSeal" BOOLEAN;

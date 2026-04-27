@@ -29,8 +29,7 @@ const CARPET_TYPES: { value: CarpetType; label: string }[] = [
 ];
 
 const INSTALL_CATEGORIES = new Set<LineCategory>([
-  LineCategory.vinyl, LineCategory.wood, LineCategory.ceramic,
-  LineCategory.tile, LineCategory.stone,
+  LineCategory.vinyl, LineCategory.wood,
 ]);
 
 // Room names that have a countable quantity field
@@ -606,6 +605,9 @@ function LineItemRow({
 
   const isCarpet = value.category === LineCategory.carpet;
   const hasInstallMethod = value.category ? INSTALL_CATEGORIES.has(value.category as LineCategory) : false;
+  const isShower = value.category === LineCategory.shower;
+  const isWood = value.category === LineCategory.wood;
+  const isCounterTop = value.category === LineCategory.counterTop;
 
   return (
     <div className="border-t border-marble-200 first:border-t-0 py-3">
@@ -616,7 +618,16 @@ function LineItemRow({
           <select
             name={`${prefix}_category`}
             value={value.category}
-            onChange={(e) => onChange({ ...value, category: e.target.value as LineCategory, carpetType: "", pad: "", lineInstallMethod: "" })}
+            onChange={(e) => onChange({
+              ...value,
+              category: e.target.value as LineCategory,
+              carpetType: "", pad: "", lineInstallMethod: "",
+              showerWallSqft: "", showerWallMaterial: "", showerPan: "", showerPanMaterial: "",
+              showerSoapBoxMaterial: "", showerBench: "", bathroomFloorSqft: "", bathroomFloorMaterial: "",
+              showerSchluterSize: "", showerSchluterColor: "", showerGroutColor: "",
+              showerTileVertical: "", showerTileHorizontal: "",
+              woodWhiteRisers: "", woodMoistureBarrier: "", counterTopSeal: "",
+            })}
             className={cellInput}
           >
             <option value="">—</option>
@@ -731,6 +742,167 @@ function LineItemRow({
         </div>
       ) : null}
 
+      {/* Shower Specification — installer instructions only */}
+      {isShower ? (
+        <div className="border border-amber-200 rounded p-2 bg-amber-50 mt-2">
+          <p className="text-xs font-semibold text-amber-700 mb-2">Shower Specification — (installer instructions only)</p>
+          <div className="flex flex-wrap gap-x-4 gap-y-2">
+            {/* Row 1: shower wall sqft + material */}
+            <div className="flex items-center gap-1">
+              <label className="text-xs text-marble-700 whitespace-nowrap">Shower wall sqft</label>
+              <input
+                type="number" step="any"
+                name={`${prefix}_showerWallSqft`}
+                value={value.showerWallSqft}
+                onChange={(e) => onChange({ ...value, showerWallSqft: e.target.value })}
+                className="w-20 bg-white border border-amber-200 rounded px-2 py-1 text-xs text-marble-900 focus:outline-none focus:ring-1 focus:ring-amber-400"
+              />
+            </div>
+            <div className="flex items-center gap-1">
+              <label className="text-xs text-marble-700 whitespace-nowrap">Wall material</label>
+              <input
+                type="text"
+                name={`${prefix}_showerWallMaterial`}
+                value={value.showerWallMaterial}
+                onChange={(e) => onChange({ ...value, showerWallMaterial: e.target.value })}
+                className="w-32 bg-white border border-amber-200 rounded px-2 py-1 text-xs text-marble-900 focus:outline-none focus:ring-1 focus:ring-amber-400"
+              />
+            </div>
+            {/* Row 2: shower pan + pan material */}
+            <LineYesNo
+              label="Shower pan" name={`${prefix}_showerPan`}
+              value={value.showerPan}
+              onChange={(v) => onChange({ ...value, showerPan: v as "" | "yes" | "no" })}
+            />
+            <div className="flex items-center gap-1">
+              <label className="text-xs text-marble-700 whitespace-nowrap">Pan material</label>
+              <input
+                type="text"
+                name={`${prefix}_showerPanMaterial`}
+                value={value.showerPanMaterial}
+                onChange={(e) => onChange({ ...value, showerPanMaterial: e.target.value })}
+                className="w-32 bg-white border border-amber-200 rounded px-2 py-1 text-xs text-marble-900 focus:outline-none focus:ring-1 focus:ring-amber-400"
+              />
+            </div>
+            {/* Row 3: soap box + bench */}
+            <div className="flex items-center gap-1">
+              <label className="text-xs text-marble-700 whitespace-nowrap">Soap box material</label>
+              <input
+                type="text"
+                name={`${prefix}_showerSoapBoxMaterial`}
+                value={value.showerSoapBoxMaterial}
+                onChange={(e) => onChange({ ...value, showerSoapBoxMaterial: e.target.value })}
+                className="w-32 bg-white border border-amber-200 rounded px-2 py-1 text-xs text-marble-900 focus:outline-none focus:ring-1 focus:ring-amber-400"
+              />
+            </div>
+            <LineYesNo
+              label="Bench" name={`${prefix}_showerBench`}
+              value={value.showerBench}
+              onChange={(v) => onChange({ ...value, showerBench: v as "" | "yes" | "no" })}
+            />
+            {/* Row 4: bathroom floor sqft + material */}
+            <div className="flex items-center gap-1">
+              <label className="text-xs text-marble-700 whitespace-nowrap">Bath floor sqft</label>
+              <input
+                type="number" step="any"
+                name={`${prefix}_bathroomFloorSqft`}
+                value={value.bathroomFloorSqft}
+                onChange={(e) => onChange({ ...value, bathroomFloorSqft: e.target.value })}
+                className="w-20 bg-white border border-amber-200 rounded px-2 py-1 text-xs text-marble-900 focus:outline-none focus:ring-1 focus:ring-amber-400"
+              />
+            </div>
+            <div className="flex items-center gap-1">
+              <label className="text-xs text-marble-700 whitespace-nowrap">Floor material</label>
+              <input
+                type="text"
+                name={`${prefix}_bathroomFloorMaterial`}
+                value={value.bathroomFloorMaterial}
+                onChange={(e) => onChange({ ...value, bathroomFloorMaterial: e.target.value })}
+                className="w-32 bg-white border border-amber-200 rounded px-2 py-1 text-xs text-marble-900 focus:outline-none focus:ring-1 focus:ring-amber-400"
+              />
+            </div>
+            {/* Row 5: schluter size + color */}
+            <div className="flex items-center gap-1">
+              <label className="text-xs text-marble-700 whitespace-nowrap">Schluter size</label>
+              <input
+                type="text"
+                name={`${prefix}_showerSchluterSize`}
+                value={value.showerSchluterSize}
+                onChange={(e) => onChange({ ...value, showerSchluterSize: e.target.value })}
+                className="w-24 bg-white border border-amber-200 rounded px-2 py-1 text-xs text-marble-900 focus:outline-none focus:ring-1 focus:ring-amber-400"
+              />
+            </div>
+            <div className="flex items-center gap-1">
+              <label className="text-xs text-marble-700 whitespace-nowrap">Schluter color</label>
+              <input
+                type="text"
+                name={`${prefix}_showerSchluterColor`}
+                value={value.showerSchluterColor}
+                onChange={(e) => onChange({ ...value, showerSchluterColor: e.target.value })}
+                className="w-24 bg-white border border-amber-200 rounded px-2 py-1 text-xs text-marble-900 focus:outline-none focus:ring-1 focus:ring-amber-400"
+              />
+            </div>
+            {/* Row 6: grout color + tile orientation */}
+            <div className="flex items-center gap-1">
+              <label className="text-xs text-marble-700 whitespace-nowrap">Grout color</label>
+              <input
+                type="text"
+                name={`${prefix}_showerGroutColor`}
+                value={value.showerGroutColor}
+                onChange={(e) => onChange({ ...value, showerGroutColor: e.target.value })}
+                className="w-28 bg-white border border-amber-200 rounded px-2 py-1 text-xs text-marble-900 focus:outline-none focus:ring-1 focus:ring-amber-400"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-marble-700 whitespace-nowrap">Tile installation:</span>
+              <LineYesNo
+                label="Vertical" name={`${prefix}_showerTileVertical`}
+                value={value.showerTileVertical}
+                onChange={(v) => onChange({ ...value, showerTileVertical: v as "" | "yes" | "no" })}
+              />
+              <LineYesNo
+                label="Horizontal" name={`${prefix}_showerTileHorizontal`}
+                value={value.showerTileHorizontal}
+                onChange={(v) => onChange({ ...value, showerTileHorizontal: v as "" | "yes" | "no" })}
+              />
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {/* Wood Specification — installer instructions only */}
+      {isWood ? (
+        <div className="border border-amber-200 rounded p-2 bg-amber-50 mt-2">
+          <p className="text-xs font-semibold text-amber-700 mb-2">Wood Specification — (installer instructions only)</p>
+          <div className="flex flex-wrap gap-4">
+            <LineYesNo
+              label="White Risers" name={`${prefix}_woodWhiteRisers`}
+              value={value.woodWhiteRisers}
+              onChange={(v) => onChange({ ...value, woodWhiteRisers: v as "" | "yes" | "no" })}
+            />
+            <LineYesNo
+              label="Moisture Barrier" name={`${prefix}_woodMoistureBarrier`}
+              value={value.woodMoistureBarrier}
+              onChange={(v) => onChange({ ...value, woodMoistureBarrier: v as "" | "yes" | "no" })}
+            />
+          </div>
+        </div>
+      ) : null}
+
+      {/* Counter Top Specification — installer instructions only */}
+      {isCounterTop ? (
+        <div className="border border-amber-200 rounded p-2 bg-amber-50 mt-2">
+          <p className="text-xs font-semibold text-amber-700 mb-2">Counter Top Specification — (installer instructions only)</p>
+          <div className="flex flex-wrap gap-4">
+            <LineYesNo
+              label="Seal" name={`${prefix}_counterTopSeal`}
+              value={value.counterTopSeal}
+              onChange={(v) => onChange({ ...value, counterTopSeal: v as "" | "yes" | "no" })}
+            />
+          </div>
+        </div>
+      ) : null}
+
       {/* Hidden fields for category-specific extras (ensure they submit even when empty) */}
       {!isCarpet ? (
         <>
@@ -740,6 +912,65 @@ function LineItemRow({
       ) : null}
       {!hasInstallMethod ? (
         <input type="hidden" name={`${prefix}_lineInstallMethod`} value="" />
+      ) : null}
+      {/* Hidden fields for unused category-specific installer fields */}
+      {!isShower ? (
+        <>
+          <input type="hidden" name={`${prefix}_showerWallSqft`} value="" />
+          <input type="hidden" name={`${prefix}_showerWallMaterial`} value="" />
+          <input type="hidden" name={`${prefix}_showerPan`} value="" />
+          <input type="hidden" name={`${prefix}_showerPanMaterial`} value="" />
+          <input type="hidden" name={`${prefix}_showerSoapBoxMaterial`} value="" />
+          <input type="hidden" name={`${prefix}_showerBench`} value="" />
+          <input type="hidden" name={`${prefix}_bathroomFloorSqft`} value="" />
+          <input type="hidden" name={`${prefix}_bathroomFloorMaterial`} value="" />
+          <input type="hidden" name={`${prefix}_showerSchluterSize`} value="" />
+          <input type="hidden" name={`${prefix}_showerSchluterColor`} value="" />
+          <input type="hidden" name={`${prefix}_showerGroutColor`} value="" />
+          <input type="hidden" name={`${prefix}_showerTileVertical`} value="" />
+          <input type="hidden" name={`${prefix}_showerTileHorizontal`} value="" />
+        </>
+      ) : null}
+      {!isWood ? (
+        <>
+          <input type="hidden" name={`${prefix}_woodWhiteRisers`} value="" />
+          <input type="hidden" name={`${prefix}_woodMoistureBarrier`} value="" />
+        </>
+      ) : null}
+      {!isCounterTop ? (
+        <input type="hidden" name={`${prefix}_counterTopSeal`} value="" />
+      ) : null}
+    </div>
+  );
+}
+
+// ---------- Inline yes/no for line item rows ----------
+function LineYesNo({ label, name, value, onChange }: {
+  label: string; name: string; value: string; onChange: (v: string) => void;
+}) {
+  return (
+    <div className="flex items-center gap-1">
+      <span className="text-xs text-marble-700 whitespace-nowrap">{label}</span>
+      <label className="flex items-center gap-0.5 text-xs text-marble-900 cursor-pointer">
+        <input
+          type="radio" name={name} value="yes"
+          checked={value === "yes"}
+          onChange={() => onChange("yes")}
+          className="accent-brand-700"
+        />
+        Yes
+      </label>
+      <label className="flex items-center gap-0.5 text-xs text-marble-900 cursor-pointer">
+        <input
+          type="radio" name={name} value="no"
+          checked={value === "no"}
+          onChange={() => onChange("no")}
+          className="accent-brand-700"
+        />
+        No
+      </label>
+      {value ? (
+        <button type="button" onClick={() => onChange("")} className="text-xs text-marble-400 hover:text-marble-600">×</button>
       ) : null}
     </div>
   );
