@@ -1,7 +1,7 @@
 // Server functions for Order CRUD against the post-restructure schema.
 // Always called from server actions or route handlers — never from a client.
 
-import { LineCategory, PricingMode } from "@prisma/client";
+import { LineCategory, OrderStatus, PricingMode } from "@prisma/client";
 import { prisma } from "./prisma";
 import { nextInvoiceNumber } from "./invoice-number";
 import { ingestSuggestions } from "./material-suggestion";
@@ -386,11 +386,25 @@ export type OrderListItem = Awaited<ReturnType<typeof listOrders>>[number];
 export async function listOrders(opts?: {
   salespersonId?: string;
   search?: string;
+  status?: OrderStatus;
+  dateFrom?: string; // ISO date string "YYYY-MM-DD"
+  dateTo?: string;   // ISO date string "YYYY-MM-DD"
   limit?: number;
 }) {
   const where: Prisma.OrderWhereInput = {
     deletedAt: null,
     ...(opts?.salespersonId ? { salespersonId: opts.salespersonId } : {}),
+    ...(opts?.status ? { status: opts.status } : {}),
+    ...(opts?.dateFrom || opts?.dateTo
+      ? {
+          dateOfSale: {
+            ...(opts.dateFrom ? { gte: new Date(opts.dateFrom) } : {}),
+            ...(opts.dateTo
+              ? { lte: new Date(`${opts.dateTo}T23:59:59.999Z`) }
+              : {}),
+          },
+        }
+      : {}),
     ...(opts?.search
       ? {
           OR: [
@@ -407,13 +421,37 @@ export async function listOrders(opts?: {
   return prisma.order.findMany({
     where,
     orderBy: { invoiceNumber: "desc" },
-    take: opts?.limit ?? 50,
+    take: opts?.limit ?? 200,
     include: {
       customer: { select: { firstName: true, lastName: true } },
       salesperson: { select: { fullName: true } },
       advertisingSource: { select: { name: true } },
     },
   });
+}
+
+export async function getAdminOrderStats() {
+  const now = new Date();
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+  const monthEnd   = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+
+  const [monthlyAgg, pendingAgg] = await Promise.all([
+    prisma.order.aggregate({
+      where: { deletedAt: null, status: { not: "voided" }, dateOfSale: { gte: monthStart, lte: monthEnd } },
+      _count: { id: true },
+      _sum:   { totalCents: true },
+    }),
+    prisma.order.aggregate({
+      where: { deletedAt: null, status: { notIn: ["paid", "voided"] } },
+      _sum: { balanceCents: true },
+    }),
+  ]);
+
+  return {
+    monthlyCount:   monthlyAgg._count.id,
+    monthlyRevenue: monthlyAgg._sum.totalCents ?? 0,
+    pendingBalance: pendingAgg._sum.balanceCents ?? 0,
+  };
 }
 
 export async function getOrder(id: string) {
