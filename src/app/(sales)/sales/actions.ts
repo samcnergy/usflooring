@@ -1,6 +1,5 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { requireRole } from "@/lib/auth";
 import { parseOrderForm } from "@/lib/order-form-parser";
@@ -32,7 +31,7 @@ export async function createOwnOrderAction(_prev: ActionState, formData: FormDat
     diff: { invoiceNumber: order.invoiceNumber, totalCents: order.totalCents },
   });
   revalidatePath("/sales/orders");
-  redirect(`/sales/orders/${order.id}`);
+  return { ok: true, orderId: order.id };
 }
 
 export async function updateOwnOrderAction(orderId: string, _prev: ActionState, formData: FormData): Promise<ActionState> {
@@ -47,7 +46,7 @@ export async function updateOwnOrderAction(orderId: string, _prev: ActionState, 
   await audit({ actorUserId: me.id, action: "update", entityType: "Order", entityId: orderId });
   revalidatePath(`/sales/orders/${orderId}`);
   revalidatePath("/sales/orders");
-  redirect(`/sales/orders/${orderId}`);
+  return { ok: true, orderId };
 }
 
 export async function voidOwnOrderAction(orderId: string) {

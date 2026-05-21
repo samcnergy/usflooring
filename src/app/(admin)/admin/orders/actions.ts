@@ -21,7 +21,7 @@ export async function createOrderAction(_prev: ActionState, formData: FormData):
     diff: { invoiceNumber: order.invoiceNumber, totalCents: order.totalCents },
   });
   revalidatePath("/admin/orders");
-  redirect(`/admin/orders/${order.id}`);
+  return { ok: true, orderId: order.id };
 }
 
 export async function updateOrderAction(orderId: string, _prev: ActionState, formData: FormData): Promise<ActionState> {
@@ -37,7 +37,7 @@ export async function updateOrderAction(orderId: string, _prev: ActionState, for
   });
   revalidatePath(`/admin/orders/${orderId}`);
   revalidatePath("/admin/orders");
-  redirect(`/admin/orders/${orderId}`);
+  return { ok: true, orderId };
 }
 
 export async function voidOrderAction(orderId: string) {
