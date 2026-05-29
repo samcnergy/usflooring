@@ -94,6 +94,88 @@ export async function inviteUserAction(_prev: InviteState, formData: FormData): 
   return { ok: true, email, inviteLink };
 }
 
+// ── Change email ─────────────────────────────────────────────────────────────
+
+export type EmailChangeState =
+  | { ok: true }
+  | { ok: false; message: string }
+  | null;
+
+export async function changeEmailAction(
+  _prev: EmailChangeState,
+  formData: FormData,
+): Promise<EmailChangeState> {
+  await requireRole("admin");
+
+  const userId   = String(formData.get("userId") ?? "").trim();
+  const newEmail = String(formData.get("newEmail") ?? "").trim().toLowerCase();
+
+  if (!userId || !newEmail) return { ok: false, message: "Missing fields." };
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
+    return { ok: false, message: "Invalid email address." };
+  }
+
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  if (!user || user.deletedAt) return { ok: false, message: "User not found." };
+  if (user.email === newEmail) return { ok: false, message: "That is already their email." };
+
+  // Make sure the new email isn't taken.
+  const clash = await prisma.user.findUnique({ where: { email: newEmail } });
+  if (clash) return { ok: false, message: "That email is already in use." };
+
+  // Update Supabase auth first (find by old email).
+  const supabaseAdmin = getSupabaseAdmin();
+  const list = await supabaseAdmin.auth.admin.listUsers({ page: 1, perPage: 1000 });
+  const authUser = list.data.users.find((u) => u.email === user.email);
+  if (authUser) {
+    const { error } = await supabaseAdmin.auth.admin.updateUserById(authUser.id, {
+      email: newEmail,
+    });
+    if (error) return { ok: false, message: `Supabase error: ${error.message}` };
+  }
+
+  await prisma.user.update({ where: { id: userId }, data: { email: newEmail } });
+  revalidatePath("/admin/users");
+  return { ok: true };
+}
+
+// ── Delete user (soft-delete) ─────────────────────────────────────────────────
+
+export async function deleteUserAction(userId: string): Promise<void> {
+  const me = await requireRole("admin");
+  if (userId === me.id) throw new Error("You cannot delete your own account.");
+
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  if (!user || user.deletedAt) return; // already gone
+
+  // Hard-delete from Supabase auth so the account is fully revoked.
+  const supabaseAdmin = getSupabaseAdmin();
+  const list = await supabaseAdmin.auth.admin.listUsers({ page: 1, perPage: 1000 });
+  const authUser = list.data.users.find((u) => u.email === user.email);
+  if (authUser) {
+    await supabaseAdmin.auth.admin.deleteUser(authUser.id);
+  }
+
+  // Soft-delete in our DB — keeps Order.salespersonId FKs intact so the
+  // salesperson's name continues to appear on all their existing invoices.
+  await prisma.user.update({
+    where: { id: userId },
+    data: { deletedAt: new Date(), isActive: false },
+  });
+
+  await audit({
+    actorUserId: me.id,
+    action: "delete",
+    entityType: "User",
+    entityId: userId,
+    diff: { email: user.email, fullName: user.fullName },
+  });
+
+  revalidatePath("/admin/users");
+}
+
+// ── Toggle active ─────────────────────────────────────────────────────────────
+
 export async function setUserActiveAction(userId: string, isActive: boolean) {
   const me = await requireRole("admin");
   await prisma.user.update({ where: { id: userId }, data: { isActive } });

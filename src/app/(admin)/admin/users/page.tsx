@@ -7,6 +7,7 @@ export default async function AdminUsersPage() {
   await requireRole("admin");
 
   const users = await prisma.user.findMany({
+    where: { deletedAt: null }, // exclude soft-deleted users
     orderBy: [{ role: "asc" }, { fullName: "asc" }],
     select: { id: true, fullName: true, email: true, role: true, isActive: true },
   });

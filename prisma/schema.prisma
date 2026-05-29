@@ -19,13 +19,16 @@ enum Role {
 }
 
 model User {
-  id           String   @id @default(uuid())
-  email        String   @unique
+  id           String    @id @default(uuid())
+  email        String    @unique
   passwordHash String?
   fullName     String
   role         Role
-  isActive     Boolean  @default(true)
-  createdAt    DateTime @default(now())
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  // Soft-delete: set instead of hard-deleting so Order.salespersonId FKs remain
+  // valid and salesperson names continue to appear on all existing invoices.
+  deletedAt    DateTime?
 
   ordersAsSalesperson Order[]    @relation("SalespersonOrders")
   auditEntries        AuditLog[] @relation("AuditActor")
