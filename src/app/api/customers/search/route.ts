@@ -10,18 +10,29 @@ export async function GET(req: Request) {
   const q = url.searchParams.get("q")?.trim() ?? "";
   if (q.length < 2) return NextResponse.json([]);
 
-  // Support "John Smith" multi-word queries — all words must match first or last name
+  // Split into words for name matching (all words must appear in first or last name).
   const words = q.split(/\s+/).filter(Boolean);
 
   const customers = await prisma.customer.findMany({
     where: {
       deletedAt: null,
-      AND: words.map((word) => ({
-        OR: [
-          { firstName: { contains: word, mode: "insensitive" as const } },
-          { lastName:  { contains: word, mode: "insensitive" as const } },
-        ],
-      })),
+      OR: [
+        // Name: every word must match firstName OR lastName
+        {
+          AND: words.map((word) => ({
+            OR: [
+              { firstName: { contains: word, mode: "insensitive" as const } },
+              { lastName:  { contains: word, mode: "insensitive" as const } },
+            ],
+          })),
+        },
+        // Phone (home or work) — full query string as substring
+        { phoneHome: { contains: q, mode: "insensitive" as const } },
+        { phoneWork: { contains: q, mode: "insensitive" as const } },
+        // Address / city — full query string as substring
+        { addressLine1: { contains: q, mode: "insensitive" as const } },
+        { city:         { contains: q, mode: "insensitive" as const } },
+      ],
     },
     orderBy: { createdAt: "desc" },
     take: 8,

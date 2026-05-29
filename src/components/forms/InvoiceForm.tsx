@@ -303,7 +303,7 @@ export function InvoiceForm({
             value={custQuery}
             onChange={(e) => setCustQuery(e.target.value)}
             onFocus={() => custResults.length > 0 && setCustOpen(true)}
-            placeholder="Type name to look up a past customer…"
+            placeholder="Search by name, phone, or address…"
             autoComplete="off"
             className="w-full bg-white border border-brand-200 rounded px-3 py-2 text-sm text-marble-900 focus:outline-none focus:ring-2 focus:ring-brand-700"
           />
@@ -318,9 +318,11 @@ export function InvoiceForm({
                 >
                   <span className="font-medium text-marble-900">{r.firstName} {r.lastName}</span>
                   <span className="text-marble-600 text-xs">
-                    {r.addressLine1}, {r.city}
-                    {r.phoneHome ? ` · ${r.phoneHome}` : ""}
-                    {r.lastOrderDate ? ` · last order ${r.lastOrderDate}` : ""}
+                    {[
+                      r.addressLine1 && r.city ? `${r.addressLine1}, ${r.city}` : r.city || r.addressLine1 || null,
+                      r.phoneHome || r.phoneWork || null,
+                      r.lastOrderDate ? `last order ${r.lastOrderDate}` : null,
+                    ].filter(Boolean).join(" · ")}
                   </span>
                 </button>
               ))}
