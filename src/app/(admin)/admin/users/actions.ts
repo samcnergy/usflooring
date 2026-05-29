@@ -116,7 +116,7 @@ export async function changeEmailAction(
   }
 
   const user = await prisma.user.findUnique({ where: { id: userId } });
-  if (!user || user.deletedAt) return { ok: false, message: "User not found." };
+  if (!user || user.email.startsWith("deleted_")) return { ok: false, message: "User not found." };
   if (user.email === newEmail) return { ok: false, message: "That is already their email." };
 
   // Make sure the new email isn't taken.
@@ -146,7 +146,8 @@ export async function deleteUserAction(userId: string): Promise<void> {
   if (userId === me.id) throw new Error("You cannot delete your own account.");
 
   const user = await prisma.user.findUnique({ where: { id: userId } });
-  if (!user || user.deletedAt) return; // already gone
+  // Already deleted if email starts with the tombstone prefix.
+  if (!user || user.email.startsWith("deleted_")) return;
 
   // Hard-delete from Supabase auth so the account is fully revoked.
   const supabaseAdmin = getSupabaseAdmin();
@@ -156,11 +157,14 @@ export async function deleteUserAction(userId: string): Promise<void> {
     await supabaseAdmin.auth.admin.deleteUser(authUser.id);
   }
 
-  // Soft-delete in our DB — keeps Order.salespersonId FKs intact so the
-  // salesperson's name continues to appear on all their existing invoices.
+  // We can't hard-delete the User row because Order.salespersonId has a FK to it
+  // and we want the salesperson name to keep appearing on existing invoices.
+  // Instead, tombstone the email (preserves uniqueness) and deactivate the user
+  // so they can never log in again — no schema migration required.
+  const tombstone = `deleted_${Date.now()}_${user.email}`;
   await prisma.user.update({
     where: { id: userId },
-    data: { deletedAt: new Date(), isActive: false },
+    data: { email: tombstone, isActive: false },
   });
 
   await audit({

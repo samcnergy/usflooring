@@ -19,7 +19,9 @@ export async function getSessionUser(): Promise<SessionUser | null> {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user?.email) return null;
   const dbUser = await prisma.user.findUnique({ where: { email: user.email } });
-  if (!dbUser || !dbUser.isActive || dbUser.deletedAt) return null;
+  // isActive=false covers both deactivated and deleted users (deleted users have
+  // their email mutated to "deleted_<ts>_<original>" and isActive set to false).
+  if (!dbUser || !dbUser.isActive) return null;
   return {
     id: dbUser.id,
     email: dbUser.email,
