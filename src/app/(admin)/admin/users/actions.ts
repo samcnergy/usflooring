@@ -24,7 +24,7 @@ const inviteInput = z.object({
 });
 
 export type InviteState =
-  | { ok: true; email: string }
+  | { ok: true; email: string; inviteLink: string }
   | { ok: false; errors?: Record<string, string>; message?: string }
   | null;
 
@@ -59,20 +59,24 @@ export async function inviteUserAction(_prev: InviteState, formData: FormData): 
   const proto = h.get("x-forwarded-proto") ?? "http";
   const redirectTo = `${proto}://${host}/reset-password`;
 
-  // Send a real invitation email — the user clicks the link and sets their own password.
-  const { data: invited, error } = await supabaseAdmin.auth.admin.inviteUserByEmail(email, {
-    redirectTo,
-    data: { full_name: fullName },
+  // Generate an invite link without sending any email. This bypasses Supabase's
+  // email rate limits entirely — the admin copies the link and shares it however
+  // they like (email, text, phone, etc.). No SMTP configuration required.
+  const { data: linkData, error } = await supabaseAdmin.auth.admin.generateLink({
+    type: "invite",
+    email,
+    options: { redirectTo, data: { full_name: fullName } },
   });
   if (error) return { ok: false, message: error.message };
 
+  const authUserId = linkData.user.id;
+  const inviteLink = linkData.properties.action_link;
+
   // Set the role in app_metadata (can only be done after the user exists).
-  if (invited?.user?.id) {
-    await supabaseAdmin.auth.admin.updateUserById(invited.user.id, {
-      app_metadata: { role },
-      user_metadata: { full_name: fullName },
-    });
-  }
+  await supabaseAdmin.auth.admin.updateUserById(authUserId, {
+    app_metadata: { role },
+    user_metadata: { full_name: fullName },
+  });
 
   const dbUser = await prisma.user.create({
     data: { email, fullName, role },
@@ -87,7 +91,7 @@ export async function inviteUserAction(_prev: InviteState, formData: FormData): 
   });
 
   revalidatePath("/admin/users");
-  return { ok: true, email };
+  return { ok: true, email, inviteLink };
 }
 
 export async function setUserActiveAction(userId: string, isActive: boolean) {
