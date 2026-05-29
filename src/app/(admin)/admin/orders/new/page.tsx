@@ -7,11 +7,11 @@ import { createOrderAction } from "../actions";
 export default async function NewOrderPage() {
   await requireRole("admin");
 
-  const [salespeople, advertisingSources] = await Promise.all([
+  const [allUsers, advertisingSources] = await Promise.all([
     prisma.user.findMany({
-      where: { role: "salesperson", isActive: true },
+      where: { isActive: true },
       orderBy: { fullName: "asc" },
-      select: { id: true, fullName: true },
+      select: { id: true, fullName: true, role: true },
     }),
     prisma.advertisingSource.findMany({
       where: { isActive: true },
@@ -19,6 +19,12 @@ export default async function NewOrderPage() {
       select: { id: true, name: true },
     }),
   ]);
+
+  // Show admins with "(Admin)" label so they're distinguishable in the dropdown.
+  const salespeople = allUsers.map((u) => ({
+    id: u.id,
+    fullName: u.role === "admin" ? `${u.fullName} (Admin)` : u.fullName,
+  }));
 
   return (
     <div>

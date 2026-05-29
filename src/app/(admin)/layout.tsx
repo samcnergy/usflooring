@@ -10,6 +10,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         { href: "/admin/users", label: "Salespeople" },
         { href: "/admin/sources", label: "Ad Sources" },
         { href: "/admin/audit", label: "Audit" },
+        { href: "/admin/profile", label: "Profile" },
       ]}
       ctaHref="/admin/ai-analysis"
       ctaLabel="Run AI Analysis"

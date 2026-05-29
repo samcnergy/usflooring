@@ -2,8 +2,8 @@ import { requireRole } from "@/lib/auth";
 import { PasswordChangeForm } from "@/components/PasswordChangeForm";
 import { changePasswordAction } from "./actions";
 
-export default async function SalesProfilePage() {
-  const me = await requireRole("salesperson");
+export default async function AdminProfilePage() {
+  const me = await requireRole("admin");
 
   return (
     <div className="flex flex-col gap-6 max-w-xl">

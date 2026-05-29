@@ -3,7 +3,6 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
-import { randomBytes } from "node:crypto";
 import { z } from "zod";
 import { requireRole } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -24,7 +23,7 @@ const inviteInput = z.object({
 });
 
 export type InviteState =
-  | { ok: true; email: string; tempPassword: string }
+  | { ok: true; email: string }
   | { ok: false; errors?: Record<string, string>; message?: string }
   | null;
 
@@ -51,15 +50,20 @@ export async function inviteUserAction(_prev: InviteState, formData: FormData): 
   }
 
   const supabaseAdmin = getSupabaseAdmin();
-  const tempPassword = randomBytes(9).toString("base64url");
-  const { error } = await supabaseAdmin.auth.admin.createUser({
-    email,
-    password: tempPassword,
-    email_confirm: true,
-    app_metadata: { role },
-    user_metadata: { full_name: fullName },
+
+  // Send a real invitation email — the user clicks the link and sets their own password.
+  const { data: invited, error } = await supabaseAdmin.auth.admin.inviteUserByEmail(email, {
+    data: { full_name: fullName },
   });
   if (error) return { ok: false, message: error.message };
+
+  // Set the role in app_metadata (can only be done after the user exists).
+  if (invited?.user?.id) {
+    await supabaseAdmin.auth.admin.updateUserById(invited.user.id, {
+      app_metadata: { role },
+      user_metadata: { full_name: fullName },
+    });
+  }
 
   const dbUser = await prisma.user.create({
     data: { email, fullName, role },
@@ -74,7 +78,7 @@ export async function inviteUserAction(_prev: InviteState, formData: FormData): 
   });
 
   revalidatePath("/admin/users");
-  return { ok: true, email, tempPassword };
+  return { ok: true, email };
 }
 
 export async function setUserActiveAction(userId: string, isActive: boolean) {

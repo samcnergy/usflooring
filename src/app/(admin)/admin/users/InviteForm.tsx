@@ -13,13 +13,9 @@ export function InviteForm() {
 
       {state?.ok ? (
         <div className="bg-brand-100 border border-brand-700 rounded p-3 text-sm text-brand-700">
-          <p className="font-semibold">Invited {state.email}.</p>
+          <p className="font-semibold">Invitation sent to {state.email}.</p>
           <p className="mt-1">
-            Share this temporary password with them — they should change it on
-            first login. <strong>It will not be shown again.</strong>
-          </p>
-          <p className="mt-2 font-mono text-marble-900 bg-white border border-marble-200 rounded px-2 py-1 inline-block">
-            {state.tempPassword}
+            They will receive an email with a link to set their own password and activate their account.
           </p>
         </div>
       ) : null}
