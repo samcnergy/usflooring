@@ -16,7 +16,10 @@ export default async function LoginPage({
   if (user) redirect(user.role === "admin" ? "/admin" : "/sales");
 
   const params = await searchParams;
-  const errorMessage = typeof params.error === "string" ? params.error : null;
+  const rawError = typeof params.error === "string" ? params.error : null;
+  const errorMessage = rawError === "auth_callback_failed"
+    ? "The invitation link has expired or is invalid. Please ask an admin to re-send the invitation."
+    : rawError;
   const justReset = params.reset === "1";
 
   return (

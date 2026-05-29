@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { requireRole } from "@/lib/auth";
@@ -51,8 +52,16 @@ export async function inviteUserAction(_prev: InviteState, formData: FormData): 
 
   const supabaseAdmin = getSupabaseAdmin();
 
+  // Build the redirect URL from the real request host so it works on every
+  // environment (localhost in dev, usflooring.onrender.com in production).
+  const h = await headers();
+  const host  = h.get("x-forwarded-host") ?? h.get("host") ?? "localhost:3000";
+  const proto = h.get("x-forwarded-proto") ?? "http";
+  const redirectTo = `${proto}://${host}/reset-password`;
+
   // Send a real invitation email — the user clicks the link and sets their own password.
   const { data: invited, error } = await supabaseAdmin.auth.admin.inviteUserByEmail(email, {
+    redirectTo,
     data: { full_name: fullName },
   });
   if (error) return { ok: false, message: error.message };
