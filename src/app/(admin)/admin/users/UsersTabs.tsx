@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useActionState, useTransition } from "react";
+import { useState, useActionState, useTransition, useEffect } from "react";
 import {
   setUserActiveAction,
   changeEmailAction,
@@ -32,11 +32,12 @@ function EditEmailForm({
     null,
   );
 
-  if (state?.ok) {
-    // success — close the form (page revalidates)
-    onDone();
-    return null;
-  }
+  // Close the form after a successful save (can't call onDone during render).
+  useEffect(() => {
+    if (state?.ok) onDone();
+  }, [state?.ok]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (state?.ok) return null;
 
   return (
     <form action={formAction} className="flex items-center gap-2 mt-1">
