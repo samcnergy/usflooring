@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { headers } from "next/headers";
+import { randomBytes } from "crypto";
 import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { requireRole } from "@/lib/auth";
@@ -24,7 +24,7 @@ const inviteInput = z.object({
 });
 
 export type InviteState =
-  | { ok: true; email: string; inviteLink: string }
+  | { ok: true; email: string; tempPassword: string }
   | { ok: false; errors?: Record<string, string>; message?: string }
   | null;
 
@@ -50,33 +50,22 @@ export async function inviteUserAction(_prev: InviteState, formData: FormData): 
     return { ok: false, message: "A user with that email already exists." };
   }
 
+  // Generate a secure temporary password — 16 url-safe characters.
+  // The user can change it from their Profile page after first login.
+  const tempPassword = randomBytes(12).toString("base64url").slice(0, 16);
+
   const supabaseAdmin = getSupabaseAdmin();
 
-  // Build the redirect URL from the real request host so it works on every
-  // environment (localhost in dev, usflooring.onrender.com in production).
-  const h = await headers();
-  const host  = h.get("x-forwarded-host") ?? h.get("host") ?? "localhost:3000";
-  const proto = h.get("x-forwarded-proto") ?? "http";
-  const redirectTo = `${proto}://${host}/reset-password`;
-
-  // Generate an invite link without sending any email. This bypasses Supabase's
-  // email rate limits entirely — the admin copies the link and shares it however
-  // they like (email, text, phone, etc.). No SMTP configuration required.
-  const { data: linkData, error } = await supabaseAdmin.auth.admin.generateLink({
-    type: "invite",
+  // Create the account with email already confirmed so the user can log in
+  // immediately with the temp password — no email link required.
+  const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
     email,
-    options: { redirectTo, data: { full_name: fullName } },
+    password: tempPassword,
+    email_confirm: true,
+    user_metadata:  { full_name: fullName },
+    app_metadata:   { role },
   });
   if (error) return { ok: false, message: error.message };
-
-  const authUserId = linkData.user.id;
-  const inviteLink = linkData.properties.action_link;
-
-  // Set the role in app_metadata (can only be done after the user exists).
-  await supabaseAdmin.auth.admin.updateUserById(authUserId, {
-    app_metadata: { role },
-    user_metadata: { full_name: fullName },
-  });
 
   const dbUser = await prisma.user.create({
     data: { email, fullName, role },
@@ -91,7 +80,7 @@ export async function inviteUserAction(_prev: InviteState, formData: FormData): 
   });
 
   revalidatePath("/admin/users");
-  return { ok: true, email, inviteLink };
+  return { ok: true, email, tempPassword };
 }
 
 // ── Change email ─────────────────────────────────────────────────────────────
