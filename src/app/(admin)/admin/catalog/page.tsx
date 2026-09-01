@@ -52,6 +52,12 @@ export default async function CatalogPage({
             </Link>
           )}
           <Link
+            href="/admin/catalog/import"
+            className="inline-flex items-center justify-center rounded border border-marble-300 hover:bg-marble-50 text-marble-700 font-medium px-4 h-9 text-sm"
+          >
+            Import file
+          </Link>
+          <Link
             href="/admin/catalog/new"
             className="inline-flex items-center justify-center rounded bg-brand-500 hover:bg-brand-700 text-white font-medium px-4 h-9 text-sm"
           >

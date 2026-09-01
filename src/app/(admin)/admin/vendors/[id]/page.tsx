@@ -84,12 +84,20 @@ export default async function VendorDetailPage({ params }: { params: Promise<{ i
       <section>
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-lg font-semibold text-marble-900">Products ({vendor.materials.length})</h2>
-          <Link
-            href={`/admin/catalog/new?vendorId=${id}`}
-            className="inline-flex items-center justify-center rounded bg-brand-500 hover:bg-brand-700 text-white font-medium px-3 h-8 text-sm"
-          >
-            + Add Product
-          </Link>
+          <div className="flex gap-2">
+            <Link
+              href={`/admin/catalog/import?vendorId=${id}`}
+              className="inline-flex items-center justify-center rounded border border-marble-300 hover:bg-marble-50 text-marble-700 font-medium px-3 h-8 text-sm"
+            >
+              Import file
+            </Link>
+            <Link
+              href={`/admin/catalog/new?vendorId=${id}`}
+              className="inline-flex items-center justify-center rounded bg-brand-500 hover:bg-brand-700 text-white font-medium px-3 h-8 text-sm"
+            >
+              + Add Product
+            </Link>
+          </div>
         </div>
         {vendor.materials.length === 0 ? (
           <p className="text-sm text-marble-500">No products yet. Add one to get started.</p>
