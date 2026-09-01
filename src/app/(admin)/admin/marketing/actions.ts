@@ -6,43 +6,37 @@ import { audit } from "@/lib/audit";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import type { ContactType, ContactStatus, OutreachMethod } from "@prisma/client";
+import { sendCampaign } from "@/lib/email";
 
-// ── Create contact ─────────────────────────────────────────────────────────
+// ── Create / update campaign ───────────────────────────────────────────────
 
-const contactSchema = z.object({
-  name:         z.string().trim().min(1, "Name is required").max(200),
-  phone:        z.string().trim().max(30).optional(),
-  email:        z.string().trim().email("Invalid email").max(200).optional().or(z.literal("")),
-  type:         z.enum(["pastCustomer", "lostLead", "coldContact"]),
-  status:       z.enum(["new", "contacted", "interested", "notInterested", "converted"]).default("new"),
-  notes:        z.string().trim().max(2000).optional(),
-  sourceId:     z.string().optional().nullable(),
-  orderId:      z.string().optional().nullable(),
-  nextFollowUp: z.string().optional().nullable(),
+const campaignSchema = z.object({
+  name:         z.string().trim().min(1, "Internal name is required").max(200),
+  subject:      z.string().trim().min(1, "Subject line is required").max(500),
+  body:         z.string().trim().min(1, "Email body is required"),
+  promoDetails: z.string().trim().max(500).optional(),
+  promoCode:    z.string().trim().max(100).optional(),
+  expiresAt:    z.string().optional().nullable(),
 });
 
-export type ContactFormState =
+export type CampaignFormState =
   | { ok: true; id: string }
   | { ok: false; errors?: Record<string, string>; message?: string }
   | null;
 
-export async function createContactAction(
-  _prev: ContactFormState,
+export async function createCampaignAction(
+  _prev: CampaignFormState,
   formData: FormData
-): Promise<ContactFormState> {
+): Promise<CampaignFormState> {
   const me = await requireRole("admin");
 
-  const parsed = contactSchema.safeParse({
+  const parsed = campaignSchema.safeParse({
     name:         formData.get("name"),
-    phone:        formData.get("phone") || undefined,
-    email:        formData.get("email") || undefined,
-    type:         formData.get("type"),
-    status:       formData.get("status") || "new",
-    notes:        formData.get("notes") || undefined,
-    sourceId:     formData.get("sourceId") || null,
-    orderId:      formData.get("orderId") || null,
-    nextFollowUp: formData.get("nextFollowUp") || null,
+    subject:      formData.get("subject"),
+    body:         formData.get("body"),
+    promoDetails: formData.get("promoDetails") || undefined,
+    promoCode:    formData.get("promoCode") || undefined,
+    expiresAt:    formData.get("expiresAt") || null,
   });
 
   if (!parsed.success) {
@@ -52,42 +46,35 @@ export async function createContactAction(
   }
 
   const d = parsed.data;
-  const contact = await prisma.marketingContact.create({
+  const campaign = await prisma.campaign.create({
     data: {
       name:         d.name,
-      phone:        d.phone || null,
-      email:        d.email || null,
-      type:         d.type as ContactType,
-      status:       d.status as ContactStatus,
-      notes:        d.notes || null,
-      sourceId:     d.sourceId || null,
-      orderId:      d.orderId || null,
-      nextFollowUp: d.nextFollowUp ? new Date(d.nextFollowUp) : null,
+      subject:      d.subject,
+      body:         d.body,
+      promoDetails: d.promoDetails || null,
+      promoCode:    d.promoCode || null,
+      expiresAt:    d.expiresAt ? new Date(d.expiresAt) : null,
       createdById:  me.id,
     },
   });
 
-  await audit({ actorUserId: me.id, action: "CREATE_MARKETING_CONTACT", entityType: "MarketingContact", entityId: contact.id });
-  redirect(`/admin/marketing/contacts/${contact.id}`);
+  redirect(`/admin/marketing/${campaign.id}`);
 }
 
-export async function updateContactAction(
+export async function updateCampaignAction(
   id: string,
-  _prev: ContactFormState,
+  _prev: CampaignFormState,
   formData: FormData
-): Promise<ContactFormState> {
-  const me = await requireRole("admin");
+): Promise<CampaignFormState> {
+  await requireRole("admin");
 
-  const parsed = contactSchema.safeParse({
+  const parsed = campaignSchema.safeParse({
     name:         formData.get("name"),
-    phone:        formData.get("phone") || undefined,
-    email:        formData.get("email") || undefined,
-    type:         formData.get("type"),
-    status:       formData.get("status") || "new",
-    notes:        formData.get("notes") || undefined,
-    sourceId:     formData.get("sourceId") || null,
-    orderId:      formData.get("orderId") || null,
-    nextFollowUp: formData.get("nextFollowUp") || null,
+    subject:      formData.get("subject"),
+    body:         formData.get("body"),
+    promoDetails: formData.get("promoDetails") || undefined,
+    promoCode:    formData.get("promoCode") || undefined,
+    expiresAt:    formData.get("expiresAt") || null,
   });
 
   if (!parsed.success) {
@@ -96,145 +83,101 @@ export async function updateContactAction(
     return { ok: false, errors };
   }
 
+  const existing = await prisma.campaign.findUnique({ where: { id } });
+  if (!existing || existing.status === "sent") {
+    return { ok: false, message: "Cannot edit a campaign that has already been sent." };
+  }
+
   const d = parsed.data;
-  await prisma.marketingContact.update({
+  await prisma.campaign.update({
     where: { id },
     data: {
       name:         d.name,
-      phone:        d.phone || null,
-      email:        d.email || null,
-      type:         d.type as ContactType,
-      status:       d.status as ContactStatus,
-      notes:        d.notes || null,
-      sourceId:     d.sourceId || null,
-      orderId:      d.orderId || null,
-      nextFollowUp: d.nextFollowUp ? new Date(d.nextFollowUp) : null,
+      subject:      d.subject,
+      body:         d.body,
+      promoDetails: d.promoDetails || null,
+      promoCode:    d.promoCode || null,
+      expiresAt:    d.expiresAt ? new Date(d.expiresAt) : null,
     },
   });
 
-  await audit({ actorUserId: me.id, action: "UPDATE_MARKETING_CONTACT", entityType: "MarketingContact", entityId: id });
-  redirect(`/admin/marketing/contacts/${id}`);
+  redirect(`/admin/marketing/${id}`);
 }
 
-// ── Log outreach ───────────────────────────────────────────────────────────
+// ── Send campaign ──────────────────────────────────────────────────────────
 
-const outreachSchema = z.object({
-  date:    z.string().min(1, "Date is required"),
-  method:  z.enum(["call", "email", "text", "inPerson", "other"]),
-  notes:   z.string().trim().max(2000).optional(),
-  outcome: z.string().trim().max(500).optional(),
-  nextFollowUp: z.string().optional().nullable(),
-  status:  z.enum(["new", "contacted", "interested", "notInterested", "converted"]).optional(),
-});
+export type SendResult =
+  | { ok: true; sent: number; failed: number }
+  | { ok: false; message: string };
 
-export type LogState =
-  | { ok: true }
-  | { ok: false; errors?: Record<string, string>; message?: string }
-  | null;
-
-export async function logOutreachAction(
-  contactId: string,
-  _prev: LogState,
-  formData: FormData
-): Promise<LogState> {
+export async function sendCampaignAction(id: string): Promise<SendResult> {
   const me = await requireRole("admin");
 
-  const parsed = outreachSchema.safeParse({
-    date:         formData.get("date"),
-    method:       formData.get("method"),
-    notes:        formData.get("notes") || undefined,
-    outcome:      formData.get("outcome") || undefined,
-    nextFollowUp: formData.get("nextFollowUp") || null,
-    status:       formData.get("status") || undefined,
+  const campaign = await prisma.campaign.findUnique({ where: { id } });
+  if (!campaign) return { ok: false, message: "Campaign not found." };
+  if (campaign.status === "sent") return { ok: false, message: "This campaign has already been sent." };
+  if (!process.env.RESEND_API_KEY) return { ok: false, message: "Email service not configured. Add RESEND_API_KEY to your environment variables." };
+
+  // Gather all unique customer emails (deduplicated)
+  const customers = await prisma.customer.findMany({
+    where: { email: { not: null }, deletedAt: null },
+    select: { email: true, firstName: true },
+    distinct: ["email"],
   });
 
-  if (!parsed.success) {
-    const errors: Record<string, string> = {};
-    for (const i of parsed.error.issues) errors[i.path.join(".")] = i.message;
-    return { ok: false, errors };
+  const recipients = customers
+    .filter((c): c is { email: string; firstName: string } => !!c.email)
+    .map((c) => ({ email: c.email, firstName: c.firstName }));
+
+  if (recipients.length === 0) {
+    return { ok: false, message: "No customers with email addresses found in the database." };
   }
 
-  const d = parsed.data;
-  await prisma.$transaction(async (tx) => {
-    await tx.outreachLog.create({
+  // Mark as sending
+  await prisma.campaign.update({ where: { id }, data: { status: "sending" } });
+
+  try {
+    const { sent, failed } = await sendCampaign(
+      recipients,
+      campaign.subject,
+      campaign.body,
+      campaign.promoDetails,
+      campaign.promoCode,
+      campaign.expiresAt
+    );
+
+    await prisma.campaign.update({
+      where: { id },
       data: {
-        contactId,
-        date:    new Date(d.date),
-        method:  d.method as OutreachMethod,
-        notes:   d.notes || null,
-        outcome: d.outcome || null,
-        createdById: me.id,
+        status:        failed === recipients.length ? "failed" : "sent",
+        sentAt:        new Date(),
+        recipientCount: sent,
       },
     });
-    // Update contact's follow-up date and status if provided
-    const update: Record<string, unknown> = {};
-    if (d.nextFollowUp) update.nextFollowUp = new Date(d.nextFollowUp);
-    if (d.status) update.status = d.status;
-    if (Object.keys(update).length) {
-      await tx.marketingContact.update({ where: { id: contactId }, data: update });
-    }
-  });
 
-  revalidatePath(`/admin/marketing/contacts/${contactId}`);
-  revalidatePath("/admin/marketing");
-  return { ok: true };
-}
+    await audit({
+      actorUserId: me.id,
+      action:      "SEND_CAMPAIGN",
+      entityType:  "Campaign",
+      entityId:    id,
+      diff:        { sent, failed, total: recipients.length },
+    });
 
-// ── Log material sent ──────────────────────────────────────────────────────
-
-const materialSchema = z.object({
-  date:        z.string().min(1, "Date is required"),
-  description: z.string().trim().min(1, "Description is required").max(500),
-  url:         z.string().trim().url("Must be a valid URL").optional().or(z.literal("")),
-  notes:       z.string().trim().max(1000).optional(),
-});
-
-export async function logMaterialSendAction(
-  contactId: string,
-  _prev: LogState,
-  formData: FormData
-): Promise<LogState> {
-  const me = await requireRole("admin");
-
-  const parsed = materialSchema.safeParse({
-    date:        formData.get("date"),
-    description: formData.get("description"),
-    url:         formData.get("url") || undefined,
-    notes:       formData.get("notes") || undefined,
-  });
-
-  if (!parsed.success) {
-    const errors: Record<string, string> = {};
-    for (const i of parsed.error.issues) errors[i.path.join(".")] = i.message;
-    return { ok: false, errors };
+    revalidatePath("/admin/marketing");
+    revalidatePath(`/admin/marketing/${id}`);
+    return { ok: true, sent, failed };
+  } catch (e) {
+    await prisma.campaign.update({ where: { id }, data: { status: "failed" } });
+    console.error("Campaign send error:", e);
+    return { ok: false, message: "An error occurred while sending. Check server logs." };
   }
-
-  const d = parsed.data;
-  await prisma.materialSend.create({
-    data: {
-      contactId,
-      date:        new Date(d.date),
-      description: d.description,
-      url:         d.url || null,
-      notes:       d.notes || null,
-      createdById: me.id,
-    },
-  });
-
-  revalidatePath(`/admin/marketing/contacts/${contactId}`);
-  return { ok: true };
 }
 
-// ── Delete log entries ─────────────────────────────────────────────────────
-
-export async function deleteOutreachLogAction(logId: string, contactId: string) {
+export async function deleteCampaignAction(id: string) {
   await requireRole("admin");
-  await prisma.outreachLog.delete({ where: { id: logId } });
-  revalidatePath(`/admin/marketing/contacts/${contactId}`);
-}
-
-export async function deleteMaterialSendAction(sendId: string, contactId: string) {
-  await requireRole("admin");
-  await prisma.materialSend.delete({ where: { id: sendId } });
-  revalidatePath(`/admin/marketing/contacts/${contactId}`);
+  const c = await prisma.campaign.findUnique({ where: { id }, select: { status: true } });
+  if (c?.status === "sending") return;
+  await prisma.campaign.delete({ where: { id } });
+  revalidatePath("/admin/marketing");
+  redirect("/admin/marketing");
 }
