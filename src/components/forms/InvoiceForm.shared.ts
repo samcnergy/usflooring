@@ -44,6 +44,8 @@ export type LineItemFormValue = {
   woodMoistureBarrier: "" | "yes" | "no";
   // Counter top-specific
   counterTopSeal: "" | "yes" | "no";
+  // Catalog link — empty string means free-text (no catalog product selected)
+  materialId: string;
 };
 
 export type AreaGroupFormValue = {
@@ -245,6 +247,7 @@ export function emptyLineItem(): LineItemFormValue {
     woodMoistureBarrier: "",
     // Counter top-specific
     counterTopSeal: "",
+    materialId: "",
   };
 }
 
@@ -296,6 +299,7 @@ function liToForm(li: {
   woodMoistureBarrier: boolean | null;
   // Counter top-specific
   counterTopSeal: boolean | null;
+  materialId?: string | null;
 }): LineItemFormValue {
   return {
     key: cryptoRandomKey(),
@@ -331,6 +335,7 @@ function liToForm(li: {
     woodMoistureBarrier:   boolToYesNo(li.woodMoistureBarrier),
     // Counter top-specific
     counterTopSeal:        boolToYesNo(li.counterTopSeal),
+    materialId:            li.materialId ?? "",
   };
 }
 

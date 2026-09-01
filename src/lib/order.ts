@@ -193,6 +193,7 @@ export async function createOrder(input: OrderInputParsed) {
           woodMoistureBarrier:   li.woodMoistureBarrier ?? null,
           counterTopSeal:        li.counterTopSeal ?? null,
           roomId: li.roomIndex != null ? (roomIdByIndex.get(li.roomIndex) ?? null) : null,
+          materialId: li.materialId ?? null,
         })),
       });
     }
@@ -345,6 +346,7 @@ export async function updateOrder(id: string, input: OrderInputParsed) {
           woodMoistureBarrier:   li.woodMoistureBarrier ?? null,
           counterTopSeal:        li.counterTopSeal ?? null,
           roomId: li.roomIndex != null ? (roomIdByIndex.get(li.roomIndex) ?? null) : null,
+          materialId: li.materialId ?? null,
         })),
       });
     }

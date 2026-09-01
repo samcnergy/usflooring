@@ -4,6 +4,7 @@ import { useActionState, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { CarpetType, ExclusionType, InclusionType, InstallMethod, LineCategory, RoomName, SubfloorType, UnitOfMeasure } from "@prisma/client";
 import { Field, inputCls, requiredInputCls, errorInputCls, requiredSelectCls, selectCls } from "./Field";
+import { CatalogPicker } from "./CatalogPicker";
 import { centsToDollarString } from "@/lib/money";
 import { ROOMS } from "@/lib/rooms";
 import { LINE_CATEGORIES } from "@/lib/line-categories";
@@ -847,6 +848,28 @@ function LineItemRow({
 
   return (
     <div className="border-t border-marble-200 first:border-t-0 py-3">
+      {/* Hidden field to persist the catalog link */}
+      <input type="hidden" name={`${prefix}_materialId`} value={value.materialId} />
+      {/* Catalog picker — fills all fields; salesperson overrides price */}
+      <div className="mb-2">
+        <CatalogPicker
+          category={value.category || undefined}
+          onPick={(p) => onChange({
+            ...value,
+            materialId: p.materialId,
+            brand:    p.brand,
+            style:    p.style,
+            color:    p.color,
+            sizeSpec: p.sizeSpec,
+            sku:      p.sku,
+            unit:     p.defaultUnit as UnitOfMeasure | "",
+            // Load the suggested price — salesperson can still change it
+            unitPriceCents: p.defaultUnitPriceCents
+              ? (p.defaultUnitPriceCents / 100).toFixed(2)
+              : value.unitPriceCents,
+          })}
+        />
+      </div>
       <div className="grid grid-cols-12 gap-2 items-end">
         <div className="col-span-12 sm:col-span-2">
           <label className="block text-xs text-marble-700 mb-1">Category</label>

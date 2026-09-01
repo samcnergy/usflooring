@@ -105,6 +105,7 @@ export function parseOrderForm(formData: FormData):
     // Counter top-specific
     counterTopSeal: string | undefined;
     roomIndex: number | null;
+    materialId: string | undefined;
   }> = [];
 
   let linePosition = 0;
@@ -157,6 +158,7 @@ export function parseOrderForm(formData: FormData):
       const woodWhiteRisers       = s(formData, `ag_${i}_li_${j}_woodWhiteRisers`) || undefined;
       const woodMoistureBarrier   = s(formData, `ag_${i}_li_${j}_woodMoistureBarrier`) || undefined;
       const counterTopSeal        = s(formData, `ag_${i}_li_${j}_counterTopSeal`) || undefined;
+      const materialId            = s(formData, `ag_${i}_li_${j}_materialId`) || undefined;
       if (!brand && !style && !color && !sizeSpec && !sku && !quantity && !unitPrice && !liNotes) continue;
       lineItems.push({
         position: linePosition++,
@@ -186,6 +188,7 @@ export function parseOrderForm(formData: FormData):
         woodMoistureBarrier,
         counterTopSeal,
         roomIndex,
+        materialId,
       });
     }
   }

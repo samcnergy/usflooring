@@ -27,8 +27,9 @@ model User {
   isActive     Boolean  @default(true)
   createdAt    DateTime @default(now())
 
-  ordersAsSalesperson Order[]    @relation("SalespersonOrders")
-  auditEntries        AuditLog[] @relation("AuditActor")
+  ordersAsSalesperson Order[]          @relation("SalespersonOrders")
+  auditEntries        AuditLog[]       @relation("AuditActor")
+  productRequests     ProductRequest[] @relation("ProductRequests")
 }
 
 // ---------- Lookup tables ----------
@@ -331,8 +332,8 @@ model OrderLineItem {
   roomId String?
   room   OrderRoom? @relation(fields: [roomId], references: [id], onDelete: SetNull)
 
-  // PHASE 2 readiness
   materialId String?
+  material   Material? @relation(fields: [materialId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -563,11 +564,20 @@ model VendorOrder {
 }
 
 model Vendor {
-  id           String        @id @default(uuid())
-  name         String        @unique
-  isActive     Boolean       @default(true)
-  createdAt    DateTime      @default(now())
+  id          String        @id @default(uuid())
+  name        String        @unique
+  contactName String?
+  email       String?
+  phone       String?
+  address     String?
+  website     String?
+  notes       String?
+  isActive    Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
   vendorOrders VendorOrder[]
+  materials    Material[]
 }
 
 // ---------- Phase 2 feeder: passive, write-only in Phase 1 ----------
@@ -625,20 +635,80 @@ model AiAnalysisRun {
   createdAt      DateTime @default(now())
 }
 
-// PHASE 2 — DO NOT UNCOMMENT IN PHASE 1
-// model Material {
-//   id                    String   @id @default(uuid())
-//   sku                   String?  @unique
-//   name                  String
-//   category              LineCategory
-//   defaultVendorId       String?
-//   defaultVendor         Vendor?  @relation(fields: [defaultVendorId], references: [id])
-//   defaultUnit           UnitOfMeasure
-//   defaultUnitPriceCents Int?
-//   defaultCostCents      Int?
-//   isActive              Boolean  @default(true)
-//   notes                 String?
-//   createdAt             DateTime @default(now())
-//   updatedAt             DateTime @updatedAt
-//   lineItems             OrderLineItem[]
-// }
+// ---------- Product Catalog ----------
+
+enum ProductRequestStatus {
+  pending
+  fulfilled
+  rejected
+}
+
+model Material {
+  id       String       @id @default(uuid())
+  sku      String?      @unique
+  name     String
+  brand    String?
+  style    String?
+  color    String?
+  sizeSpec String?
+  category LineCategory
+
+  defaultVendorId       String?
+  defaultVendor         Vendor?        @relation(fields: [defaultVendorId], references: [id])
+  defaultUnit           UnitOfMeasure?
+  // Suggested default price loaded into invoice (salesperson overrides)
+  defaultUnitPriceCents Int?
+  // What company pays vendor — visible to admin only, never sent to browser for salespeople
+  defaultCostCents      Int?
+
+  isActive Boolean  @default(true)
+  notes    String?
+
+  images          MaterialImage[]
+  lineItems       OrderLineItem[]
+  productRequests ProductRequest[] @relation("MaterialFulfills")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([category, isActive])
+  @@index([defaultVendorId])
+  @@index([brand])
+}
+
+model MaterialImage {
+  id         String   @id @default(uuid())
+  materialId String
+  material   Material @relation(fields: [materialId], references: [id], onDelete: Cascade)
+  // Supabase Storage path (for uploads) or external URL (for links)
+  url        String
+  sourceType String   // 'upload' | 'link'
+  label      String?
+  isPrimary  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@index([materialId])
+}
+
+model ProductRequest {
+  id            String               @id @default(uuid())
+  requestedById String
+  requestedBy   User                 @relation("ProductRequests", fields: [requestedById], references: [id])
+  category      LineCategory?
+  brand         String?
+  style         String?
+  color         String?
+  sizeSpec      String?
+  vendorName    String?
+  notes         String?
+  status        ProductRequestStatus @default(pending)
+  // Set when admin creates a Material row to fulfill this request
+  fulfilledById String?
+  fulfilledBy   Material?            @relation("MaterialFulfills", fields: [fulfilledById], references: [id])
+  fulfilledAt   DateTime?
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+
+  @@index([requestedById, status])
+  @@index([status])
+}

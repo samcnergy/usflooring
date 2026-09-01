@@ -116,6 +116,8 @@ export const orderLineItemInput = z.object({
   // Counter top-specific
   counterTopSeal: optBool,
   roomIndex: z.number().int().min(0).optional().nullable(),
+  // Catalog link — nullable; when set, this line item originated from the product catalog
+  materialId: z.string().optional().nullable().transform((v) => v || null),
 });
 
 export const orderMoldingInput = z.object({
