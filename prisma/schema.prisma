@@ -27,9 +27,12 @@ model User {
   isActive     Boolean  @default(true)
   createdAt    DateTime @default(now())
 
-  ordersAsSalesperson Order[]          @relation("SalespersonOrders")
-  auditEntries        AuditLog[]       @relation("AuditActor")
-  productRequests     ProductRequest[] @relation("ProductRequests")
+  ordersAsSalesperson  Order[]             @relation("SalespersonOrders")
+  auditEntries         AuditLog[]          @relation("AuditActor")
+  productRequests      ProductRequest[]    @relation("ProductRequests")
+  marketingContacts    MarketingContact[]  @relation("ContactCreator")
+  outreachLogs         OutreachLog[]       @relation("OutreachCreator")
+  materialSends        MaterialSend[]      @relation("MaterialSendCreator")
 }
 
 // ---------- Lookup tables ----------
@@ -37,9 +40,10 @@ model User {
 model AdvertisingSource {
   id        String   @id @default(uuid())
   name      String   @unique
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
+  isActive  Boolean            @default(true)
+  createdAt DateTime           @default(now())
   orders    Order[]
+  contacts  MarketingContact[]
 }
 
 // ---------- Customers ----------
@@ -201,7 +205,8 @@ model Order {
   showerSpec   OrderShower?
   tileSpec     OrderTileStone?
   removals     OrderRemoval[]
-  vendorOrders VendorOrder[]
+  vendorOrders      VendorOrder[]
+  marketingContacts MarketingContact[]
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -711,4 +716,92 @@ model ProductRequest {
 
   @@index([requestedById, status])
   @@index([status])
+}
+
+// ─── Marketing ────────────────────────────────────────────────────────────────
+
+enum ContactType {
+  pastCustomer
+  lostLead
+  coldContact
+}
+
+enum ContactStatus {
+  new
+  contacted
+  interested
+  notInterested
+  converted
+}
+
+enum OutreachMethod {
+  call
+  email
+  text
+  inPerson
+  other
+}
+
+model MarketingContact {
+  id           String        @id @default(uuid())
+  name         String
+  phone        String?
+  email        String?
+  notes        String?
+  type         ContactType
+  status       ContactStatus @default(new)
+  nextFollowUp DateTime?
+
+  // Optional link to an existing order (for past customers / lost leads)
+  orderId      String?
+  order        Order?             @relation(fields: [orderId], references: [id])
+
+  // Optional link to ad source (where this contact came from)
+  sourceId     String?
+  source       AdvertisingSource? @relation(fields: [sourceId], references: [id])
+
+  createdById  String
+  createdBy    User               @relation("ContactCreator", fields: [createdById], references: [id])
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+
+  outreachLogs  OutreachLog[]
+  materialSends MaterialSend[]
+
+  @@index([status])
+  @@index([type])
+  @@index([nextFollowUp])
+  @@index([createdById])
+}
+
+model OutreachLog {
+  id        String         @id @default(uuid())
+  contactId String
+  contact   MarketingContact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  date      DateTime
+  method    OutreachMethod
+  notes     String?
+  outcome   String?        // free-text: "left voicemail", "interested in vinyl", etc.
+
+  createdById String
+  createdBy   User @relation("OutreachCreator", fields: [createdById], references: [id])
+  createdAt   DateTime @default(now())
+
+  @@index([contactId])
+}
+
+model MaterialSend {
+  id          String   @id @default(uuid())
+  contactId   String
+  contact     MarketingContact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  date        DateTime
+  description String   // what was sent, e.g. "Spring promo flyer", "Vinyl catalog PDF"
+  url         String?  // optional link (Drive, Dropbox, etc.)
+  notes       String?
+
+  createdById String
+  createdBy   User @relation("MaterialSendCreator", fields: [createdById], references: [id])
+  createdAt   DateTime @default(now())
+
+  @@index([contactId])
 }
