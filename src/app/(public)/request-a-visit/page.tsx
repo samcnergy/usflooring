@@ -1,8 +1,8 @@
 import LeadForm from "./LeadForm";
 
 export const metadata = {
-  title: "Request a Visit — U.S. Floor, Kitchen & Bath",
-  description: "Tell us about your project and we'll schedule a showroom visit.",
+  title: "Request a Visit — US Floor Design Center",
+  description: "Tell us about your project and we will schedule a showroom visit.",
 };
 
 export default function RequestAVisitPage() {
@@ -21,7 +21,7 @@ export default function RequestAVisitPage() {
             Tell us about your project.
           </h1>
           <p style={{ fontSize: 15, color: "var(--pub-muted)", lineHeight: 1.7, maxWidth: "30ch" }}>
-            Every project starts with a conversation. Share the details below and one of our designers will reach out to set up a showroom visit — at no cost or commitment.
+            Every project starts with a conversation. Share the details below and one of our designers will reach out to schedule a showroom visit at no cost or commitment.
           </p>
           <div style={{ marginTop: 32, borderTop: "1px solid var(--pub-line)", paddingTop: 24 }}>
             {[

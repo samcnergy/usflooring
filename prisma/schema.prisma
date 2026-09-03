@@ -71,6 +71,7 @@ model Customer {
   deletedAt DateTime?
 
   orders Order[]
+  leads  Lead[]
 }
 
 // ---------- Order (the single source of truth) ----------
@@ -748,14 +749,6 @@ model Campaign {
 
 // ─── Leads (public site) ──────────────────────────────────────────────────────
 
-enum LeadJobType {
-  flooring
-  kitchen
-  bathroom
-  wholeHome
-  other
-}
-
 enum LeadPropertyType {
   own
   rent
@@ -787,7 +780,7 @@ enum LeadStatus {
 
 model Lead {
   id            String           @id @default(uuid())
-  jobType       LeadJobType
+  jobType       String
   propertyType  LeadPropertyType
   sqft          Int?
   qualityLevel  LeadQualityLevel?
@@ -809,6 +802,8 @@ model Lead {
   status       LeadStatus        @default(new)
   assignedToId String?
   assignedTo   User?             @relation("AssignedLeads", fields: [assignedToId], references: [id])
+  customerId   String?
+  customer     Customer?         @relation(fields: [customerId], references: [id])
 
   statusHistory LeadStatusHistory[]
 

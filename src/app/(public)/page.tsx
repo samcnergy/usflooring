@@ -6,14 +6,14 @@ const PATH_OPTIONS = [
   {
     key: "remodel",
     title: "Full room remodel",
-    desc: "Complete kitchen, bath, or whole-home — design through installation.",
+    desc: "Complete kitchen, bath, or whole-home from design through installation.",
     result: { label: "Request a visit", href: "/request-a-visit" },
   },
   {
     key: "refresh",
     title: "Room refresh or finishes",
-    desc: "New cabinets, countertops, flooring, or tile — without a full renovation.",
-    result: { label: "Start a room & finish request", href: "/request-a-visit" },
+    desc: "New cabinets, countertops, flooring, or tile without a full renovation.",
+    result: { label: "Start a room and finish request", href: "/request-a-visit" },
   },
   {
     key: "materials",
@@ -52,7 +52,7 @@ export default function HomePage() {
           <p style={{
             marginTop: 26, fontSize: 17, lineHeight: 1.65, color: "#4B4A45", maxWidth: "38ch",
           }}>
-            A design center for kitchens, baths, and flooring — where the plan is drawn and the room is built by one accountable team, not handed off to an outside contractor. Thirty years in Orange County, one showroom, one accountable team.
+            A design center for kitchens, baths, and flooring. The plan is drawn and the room is built by one accountable team, not passed to an outside contractor. Thirty years in Orange County, one showroom, one team.
           </p>
           <div style={{ marginTop: 38, display: "flex", alignItems: "center", gap: 28 }}>
             <Link href="#start-here" style={{
@@ -95,7 +95,7 @@ export default function HomePage() {
           Where should we start?
         </h2>
         <p style={{ marginTop: 10, fontSize: 15, color: "var(--pub-muted)", maxWidth: "48ch" }}>
-          Every project starts differently — tell us which one is yours.
+          Every project starts differently. Tell us which one is yours.
         </p>
         <div style={{
           display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 16, marginTop: 32,
@@ -134,7 +134,7 @@ export default function HomePage() {
         <p style={{ marginTop: 22, fontSize: 14, minHeight: 20 }}>
           {selectedPath && (
             <>
-              Good fit →{" "}
+              Good fit{" "}
               <Link href={selectedPath.result.href} style={{
                 color: "var(--pub-ink)", borderBottom: "1px solid var(--pub-brass)",
                 textDecoration: "none", paddingBottom: 1,
@@ -154,8 +154,8 @@ export default function HomePage() {
         {[
           { strong: "30 yrs", body: "Orange County, one location" },
           { strong: "Design + build", body: "Under one accountable team" },
-          { strong: "In‑showroom", body: "See every material before you choose" },
-          { strong: "Licensed", body: "& insured" },
+          { strong: "In showroom", body: "See every material before you choose" },
+          { strong: "Licensed", body: "and insured" },
         ].map((item, i, arr) => (
           <div key={i} style={{
             fontSize: 13, color: "var(--pub-muted)", padding: "0 28px",
@@ -187,13 +187,13 @@ export default function HomePage() {
             fontFamily: "var(--pub-serif)", fontWeight: 400, fontSize: 34,
             lineHeight: 1.25, maxWidth: "12ch", color: "var(--pub-ink)",
           }}>
-            A design studio that happens to install its own work.
+            A design studio that installs its own work.
           </h2>
         </div>
         <div>
           {[
-            "Most kitchen and bath companies are contractors first — they build to a plan someone else drew, or skip the plan entirely. We start every project in the showroom, as a design conversation: how the space should feel, which materials belong together, what the finished room actually looks like before a single tile is set.",
-            "Then our own installation crews bring it to life. No handoff to an outside contractor, no second company, no surprises between the rendering and the result — just one studio, thirty years of craft, and a room built exactly the way it was drawn.",
+            "Most kitchen and bath companies are contractors first. They build to a plan someone else drew, or skip the plan entirely. We start every project in the showroom as a design conversation: how the space should feel, which materials belong together, what the finished room looks like before a single tile is set.",
+            "Then our own installation crews bring it to life. No handoff to an outside contractor, no second company, no gap between the rendering and the result. Just one studio, thirty years of craft, and a room built exactly the way it was drawn.",
           ].map((text, i) => (
             <p key={i} style={{
               fontSize: 16, lineHeight: 1.75, color: "#4B4A45",

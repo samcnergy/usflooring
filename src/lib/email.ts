@@ -104,6 +104,42 @@ ${lead.budgetRange ? `<tr><td style="padding:6px 0;color:#6b7280;">Budget</td><t
   });
 }
 
+export async function sendCustomerConfirmation({
+  email,
+  firstName,
+}: {
+  email: string;
+  firstName: string;
+}): Promise<void> {
+  const resend = getResend();
+  await resend.emails.send({
+    from: FROM,
+    to: email,
+    subject: "Thank you for choosing US Floor Design Center",
+    html: `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#f9fafb;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+<div style="max-width:600px;margin:32px auto;background:#fff;border-radius:8px;overflow:hidden;border:1px solid #e5e7eb;">
+  <div style="background:#2F4A38;padding:24px 32px;">
+    <p style="margin:0;color:#F1EEE7;font-size:18px;letter-spacing:0.05em;text-transform:uppercase;">US Floor Design Center</p>
+  </div>
+  <div style="padding:36px 32px;">
+    <p style="margin:0 0 16px 0;font-size:22px;color:#1E2320;font-weight:400;font-family:Georgia,serif;">Thank you, ${firstName}.</p>
+    <p style="margin:0 0 16px 0;font-size:15px;color:#4B4A45;line-height:1.7;">
+      We received your project request and a representative will contact you shortly to schedule your showroom visit.
+    </p>
+    <p style="margin:0 0 16px 0;font-size:15px;color:#4B4A45;line-height:1.7;">
+      We look forward to working with you.
+    </p>
+    <p style="margin:32px 0 0 0;font-size:14px;color:#8C8577;">
+      US Floor Design Center<br>
+      Rancho Santa Margarita, CA
+    </p>
+  </div>
+</div>
+</body></html>`,
+  });
+}
+
 export async function sendCampaign(
   recipients: CampaignRecipient[],
   subject: string,
