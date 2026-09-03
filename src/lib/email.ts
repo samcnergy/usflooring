@@ -6,7 +6,7 @@ function getResend() {
   return new Resend(key);
 }
 
-const FROM = process.env.RESEND_FROM_EMAIL ?? "US Floor <marketing@usflooring.com>";
+const FROM = process.env.RESEND_FROM_EMAIL ?? "US Floor <marketing@usfloordesign.com>";
 
 export type CampaignRecipient = { email: string; firstName: string };
 
