@@ -30,9 +30,12 @@ export async function proxy(req: NextRequest) {
 
   // Public routes (no session required).
   const isPublic =
+    path === "/" ||
     path === "/login" ||
     path === "/forgot-password" ||
     path === "/reset-password" ||
+    path.startsWith("/request-a-visit") ||
+    path.startsWith("/shop") ||
     path.startsWith("/_next") ||
     path.startsWith("/api/auth");
 

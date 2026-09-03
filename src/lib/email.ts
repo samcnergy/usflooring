@@ -57,6 +57,53 @@ function personalize(template: string, firstName: string): string {
   return template.replace(/\{\{firstName\}\}/gi, firstName);
 }
 
+const JOB_TYPE_LABELS: Record<string, string> = {
+  flooring: "Flooring", kitchen: "Kitchen", bathroom: "Bathroom",
+  wholeHome: "Whole-home", other: "Other",
+};
+
+const TIMEFRAME_LABELS: Record<string, string> = {
+  asap: "As soon as possible", withinMonth: "Within the next month",
+  oneToThreeMonths: "1–3 months", threeToSixMonths: "3–6 months", flexible: "Just planning ahead",
+};
+
+export async function notifyAdminNewLead(
+  adminEmail: string,
+  lead: {
+    id: string; firstName: string; lastName: string; email: string; phone: string;
+    jobType: string; timeframe: string; description: string; sqft?: number | null;
+    budgetRange?: string | null; city?: string | null;
+  }
+): Promise<void> {
+  const resend = getResend();
+  const adminUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/admin/leads/${lead.id}`;
+  await resend.emails.send({
+    from: FROM,
+    to: adminEmail,
+    subject: `New lead: ${lead.firstName} ${lead.lastName} — ${JOB_TYPE_LABELS[lead.jobType] ?? lead.jobType}`,
+    html: `<!DOCTYPE html><html><head><meta charset="utf-8"></head><body style="font-family:system-ui,sans-serif;background:#f9fafb;margin:0;padding:0;">
+<div style="max-width:600px;margin:32px auto;background:#fff;border-radius:8px;overflow:hidden;border:1px solid #e5e7eb;">
+<div style="background:#2F4A38;padding:20px 28px;"><p style="margin:0;color:#F1EEE7;font-size:17px;font-weight:600;">New Lead — U.S. Floor, Kitchen &amp; Bath</p></div>
+<div style="padding:24px 28px;">
+<table style="width:100%;border-collapse:collapse;font-size:14px;">
+<tr><td style="padding:6px 0;color:#6b7280;width:140px;">Name</td><td style="padding:6px 0;color:#111;">${lead.firstName} ${lead.lastName}</td></tr>
+<tr><td style="padding:6px 0;color:#6b7280;">Email</td><td style="padding:6px 0;color:#111;"><a href="mailto:${lead.email}">${lead.email}</a></td></tr>
+<tr><td style="padding:6px 0;color:#6b7280;">Phone</td><td style="padding:6px 0;color:#111;">${lead.phone}</td></tr>
+<tr><td style="padding:6px 0;color:#6b7280;">Project type</td><td style="padding:6px 0;color:#111;">${JOB_TYPE_LABELS[lead.jobType] ?? lead.jobType}</td></tr>
+<tr><td style="padding:6px 0;color:#6b7280;">Timeframe</td><td style="padding:6px 0;color:#111;">${TIMEFRAME_LABELS[lead.timeframe] ?? lead.timeframe}</td></tr>
+${lead.sqft ? `<tr><td style="padding:6px 0;color:#6b7280;">Sq ft</td><td style="padding:6px 0;color:#111;">${lead.sqft.toLocaleString()} sq ft</td></tr>` : ""}
+${lead.city ? `<tr><td style="padding:6px 0;color:#6b7280;">City</td><td style="padding:6px 0;color:#111;">${lead.city}</td></tr>` : ""}
+${lead.budgetRange ? `<tr><td style="padding:6px 0;color:#6b7280;">Budget</td><td style="padding:6px 0;color:#111;">${lead.budgetRange}</td></tr>` : ""}
+</table>
+<div style="margin-top:16px;padding:14px;background:#f3f4f6;border-radius:6px;">
+<p style="margin:0 0 6px 0;font-size:12px;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;">Project description</p>
+<p style="margin:0;font-size:14px;color:#374151;line-height:1.6;">${lead.description.replace(/\n/g, "<br>")}</p>
+</div>
+<div style="margin-top:20px;"><a href="${adminUrl}" style="display:inline-block;background:#2F4A38;color:#F1EEE7;padding:12px 20px;text-decoration:none;border-radius:4px;font-size:14px;">Review &amp; assign this lead →</a></div>
+</div></div></body></html>`,
+  });
+}
+
 export async function sendCampaign(
   recipients: CampaignRecipient[],
   subject: string,
