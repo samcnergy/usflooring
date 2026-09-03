@@ -1,6 +1,4 @@
-"use client";
 import Link from "next/link";
-import { useState } from "react";
 
 const TRUST_SIGNALS = [
   { strong: "30 years", body: "In Orange County" },
@@ -23,8 +21,6 @@ const CONSULTATIONS = [
 ];
 
 export default function HomePage() {
-  const [expandedQ, setExpandedQ] = useState<number | null>(null);
-
   return (
     <div>
 
@@ -78,37 +74,46 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Hero visual — answers the 5 questions visually */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              {[
-                { q: "What do you sell?", a: "Cabinets, countertops, flooring, tile, and fixtures — all brands in one showroom." },
-                { q: "Do you design?", a: "Yes. Every project starts with a design consultation. We draw the space before anything is ordered." },
-                { q: "Do you install?", a: "Yes. Our own licensed installation crews do the work — no outside contractors." },
-                { q: "Where is the showroom?", a: "Rancho Santa Margarita, CA. Open Monday through Saturday." },
-                { q: "Why trust you?", a: "30 years in Orange County. Licensed, insured, and accountable from design through final walkthrough." },
-              ].map((item, i) => (
-                <button
-                  key={i}
-                  onClick={() => setExpandedQ(expandedQ === i ? null : i)}
-                  style={{
-                    textAlign: "left", background: "#fff", border: "1px solid var(--pub-line)",
-                    borderRadius: 2, padding: "14px 18px", cursor: "pointer",
-                    transition: "border-color .15s",
-                  }}
-                >
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
-                    <span style={{ fontSize: 14, fontWeight: 500, color: "var(--pub-ink)" }}>{item.q}</span>
-                    <span style={{ fontSize: 18, color: "var(--pub-muted)", flexShrink: 0 }}>
-                      {expandedQ === i ? "−" : "+"}
-                    </span>
-                  </div>
-                  {expandedQ === i && (
-                    <p style={{ marginTop: 10, fontSize: 14, color: "#4B4A45", lineHeight: 1.6, marginBottom: 0 }}>
-                      {item.a}
-                    </p>
-                  )}
-                </button>
-              ))}
+            {/* Hero right — project quick-start */}
+            <div style={{
+              background: "#fff", border: "1px solid var(--pub-line)", borderRadius: 2,
+              padding: "28px 28px 24px",
+            }}>
+              <p style={{ fontSize: 13, color: "var(--pub-muted)", marginBottom: 18, textTransform: "uppercase", letterSpacing: "0.07em" }}>
+                What are you working on?
+              </p>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                {[
+                  { label: "Kitchen", href: "/shop?project=kitchen", swatch: "linear-gradient(135deg,#C9A87A,#A07850)" },
+                  { label: "Primary bathroom", href: "/shop?project=primary-bath", swatch: "linear-gradient(135deg,#C8D8DC,#A8B8B8)" },
+                  { label: "Guest bathroom", href: "/shop?project=guest-bath", swatch: "linear-gradient(135deg,#D8D0C8,#B8B0A8)" },
+                  { label: "Powder room", href: "/shop?project=powder-room", swatch: "linear-gradient(135deg,#C8C4BE,#A8A49E)" },
+                  { label: "Whole-home flooring", href: "/shop?project=flooring", swatch: "linear-gradient(135deg,#D4A870,#8B5E30)" },
+                  { label: "Outdoor living", href: "/shop?project=outdoor", swatch: "linear-gradient(135deg,#8A9E78,#5A7048)" },
+                ].map((p) => (
+                  <Link key={p.label} href={p.href} style={{
+                    textDecoration: "none",
+                    display: "flex", alignItems: "center", gap: 10,
+                    padding: "12px 14px", border: "1px solid var(--pub-line)", borderRadius: 2,
+                    color: "var(--pub-ink)", fontSize: 14, lineHeight: 1.3,
+                  }}>
+                    <span style={{
+                      display: "inline-block", width: 20, height: 20,
+                      borderRadius: 2, flexShrink: 0, background: p.swatch,
+                    }} />
+                    {p.label}
+                  </Link>
+                ))}
+              </div>
+              <div style={{ marginTop: 16, paddingTop: 16, borderTop: "1px solid var(--pub-line)" }}>
+                <Link href="/request-a-visit" style={{
+                  display: "block", textAlign: "center",
+                  background: "var(--pub-forest)", color: "var(--pub-stone)",
+                  fontSize: 13, padding: "12px", textDecoration: "none", borderRadius: 2,
+                }}>
+                  Not sure where to start — talk to a designer
+                </Link>
+              </div>
             </div>
           </div>
         </div>
