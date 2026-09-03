@@ -140,6 +140,62 @@ export async function sendCustomerConfirmation({
   });
 }
 
+export async function notifyTradeApplication(app: {
+  name: string;
+  company: string;
+  email: string;
+  phone: string;
+  type: string;
+  license: string;
+  message: string;
+}): Promise<void> {
+  const resend = getResend();
+  const adminEmail = process.env.ADMIN_EMAIL ?? "info@usfloordesign.com";
+  const rows = [
+    ["Name", app.name],
+    ["Company", app.company],
+    ["Email", `<a href="mailto:${app.email}">${app.email}</a>`],
+    ["Phone", app.phone || "—"],
+    ["Trade type", app.type],
+    ["License / credential", app.license || "—"],
+  ]
+    .map(([k, v]) => `<tr><td style="padding:6px 0;color:#6b7280;width:160px;font-size:14px;">${k}</td><td style="padding:6px 0;color:#111;font-size:14px;">${v}</td></tr>`)
+    .join("");
+
+  const messageBlock = app.message
+    ? `<div style="margin-top:16px;padding:14px;background:#f3f4f6;border-radius:6px;"><p style="margin:0 0 6px 0;font-size:12px;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;">Additional notes</p><p style="margin:0;font-size:14px;color:#374151;line-height:1.6;">${app.message.replace(/\n/g, "<br>")}</p></div>`
+    : "";
+
+  await resend.emails.send({
+    from: FROM,
+    to: adminEmail,
+    subject: `Trade account application: ${app.name} — ${app.company}`,
+    html: `<!DOCTYPE html><html><head><meta charset="utf-8"></head><body style="font-family:system-ui,sans-serif;background:#f9fafb;margin:0;padding:0;">
+<div style="max-width:600px;margin:32px auto;background:#fff;border-radius:8px;overflow:hidden;border:1px solid #e5e7eb;">
+<div style="background:#2F4A38;padding:20px 28px;"><p style="margin:0;color:#F1EEE7;font-size:17px;font-weight:600;">Trade Account Application — US Floor Design Center</p></div>
+<div style="padding:24px 28px;">
+<table style="width:100%;border-collapse:collapse;">${rows}</table>
+${messageBlock}
+</div></div></body></html>`,
+  });
+
+  // Confirmation to applicant
+  await resend.emails.send({
+    from: FROM,
+    to: app.email,
+    subject: "We received your trade account application — US Floor Design Center",
+    html: `<!DOCTYPE html><html><head><meta charset="utf-8"></head><body style="font-family:system-ui,sans-serif;background:#f9fafb;margin:0;padding:0;">
+<div style="max-width:600px;margin:32px auto;background:#fff;border-radius:8px;overflow:hidden;border:1px solid #e5e7eb;">
+<div style="background:#2F4A38;padding:24px 32px;"><p style="margin:0;color:#F1EEE7;font-size:18px;letter-spacing:0.05em;text-transform:uppercase;">US Floor Design Center</p></div>
+<div style="padding:36px 32px;">
+<p style="margin:0 0 16px 0;font-size:22px;color:#1E2320;font-weight:400;font-family:Georgia,serif;">Thank you, ${app.name.split(" ")[0]}.</p>
+<p style="margin:0 0 16px 0;font-size:15px;color:#4B4A45;line-height:1.7;">We received your trade account application for <strong>${app.company}</strong> and will review your credentials within one business day.</p>
+<p style="margin:0 0 16px 0;font-size:15px;color:#4B4A45;line-height:1.7;">Once approved, you will receive a follow-up email with your account details and access to trade pricing.</p>
+<p style="margin:32px 0 0 0;font-size:14px;color:#8C8577;">US Floor Design Center<br>Rancho Santa Margarita, CA<br><a href="mailto:info@usfloordesign.com" style="color:#8C8577;">info@usfloordesign.com</a></p>
+</div></div></body></html>`,
+  });
+}
+
 export async function sendCampaign(
   recipients: CampaignRecipient[],
   subject: string,
