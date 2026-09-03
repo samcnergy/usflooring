@@ -100,17 +100,17 @@ export default function HomePage() {
             An Orange County design center for kitchens, baths, and flooring. One team plans it, selects the materials with you in our showroom, and installs it. No outside contractors. Thirty years in business.
           </p>
           <div style={{ marginTop: 38, display: "flex", alignItems: "center", gap: 28 }}>
-            <Link href="#start-here" style={{
+            <Link href="/request-a-visit" style={{
               background: "var(--pub-forest)", color: "var(--pub-stone)", fontSize: 14,
               padding: "14px 26px", textDecoration: "none", borderRadius: 2,
             }}>
-              Find your starting point
+              Start your design
             </Link>
-            <Link href="/request-a-visit" style={{
+            <Link href="/shop" style={{
               fontSize: 14, color: "var(--pub-ink)", textDecoration: "none",
               borderBottom: "1px solid var(--pub-brass)", paddingBottom: 2,
             }}>
-              Book a showroom visit
+              Visit the showroom
             </Link>
           </div>
         </div>

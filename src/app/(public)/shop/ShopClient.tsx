@@ -52,7 +52,7 @@ type Material = {
   images: { url: string }[];
 };
 
-export function CategoryTabs({ current, counts }: { current: string; counts: Record<string, number> }) {
+export function CategoryTabs({ current, counts, styleParam }: { current: string; counts: Record<string, number>; styleParam?: string }) {
   const router = useRouter();
   const pathname = usePathname();
   const [, startTransition] = useTransition();
@@ -61,6 +61,7 @@ export function CategoryTabs({ current, counts }: { current: string; counts: Rec
     startTransition(() => {
       const params = new URLSearchParams();
       if (cat) params.set("cat", cat);
+      if (styleParam) params.set("style", styleParam);
       router.push(`${pathname}${params.size ? `?${params}` : ""}`);
     });
   }
