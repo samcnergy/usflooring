@@ -30,7 +30,7 @@ export function StyleQuiz() {
             Skip — browse everything
           </a>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
           {Object.entries(STYLE_PRESETS).map(([key, preset]) => (
             <button
               key={key}
