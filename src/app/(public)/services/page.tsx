@@ -69,6 +69,37 @@ const TIERS = [
   },
 ];
 
+const SPECIALIZATIONS = [
+  {
+    label: "Aging-in-place and multigenerational",
+    desc: "Grab bars, curbless showers, wider doorways, and layout changes that work for every stage of life — without looking institutional.",
+  },
+  {
+    label: "Condo and HOA-coordinated remodeling",
+    desc: "We handle the HOA submission paperwork, coordinate access with building management, and schedule work to comply with noise and hours restrictions.",
+  },
+  {
+    label: "Water-efficient and energy-conscious",
+    desc: "Low-flow fixtures, insulated panels, and material selections that reduce utility costs — with documentation for rebate applications where applicable.",
+  },
+  {
+    label: "Indoor/outdoor integration",
+    desc: "Continuous flooring from interior to exterior, covered outdoor kitchens, and transition details that hold up to California weather.",
+  },
+  {
+    label: "Pre-purchase remodeling assessment",
+    desc: "Before you close on a home, we walk the property and give you a realistic scope and cost range for the changes you are planning — so you can negotiate or budget accordingly.",
+  },
+  {
+    label: "Post-remodel home care",
+    desc: "An optional annual visit to inspect grout, caulk, and finish conditions — and address small issues before they become expensive ones.",
+  },
+  {
+    label: "Refresh packages",
+    desc: "A defined scope at a fixed price range: paint, hardware, lighting, and a few new surfaces. For clients who want a meaningful update without a full renovation.",
+  },
+];
+
 const CONSULTATION_TYPES = [
   {
     name: "Showroom discovery",
@@ -168,6 +199,40 @@ export default function ServicesPage() {
               </div>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* Specializations */}
+      <div style={{ background: "var(--pub-stone)", borderTop: "1px solid var(--pub-line)" }}>
+        <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
+          <div style={{ padding: "72px 0" }}>
+            <div style={{ fontSize: 13, color: "var(--pub-brass)", marginBottom: 14 }}>Specializations</div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: 64, alignItems: "start" }}>
+              <div>
+                <h2 style={{ fontFamily: "var(--pub-serif)", fontWeight: 400, fontSize: 30, color: "var(--pub-ink)", lineHeight: 1.3, marginBottom: 14 }}>
+                  Situations that require a different approach.
+                </h2>
+                <p style={{ fontSize: 15, color: "var(--pub-muted)", lineHeight: 1.7, maxWidth: "30ch" }}>
+                  These are not separate service lines — they are capabilities we bring to any project that needs them.
+                </p>
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                {SPECIALIZATIONS.map((s) => (
+                  <div key={s.label} style={{
+                    padding: "22px 24px", background: "#fff",
+                    border: "1px solid var(--pub-line)", borderRadius: 2,
+                  }}>
+                    <div style={{ fontFamily: "var(--pub-serif)", fontSize: 17, color: "var(--pub-ink)", marginBottom: 8, lineHeight: 1.35 }}>
+                      {s.label}
+                    </div>
+                    <p style={{ fontSize: 13, color: "var(--pub-muted)", lineHeight: 1.65, margin: 0 }}>
+                      {s.desc}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
