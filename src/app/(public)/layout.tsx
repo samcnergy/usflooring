@@ -32,6 +32,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
             <Link href="/services" style={{ color: "inherit", textDecoration: "none" }}>Services</Link>
             <Link href="/projects" style={{ color: "inherit", textDecoration: "none" }}>Projects</Link>
             <Link href="/showroom" style={{ color: "inherit", textDecoration: "none" }}>Showroom</Link>
+            <Link href="/academy" style={{ color: "inherit", textDecoration: "none" }}>Academy</Link>
           </nav>
           <Link href="/request-a-visit" style={{
             border: "1px solid var(--pub-ink)", borderRadius: 2, padding: "9px 20px",
@@ -61,7 +62,11 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
               <div style={{ display: "flex", flexDirection: "column", gap: 8, fontSize: 14 }}>
                 <Link href="/request-a-visit" style={{ color: "var(--pub-ink)", textDecoration: "none" }}>Request a visit</Link>
                 <Link href="/shop" style={{ color: "var(--pub-ink)", textDecoration: "none" }}>Browse materials</Link>
-                <Link href="/#start-here" style={{ color: "var(--pub-ink)", textDecoration: "none" }}>Start here</Link>
+                <Link href="/services" style={{ color: "var(--pub-ink)", textDecoration: "none" }}>Services</Link>
+                <Link href="/projects" style={{ color: "var(--pub-ink)", textDecoration: "none" }}>Projects</Link>
+                <Link href="/trade" style={{ color: "var(--pub-ink)", textDecoration: "none" }}>Trade</Link>
+                <Link href="/warranty" style={{ color: "var(--pub-ink)", textDecoration: "none" }}>Warranty</Link>
+                <Link href="/academy" style={{ color: "var(--pub-ink)", textDecoration: "none" }}>Academy</Link>
               </div>
             </div>
             <div>
