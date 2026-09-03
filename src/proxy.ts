@@ -36,6 +36,10 @@ export async function proxy(req: NextRequest) {
     path === "/reset-password" ||
     path.startsWith("/request-a-visit") ||
     path.startsWith("/shop") ||
+    path.startsWith("/services") ||
+    path.startsWith("/projects") ||
+    path.startsWith("/showroom") ||
+    path.startsWith("/trade") ||
     path.startsWith("/_next") ||
     path.startsWith("/api/auth");
 

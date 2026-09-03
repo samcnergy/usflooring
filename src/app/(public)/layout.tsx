@@ -29,9 +29,9 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
           </Link>
           <nav style={{ display: "flex", gap: 36, fontSize: 14, color: "var(--pub-ink)" }}>
             <Link href="/shop" style={{ color: "inherit", textDecoration: "none" }}>Shop</Link>
-            <Link href="/#studio" style={{ color: "inherit", textDecoration: "none" }}>Design center</Link>
-            <Link href="/#start-here" style={{ color: "inherit", textDecoration: "none" }}>Projects</Link>
-            <Link href="/#proof" style={{ color: "inherit", textDecoration: "none" }}>Showroom</Link>
+            <Link href="/services" style={{ color: "inherit", textDecoration: "none" }}>Services</Link>
+            <Link href="/projects" style={{ color: "inherit", textDecoration: "none" }}>Projects</Link>
+            <Link href="/showroom" style={{ color: "inherit", textDecoration: "none" }}>Showroom</Link>
           </nav>
           <Link href="/request-a-visit" style={{
             border: "1px solid var(--pub-ink)", borderRadius: 2, padding: "9px 20px",
