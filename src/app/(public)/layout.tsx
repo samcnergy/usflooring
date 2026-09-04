@@ -8,12 +8,15 @@ const ORG_SCHEMA = {
       "@id": "https://usfloordesign.com/#organization",
       "name": "US Floor Design Center",
       "url": "https://usfloordesign.com",
+      "telephone": "+16196267545",
       "email": "info@usfloordesign.com",
       "description": "Design-build studio specializing in kitchen, bathroom, and flooring remodeling in Rancho Santa Margarita, Orange County, California. Full design-build, countertops, cabinetry, tile, flooring, and installation.",
       "address": {
         "@type": "PostalAddress",
+        "streetAddress": "30092 Santa Margarita Pkwy, Suite G",
         "addressLocality": "Rancho Santa Margarita",
         "addressRegion": "CA",
+        "postalCode": "92688",
         "addressCountry": "US"
       },
       "openingHoursSpecification": [
@@ -93,8 +96,9 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
               US Floor Design Center
             </p>
             <p style={{ fontSize: 13, color: "var(--pub-muted)", lineHeight: 1.6 }}>
-              Rancho Santa Margarita, CA<br />
-              Orange County&apos;s design-build studio.
+              30092 Santa Margarita Pkwy, Suite G<br />
+              Rancho Santa Margarita, CA 92688<br />
+              <a href="tel:+16196267545" style={{ color: "var(--pub-muted)", textDecoration: "none" }}>(619) 626-7545</a>
             </p>
           </div>
           <div style={{ display: "flex", gap: 64 }}>

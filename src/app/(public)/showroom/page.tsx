@@ -75,10 +75,12 @@ export default function ShowroomPage() {
                 Address
               </div>
               <p style={{ fontFamily: "var(--pub-serif)", fontSize: 20, color: "var(--pub-ink)", lineHeight: 1.5, margin: 0 }}>
-                Rancho Santa Margarita<br />
-                Orange County, CA
+                30092 Santa Margarita Pkwy<br />
+                Suite G<br />
+                Rancho Santa Margarita, CA 92688
               </p>
               <p style={{ fontSize: 14, color: "var(--pub-muted)", marginTop: 10, lineHeight: 1.6 }}>
+                Arroyo Crossroads Shopping Center.<br />
                 Free parking in the lot.<br />
                 Accessible entrance at the main door.
               </p>
@@ -110,7 +112,7 @@ export default function ShowroomPage() {
                 Contact
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 10, fontSize: 14 }}>
-                <a href="tel:+1" style={{ color: "var(--pub-ink)", textDecoration: "none" }}>Call the showroom</a>
+                <a href="tel:+16196267545" style={{ color: "var(--pub-ink)", textDecoration: "none" }}>(619) 626-7545</a>
                 <a href="mailto:info@usfloordesign.com" style={{ color: "var(--pub-ink)", textDecoration: "none" }}>info@usfloordesign.com</a>
               </div>
               <div style={{ marginTop: 20 }}>
