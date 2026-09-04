@@ -65,9 +65,9 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
           <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center" }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/logo.jpg"
+              src="/logo.png"
               alt="US Floor Design Center"
-              style={{ height: 52, width: "auto" }}
+              style={{ height: 48, width: "auto" }}
             />
           </Link>
           <nav style={{ display: "flex", gap: 36, fontSize: 14, color: "var(--pub-ink)" }}>
