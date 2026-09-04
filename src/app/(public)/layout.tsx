@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 const ORG_SCHEMA = {
   "@context": "https://schema.org",
@@ -62,12 +63,15 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
           display: "flex", alignItems: "center", justifyContent: "space-between",
           padding: "28px 0", borderBottom: "1px solid var(--pub-line)",
         }}>
-          <Link href="/" style={{
-            fontFamily: "var(--pub-serif)", fontSize: 18, letterSpacing: "0.06em",
-            color: "var(--pub-ink)", textDecoration: "none", textTransform: "uppercase",
-            fontWeight: 400,
-          }}>
-            US Floor Design Center
+          <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center" }}>
+            <Image
+              src="/logo.jpg"
+              alt="US Floor Design Center"
+              width={160}
+              height={101}
+              style={{ height: 52, width: "auto", objectFit: "contain" }}
+              priority
+            />
           </Link>
           <nav style={{ display: "flex", gap: 36, fontSize: 14, color: "var(--pub-ink)" }}>
             <Link href="/shop" style={{ color: "inherit", textDecoration: "none" }}>Shop</Link>
