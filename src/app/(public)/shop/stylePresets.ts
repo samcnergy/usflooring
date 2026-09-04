@@ -50,7 +50,7 @@ export const STYLE_PRESETS: Record<string, {
   "minimalist": {
     label: "Minimalist",
     description: "Concrete, large-format tile, and monochrome palettes. Nothing extra.",
-    palette: ["#D0CCCA", "#A8A8A4", "#E8E8E6", "#6C6C6A"],
+    palette: ["#D0CCCA", "#A8A8A4", "#E8E8E6", "#6C6C6A", "#1A1A1A"],
     categories: ["ceramic", "tile", "vinyl", "stone"],
     keywords: ["concrete", "gray", "large format", "minimal", "clean"],
   },
