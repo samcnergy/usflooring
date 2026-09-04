@@ -94,7 +94,7 @@ export async function submitLeadAction(
     },
   });
 
-  // Send emails — best-effort, never fail the submission
+  // Send emails - best-effort, never fail the submission
   try {
     const { notifyAdminNewLead, sendCustomerConfirmation } = await import("@/lib/email");
     const adminEmail = process.env.ADMIN_EMAIL;

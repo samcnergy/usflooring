@@ -19,7 +19,7 @@ export function StyleQuiz() {
             What direction are you thinking?
           </h2>
           <p style={{ fontSize: 15, color: "var(--pub-muted)", lineHeight: 1.65, maxWidth: "36ch" }}>
-            Pick the style closest to what you have in mind. We will show you the materials that fit it best — and our designers can help narrow it down further in the showroom.
+            Pick the style closest to what you have in mind. We will show you the materials that fit it best - and our designers can help narrow it down further in the showroom.
           </p>
           <a href="/shop?browse=1" onClick={(e) => { e.preventDefault(); router.push("/shop?browse=1"); }} style={{
             display: "inline-block", marginTop: 20,
@@ -27,7 +27,7 @@ export function StyleQuiz() {
             borderBottom: "1px solid var(--pub-line)", paddingBottom: 2,
             textDecoration: "none",
           }}>
-            Skip — browse everything
+            Skip - browse everything
           </a>
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>

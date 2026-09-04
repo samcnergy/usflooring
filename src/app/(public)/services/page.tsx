@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Services — US Floor Design Center",
+  title: "Services | US Floor Design Center",
   description: "Full design-build projects, room and finish renovations, professional planning, and aftercare. Orange County's complete kitchen and bath studio.",
 };
 
@@ -9,7 +9,7 @@ const TIERS = [
   {
     label: "Full design-build",
     headline: "Complete renovation, one team.",
-    description: "For projects that start with a blank slate or major structural changes. We handle everything from design and permitting through final installation — one accountable team, no handoffs.",
+    description: "For projects that start with a blank slate or major structural changes. We handle everything from design and permitting through final installation - one accountable team, no handoffs.",
     services: [
       "Whole-home renovation",
       "Complete kitchen remodeling",
@@ -24,7 +24,7 @@ const TIERS = [
   {
     label: "Room and finish projects",
     headline: "Update the room without rebuilding it.",
-    description: "For projects where the layout stays but the surfaces change. New cabinets, countertops, flooring, or tile — each with installation by our own crew.",
+    description: "For projects where the layout stays but the surfaces change. New cabinets, countertops, flooring, or tile - each with installation by our own crew.",
     services: [
       "Cabinets and cabinet installation",
       "Countertops",
@@ -55,7 +55,7 @@ const TIERS = [
   {
     label: "Aftercare",
     headline: "We stand behind the work.",
-    description: "Every completed project comes with a written warranty and a direct line to us — not a call center. For clients who want ongoing coverage, an optional annual home-care plan is available.",
+    description: "Every completed project comes with a written warranty and a direct line to us - not a call center. For clients who want ongoing coverage, an optional annual home-care plan is available.",
     services: [
       "Written warranty on all projects",
       "Product warranty coordination",
@@ -72,7 +72,7 @@ const TIERS = [
 const SPECIALIZATIONS = [
   {
     label: "Aging-in-place and multigenerational",
-    desc: "Grab bars, curbless showers, wider doorways, and layout changes that work for every stage of life — without looking institutional.",
+    desc: "Grab bars, curbless showers, wider doorways, and layout changes that work for every stage of life - without looking institutional.",
   },
   {
     label: "Condo and HOA-coordinated remodeling",
@@ -80,7 +80,7 @@ const SPECIALIZATIONS = [
   },
   {
     label: "Water-efficient and energy-conscious",
-    desc: "Low-flow fixtures, insulated panels, and material selections that reduce utility costs — with documentation for rebate applications where applicable.",
+    desc: "Low-flow fixtures, insulated panels, and material selections that reduce utility costs - with documentation for rebate applications where applicable.",
   },
   {
     label: "Indoor/outdoor integration",
@@ -88,11 +88,11 @@ const SPECIALIZATIONS = [
   },
   {
     label: "Pre-purchase remodeling assessment",
-    desc: "Before you close on a home, we walk the property and give you a realistic scope and cost range for the changes you are planning — so you can negotiate or budget accordingly.",
+    desc: "Before you close on a home, we walk the property and give you a realistic scope and cost range for the changes you are planning - so you can negotiate or budget accordingly.",
   },
   {
     label: "Post-remodel home care",
-    desc: "An optional annual visit to inspect grout, caulk, and finish conditions — and address small issues before they become expensive ones.",
+    desc: "An optional annual visit to inspect grout, caulk, and finish conditions - and address small issues before they become expensive ones.",
   },
   {
     label: "Refresh packages",
@@ -181,7 +181,7 @@ export default function ServicesPage() {
                 </Link>
               </div>
 
-              {/* Right column — service list */}
+              {/* Right column - service list */}
               <div style={{
                 display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12,
                 paddingTop: 8,
@@ -213,7 +213,7 @@ export default function ServicesPage() {
                   Situations that require a different approach.
                 </h2>
                 <p style={{ fontSize: 15, color: "var(--pub-muted)", lineHeight: 1.7, maxWidth: "30ch" }}>
-                  These are not separate service lines — they are capabilities we bring to any project that needs them.
+                  These are not separate service lines - they are capabilities we bring to any project that needs them.
                 </p>
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
@@ -250,7 +250,7 @@ export default function ServicesPage() {
                   Three consultation types. Each one has a defined deliverable.
                 </h2>
                 <p style={{ fontSize: 15, color: "rgba(241,238,231,0.65)", lineHeight: 1.7 }}>
-                  Not a vague "get a quote" — each consultation has a format, a time commitment, a specific deliverable, and a clear next step.
+                  Not a vague "get a quote" - each consultation has a format, a time commitment, a specific deliverable, and a clear next step.
                 </p>
               </div>
               <div>

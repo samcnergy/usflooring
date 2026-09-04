@@ -28,7 +28,7 @@ export const STYLE_PRESETS: Record<string, {
   },
   "transitional": {
     label: "Transitional",
-    description: "A balanced mix of classic and contemporary — timeless finishes that work in any room.",
+    description: "A balanced mix of classic and contemporary - timeless finishes that work in any room.",
     palette: ["#C8C0B0", "#8C7A6A", "#E0D8CC", "#5A5048"],
     categories: ["wood", "tile", "carpet", "counterTop"],
     keywords: ["transitional", "classic", "balanced", "neutral"],

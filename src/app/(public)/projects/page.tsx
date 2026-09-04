@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Projects — US Floor Design Center",
+  title: "Projects | US Floor Design Center",
   description: "Real kitchens and bathrooms designed and built by our team in Orange County. See the before, the process, and the finished result.",
 };
 
@@ -9,8 +9,8 @@ const DISCOVERY_PACKAGE = [
   { item: "In-home measurement", detail: "We measure the space, document what's there, and identify any structural constraints before any product is specified." },
   { item: "Needs and lifestyle assessment", detail: "A structured conversation about how the room is actually used, who uses it, and what's not working about the current layout." },
   { item: "Preliminary layout", detail: "A scaled drawing of the proposed floor plan showing cabinet runs, appliance placement, and traffic flow." },
-  { item: "Product direction", detail: "Specific material and finish recommendations from our showroom — not a general style board but actual products at real price points." },
-  { item: "Investment range", detail: "A written cost range broken down by phase — materials, labor, permitting — so you know what you are committing to before anything is ordered." },
+  { item: "Product direction", detail: "Specific material and finish recommendations from our showroom - not a general style board but actual products at real price points." },
+  { item: "Investment range", detail: "A written cost range broken down by phase - materials, labor, permitting - so you know what you are committing to before anything is ordered." },
   { item: "Preliminary schedule", detail: "A project timeline showing lead times, installation sequence, and expected completion window." },
   { item: "3D concept", detail: "A rendered view of the proposed design so you can see the finished room before a single cabinet is ordered." },
   { item: "Credit toward construction", detail: "The full discovery fee is credited toward the construction contract if you proceed with us." },
@@ -25,9 +25,9 @@ const CASE_STUDIES = [
     objective: "The owners wanted to remove the wall between the kitchen and family room, relocate the range, and replace all surfaces with a transitional finish package.",
     investmentRange: "$85,000 – $110,000",
     duration: { planned: "10 weeks", actual: "11 weeks" },
-    scope: "Full design-build — structural, plumbing relocation, cabinetry, countertops, flooring, and appliances.",
+    scope: "Full design-build - structural, plumbing relocation, cabinetry, countertops, flooring, and appliances.",
     designNote: "We discovered during measurement that the wall contained a structural beam. Relocating the beam added three weeks of lead time for the engineer, which is why actual duration exceeded the plan. The client was informed at the discovery phase before any construction began.",
-    materials: ["Custom shaker cabinets — painted white", "Calacatta quartz countertops", "Large-format porcelain tile floor", "White oak island with waterfall edge"],
+    materials: ["Custom shaker cabinets - painted white", "Calacatta quartz countertops", "Large-format porcelain tile floor", "White oak island with waterfall edge"],
     testimonial: {
       quote: "The discovery package was the best money we spent on this project. We knew exactly what we were getting into before we signed anything.",
       name: "M. and D. T.",
@@ -42,9 +42,9 @@ const CASE_STUDIES = [
     objective: "Replace the original builder-grade finishes, relocate the shower to allow a larger footprint, and add a freestanding soaking tub.",
     investmentRange: "$42,000 – $58,000",
     duration: { planned: "6 weeks", actual: "6 weeks" },
-    scope: "Room and finish with plumbing relocation — tile, shower glass, vanity, freestanding tub, and fixture replacement.",
+    scope: "Room and finish with plumbing relocation - tile, shower glass, vanity, freestanding tub, and fixture replacement.",
     designNote: "The preliminary layout identified that relocating the shower drain only 18 inches allowed the shower to gain 12 square feet without touching the exterior wall. That detail, caught at measurement, avoided a much larger structural scope.",
-    materials: ["Bouquet Canyon limestone-look tile", "Freestanding soaking tub — matte white", "Floating double vanity — walnut", "Matte black fixtures throughout"],
+    materials: ["Bouquet Canyon limestone-look tile", "Freestanding soaking tub - matte white", "Floating double vanity - walnut", "Matte black fixtures throughout"],
     testimonial: {
       quote: "They found an issue with the original plumbing that two other contractors missed. The discovery process more than paid for itself.",
       name: "K. and J. R.",
@@ -169,7 +169,7 @@ export default function ProjectsPage() {
                 </div>
               </div>
 
-              {/* Design note — the value of the discovery phase */}
+              {/* Design note - the value of the discovery phase */}
               <div style={{
                 marginTop: 36, padding: "24px 28px",
                 background: "rgba(169,134,63,0.07)", border: "1px solid rgba(169,134,63,0.25)",
@@ -204,7 +204,7 @@ export default function ProjectsPage() {
                     &ldquo;{cs.testimonial.quote}&rdquo;
                   </p>
                   <p style={{ fontSize: 13, color: "var(--pub-muted)", margin: 0 }}>
-                    {cs.testimonial.name} &mdash; {cs.testimonial.city}
+                    {cs.testimonial.name} - {cs.testimonial.city}
                   </p>
                 </div>
               </div>
@@ -219,7 +219,7 @@ export default function ProjectsPage() {
           <div style={{ padding: "80px 0" }}>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1.8fr", gap: 72, alignItems: "start" }}>
 
-              {/* Left — pitch */}
+              {/* Left - pitch */}
               <div>
                 <div style={{ fontSize: 13, color: "var(--pub-brass)", marginBottom: 16 }}>
                   Design discovery package
@@ -231,7 +231,7 @@ export default function ProjectsPage() {
                   The most expensive mistake in remodeling is skipping the planning.
                 </h2>
                 <p style={{ fontSize: 15, color: "rgba(241,238,231,0.7)", lineHeight: 1.75, marginBottom: 18 }}>
-                  Every case study above contains at least one thing we found during measurement or design that changed the scope, the budget, or both. A client who does not go through a proper discovery phase finds those things after the crew is already on-site — when fixing them costs three times as much.
+                  Every case study above contains at least one thing we found during measurement or design that changed the scope, the budget, or both. A client who does not go through a proper discovery phase finds those things after the crew is already on-site - when fixing them costs three times as much.
                 </p>
                 <p style={{ fontSize: 15, color: "rgba(241,238,231,0.7)", lineHeight: 1.75, marginBottom: 28 }}>
                   Our structured discovery package documents the space, assesses the real scope, and produces a set of deliverables you can take to any contractor. If you build with us, the full fee is credited toward construction.
@@ -246,7 +246,7 @@ export default function ProjectsPage() {
                 </Link>
               </div>
 
-              {/* Right — deliverables */}
+              {/* Right - deliverables */}
               <div>
                 <div style={{ fontSize: 12, color: "rgba(241,238,231,0.45)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 20 }}>
                   What the package includes
@@ -274,7 +274,7 @@ export default function ProjectsPage() {
                   background: "rgba(169,134,63,0.08)",
                 }}>
                   <p style={{ fontSize: 14, color: "var(--pub-brass)", margin: 0, lineHeight: 1.6 }}>
-                    <strong>Credit toward construction.</strong> The full discovery fee applies to your construction contract if you proceed with us. You are not paying for a sales pitch — you are paying for deliverables you own regardless of who builds the project.
+                    <strong>Credit toward construction.</strong> The full discovery fee applies to your construction contract if you proceed with us. You are not paying for a sales pitch - you are paying for deliverables you own regardless of who builds the project.
                   </p>
                 </div>
               </div>

@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "US Floor Academy — Free Training and Certificates",
+  title: "US Floor Academy | Free Training and Certificates",
   description: "Free installation training courses for tile, cabinets, and flooring. Earn a certificate and build your skills. A skills program from US Floor Design Center.",
 };
 
@@ -17,7 +17,7 @@ const COURSES = [
       "Mortar, thinset, and adhesives",
       "Cutting techniques",
       "Grouting and sealing",
-      "Natural stone — handling, variation, and sealer requirements",
+      "Natural stone - handling, variation, and sealer requirements",
     ],
     cert: "Tile Installation Fundamentals Certificate",
     note: "Safety module links to Cal-OSHA and NIOSH guidance on silica dust from cutting stone, quartz, and porcelain.",
@@ -45,8 +45,8 @@ const COURSES = [
     duration: "5 hours · self-paced",
     topics: [
       "Subfloor inspection and prep",
-      "Hardwood — nail-down, glue-down, and floating methods",
-      "LVP and laminate — click and glue systems",
+      "Hardwood - nail-down, glue-down, and floating methods",
+      "LVP and laminate - click and glue systems",
       "Transitions and thresholds",
       "Moisture testing and vapor barriers",
       "Pattern flooring and herringbone layouts",
@@ -62,14 +62,14 @@ const VIDEOS = {
     { title: "Replacing a broken tile without disturbing the surrounding tiles", duration: "11 min" },
     { title: "Adjusting cabinet door hinges for alignment", duration: "5 min" },
     { title: "Removing and replacing grout in a shower", duration: "14 min" },
-    { title: "Cleaning luxury vinyl plank — what works and what damages it", duration: "7 min" },
+    { title: "Cleaning luxury vinyl plank: what works and what damages it", duration: "7 min" },
     { title: "Resealing a quartz countertop", duration: "6 min" },
   ],
   process: [
-    { title: "Our full kitchen tile installation — from demo to final grout", duration: "22 min" },
+    { title: "Our full kitchen tile installation: from demo to final grout", duration: "22 min" },
     { title: "How we plan a cabinet layout before anything is ordered", duration: "16 min" },
-    { title: "Herringbone hardwood flooring — how we handle the cuts", duration: "18 min" },
-    { title: "Curbless shower waterproofing — our process", duration: "12 min" },
+    { title: "Herringbone hardwood flooring: how we handle the cuts", duration: "18 min" },
+    { title: "Curbless shower waterproofing: our process", duration: "12 min" },
     { title: "Material selection walk-through with a client", duration: "20 min" },
     { title: "Our post-install inspection checklist", duration: "9 min" },
   ],
@@ -93,7 +93,7 @@ export default function AcademyPage() {
               </h1>
               <div>
                 <p style={{ fontSize: 16, color: "#4B4A45", lineHeight: 1.7, maxWidth: "44ch", marginBottom: 0 }}>
-                  Free, self-paced installation courses with a certificate on completion. Built for people who want to develop real skills — whether you are changing careers, growing your capabilities, or just want to understand what a professional installation actually involves.
+                  Free, self-paced installation courses with a certificate on completion. Built for people who want to develop real skills - whether you are changing careers, growing your capabilities, or just want to understand what a professional installation actually involves.
                 </p>
               </div>
             </div>
@@ -164,11 +164,11 @@ export default function AcademyPage() {
                       background: "var(--pub-forest)", color: "var(--pub-stone)",
                       fontSize: 13, padding: "12px 22px", textDecoration: "none", borderRadius: 2,
                     }}>
-                      Enroll — free
+                      Enroll - free
                     </Link>
                   </div>
 
-                  {/* Right — topics */}
+                  {/* Right - topics */}
                   <div>
                     <div style={{ fontSize: 13, color: "var(--pub-muted)", marginBottom: 14, textTransform: "uppercase", letterSpacing: "0.06em" }}>
                       What this course covers
@@ -235,7 +235,7 @@ export default function AcademyPage() {
               {/* Process videos */}
               <div>
                 <h2 style={{ fontFamily: "var(--pub-serif)", fontWeight: 400, fontSize: 22, color: "var(--pub-ink)", lineHeight: 1.3, marginBottom: 20 }}>
-                  How we do it — our process
+                  How we do it - our process
                 </h2>
                 <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
                   {VIDEOS.process.map((v) => (

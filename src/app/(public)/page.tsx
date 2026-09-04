@@ -9,10 +9,10 @@ const TRUST_SIGNALS = [
 ];
 
 const PROCESS = [
-  { step: "01", name: "Design", body: "Every project starts with a design conversation in our showroom — how the space should feel, which materials fit, what the finished room looks like before a single tile is set." },
-  { step: "02", name: "Select", body: "Cabinets, countertops, flooring, tile, and fixtures — all in one place. You see the real materials, our designers help you build a finish schedule that fits the space and budget." },
-  { step: "03", name: "Build", body: "Our own installation crews handle the work. No handoff to an outside contractor, no coordination gap, no second company — the same team accountable from design through final walkthrough." },
-  { step: "04", name: "Care", body: "We stand behind the work with a clear warranty and a direct line back to us — not a call center — if anything ever needs attention after the job is done." },
+  { step: "01", name: "Design", body: "Every project starts with a design conversation in our showroom - how the space should feel, which materials fit, what the finished room looks like before a single tile is set." },
+  { step: "02", name: "Select", body: "Cabinets, countertops, flooring, tile, and fixtures - all in one place. You see the real materials, our designers help you build a finish schedule that fits the space and budget." },
+  { step: "03", name: "Build", body: "Our own installation crews handle the work. No handoff to an outside contractor, no coordination gap, no second company - the same team accountable from design through final walkthrough." },
+  { step: "04", name: "Care", body: "We stand behind the work with a clear warranty and a direct line back to us - not a call center - if anything ever needs attention after the job is done." },
 ];
 
 const CONSULTATIONS = [
@@ -34,19 +34,19 @@ export default function HomePage() {
           }}>
             <div>
               <p style={{ fontSize: 13, color: "var(--pub-brass)", marginBottom: 18, letterSpacing: "0.04em" }}>
-                Orange County showroom — Rancho Santa Margarita, CA
+                Orange County showroom - Rancho Santa Margarita, CA
               </p>
               <h1 style={{
                 fontFamily: "var(--pub-serif)", fontWeight: 400, fontSize: 50,
                 lineHeight: 1.13, letterSpacing: "-0.01em",
                 color: "var(--pub-ink)", maxWidth: "14ch",
               }}>
-                Design, select, and build your kitchen or bath — in one place.
+                Design, select, and build your kitchen or bath - in one place.
               </h1>
               <p style={{
                 marginTop: 24, fontSize: 17, lineHeight: 1.7, color: "#4B4A45", maxWidth: "42ch",
               }}>
-                Visit our Orange County showroom to compare cabinets, countertops, flooring, tile, and finishes — with professional design guidance and complete installation by our own crew.
+                Visit our Orange County showroom to compare cabinets, countertops, flooring, tile, and finishes - with professional design guidance and complete installation by our own crew.
               </p>
               <div style={{ marginTop: 36, display: "flex", flexWrap: "wrap", gap: 12 }}>
                 <Link href="/request-a-visit" style={{
@@ -75,7 +75,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Hero right — 2027 trends article card */}
+            {/* Hero right - 2027 trends article card */}
             <Link href="/blog/2027-interior-design-trends" style={{ textDecoration: "none", display: "block" }}>
               <div style={{
                 border: "1px solid var(--pub-line)", borderRadius: 2, overflow: "hidden",
@@ -98,7 +98,7 @@ export default function HomePage() {
                     2027 Home Design Trends
                   </p>
                   <p style={{ fontSize: 14, color: "var(--pub-muted)", lineHeight: 1.65, margin: 0 }}>
-                    The best homes of 2027 will feel less staged and more personal — comfortable, tactile, and built for how you actually live.
+                    The best homes of 2027 will feel less staged and more personal - comfortable, tactile, and built for how you actually live.
                   </p>
                   <div style={{ marginTop: 18, fontSize: 13, color: "var(--pub-forest)", fontWeight: 500 }}>
                     Read the full forecast →
@@ -230,7 +230,7 @@ export default function HomePage() {
                 Three ways to start, depending on where you are in the process.
               </h2>
               <p style={{ fontSize: 15, color: "rgba(241,238,231,0.65)", lineHeight: 1.7 }}>
-                Each consultation has a defined format, a specific deliverable, and a clear next step. You leave with something concrete — not just a conversation.
+                Each consultation has a defined format, a specific deliverable, and a clear next step. You leave with something concrete - not just a conversation.
               </p>
             </div>
             <div>

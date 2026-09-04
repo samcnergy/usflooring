@@ -6,7 +6,7 @@ import Link from "next/link";
 const BENEFITS = [
   {
     heading: "Trade pricing",
-    body: "Verified trade accounts receive wholesale or contractor pricing on all product categories — cabinets, countertops, flooring, tile, fixtures, and hardware.",
+    body: "Verified trade accounts receive wholesale or contractor pricing on all product categories - cabinets, countertops, flooring, tile, fixtures, and hardware.",
   },
   {
     heading: "Project lists and saved selections",
@@ -18,7 +18,7 @@ const BENEFITS = [
   },
   {
     heading: "Specification downloads",
-    body: "Download cut sheets, CAD files, installation specifications, and maintenance guides for all product lines — directly from your account dashboard.",
+    body: "Download cut sheets, CAD files, installation specifications, and maintenance guides for all product lines - directly from your account dashboard.",
   },
   {
     heading: "Delivery and site coordination",
@@ -26,7 +26,7 @@ const BENEFITS = [
   },
   {
     heading: "Dedicated account manager",
-    body: "Trade accounts are assigned a single point of contact — not a general support queue. Call, text, or email the same person every time.",
+    body: "Trade accounts are assigned a single point of contact - not a general support queue. Call, text, or email the same person every time.",
   },
 ];
 

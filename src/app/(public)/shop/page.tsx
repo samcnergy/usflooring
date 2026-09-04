@@ -8,7 +8,7 @@ import { STYLE_PRESETS } from "./stylePresets";
 export { STYLE_PRESETS };
 
 export const metadata = {
-  title: "Shop Materials — US Floor Design Center",
+  title: "Shop Materials | US Floor Design Center",
   description: "Browse flooring, tile, countertops, cabinets, and fixtures. See real materials in our showroom.",
 };
 
@@ -80,14 +80,14 @@ export default async function ShopPage({
   return (
     <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
 
-      {/* Style Quiz — shown when no style is selected yet */}
+      {/* Style Quiz - shown when no style is selected yet */}
       {!activeStyle && !cat && !q && (
         <Suspense>
           <StyleQuiz />
         </Suspense>
       )}
 
-      {/* Style banner — shown when a style is active */}
+      {/* Style banner - shown when a style is active */}
       {stylePreset && (
         <div style={{
           margin: "48px 0 0",

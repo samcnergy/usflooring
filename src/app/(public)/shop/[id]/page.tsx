@@ -13,15 +13,15 @@ const SAMPLE_OPTIONS = [
 const SHIPPING_POLICY = [
   {
     q: "Freight or local delivery?",
-    a: "Orders over 100 sq ft or any order containing large-format tile (24×24 or larger) ship via freight carrier. All other orders are handled by our local delivery team within a 60-mile radius of Rancho Santa Margarita. Freight delivery timelines are longer and charges differ — pricing is shown at checkout.",
+    a: "Orders over 100 sq ft or any order containing large-format tile (24×24 or larger) ship via freight carrier. All other orders are handled by our local delivery team within a 60-mile radius of Rancho Santa Margarita. Freight delivery timelines are longer and charges differ - pricing is shown at checkout.",
   },
   {
     q: "Curbside or inside delivery?",
-    a: "Our local delivery includes inside delivery to the first dry interior space at no additional charge. Freight carriers deliver curbside only — you are responsible for moving product from the delivery point.",
+    a: "Our local delivery includes inside delivery to the first dry interior space at no additional charge. Freight carriers deliver curbside only - you are responsible for moving product from the delivery point.",
   },
   {
     q: "What to do when the order arrives?",
-    a: "Inspect all cartons before signing the delivery receipt. Count boxes, check for visible damage, and open one carton to verify product condition. Do not refuse delivery unless damage is severe — instead, note the damage on the receipt and contact us within 48 hours.",
+    a: "Inspect all cartons before signing the delivery receipt. Count boxes, check for visible damage, and open one carton to verify product condition. Do not refuse delivery unless damage is severe - instead, note the damage on the receipt and contact us within 48 hours.",
   },
   {
     q: "Damage claim deadline?",
@@ -36,16 +36,16 @@ const SHIPPING_POLICY = [
     a: "No. Once a carton is opened, it cannot be returned. We recommend ordering samples before purchasing full quantities.",
   },
   {
-    q: "Natural stone — is variation a defect?",
+    q: "Natural stone - is variation a defect?",
     a: "No. Variation in color, veining, and surface texture is an inherent characteristic of natural stone and is not considered a defect. Order a sample and review the full lot before purchasing.",
   },
   {
     q: "Are special orders final?",
-    a: "Yes. Special-order products — those not stocked in our standard inventory — are final sale. They cannot be returned or exchanged once ordered.",
+    a: "Yes. Special-order products - those not stocked in our standard inventory - are final sale. They cannot be returned or exchanged once ordered.",
   },
   {
     q: "What about surplus tile?",
-    a: "We recommend purchasing 10–15% overage for cuts and future repairs. Surplus tile that matches your lot number can sometimes be returned (unopened, within 90 days) — contact us before returning.",
+    a: "We recommend purchasing 10–15% overage for cuts and future repairs. Surplus tile that matches your lot number can sometimes be returned (unopened, within 90 days) - contact us before returning.",
   },
 ];
 
@@ -63,14 +63,14 @@ const MOCK_PRODUCT = {
     { label: "Size", value: "24 × 24 inches" },
     { label: "Thickness", value: "3/8 inch (10mm)" },
     { label: "Finish", value: "Polished" },
-    { label: "Material", value: "Natural stone — Italian marble" },
+    { label: "Material", value: "Natural stone - Italian marble" },
     { label: "Use", value: "Floor and wall, interior" },
-    { label: "Slip resistance (wet)", value: "COF 0.42 — suitable for wet areas with appropriate sealer" },
+    { label: "Slip resistance (wet)", value: "COF 0.42 - suitable for wet areas with appropriate sealer" },
     { label: "PEI rating", value: "N/A (stone)" },
   ],
   care: [
     "Seal before installation and annually thereafter.",
-    "Clean with a pH-neutral stone cleaner — avoid vinegar, bleach, or acidic products.",
+    "Clean with a pH-neutral stone cleaner - avoid vinegar, bleach, or acidic products.",
     "Wipe spills immediately; marble is porous and will stain if left wet.",
     "Do not use abrasive pads or steam cleaners.",
   ],
@@ -78,7 +78,7 @@ const MOCK_PRODUCT = {
     "Install on a flat, structurally sound substrate (deflection ≤ L/360).",
     "Use a white polymer-modified thinset mortar.",
     "Back-butter each tile for full coverage.",
-    "Grout with a non-sanded grout — 1/16 to 1/8 inch joint recommended.",
+    "Grout with a non-sanded grout - 1/16 to 1/8 inch joint recommended.",
     "Allow full cure before grouting (24 hours minimum).",
   ],
   coordinating: [
@@ -124,7 +124,7 @@ export default function ProductDetailPage() {
         <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 72, padding: "56px 0" }}>
 
-            {/* Left — image placeholder */}
+            {/* Left - image placeholder */}
             <div>
               <div style={{
                 width: "100%", aspectRatio: "1 / 1",
@@ -144,7 +144,7 @@ export default function ProductDetailPage() {
               </div>
             </div>
 
-            {/* Right — details */}
+            {/* Right - details */}
             <div>
               <div style={{ fontSize: 12, color: "var(--pub-muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 10 }}>
                 {product.category} · {product.sku}

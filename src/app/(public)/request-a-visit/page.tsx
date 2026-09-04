@@ -1,7 +1,7 @@
 import LeadForm from "./LeadForm";
 
 export const metadata = {
-  title: "Request a Visit — US Floor Design Center",
+  title: "Request a Visit | US Floor Design Center",
   description: "Tell us about your project and we will schedule a showroom visit.",
 };
 

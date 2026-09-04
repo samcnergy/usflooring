@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Warranty — US Floor Design Center",
+  title: "Warranty | US Floor Design Center",
   description: "Our written warranty covers labor for 12 months and materials at the manufacturer warranty level. Plain language. No surprises.",
 };
 
@@ -10,7 +10,7 @@ const SECTIONS = [
     heading: "What is covered",
     body: [
       "Labor performed by our installation crews is covered for 12 months from the date of project completion. If something we installed fails or was installed incorrectly, we will return and correct it at no charge.",
-      "Materials are covered at the manufacturer's warranty level. Every product we sell carries its own manufacturer warranty — we will coordinate the claim on your behalf, and if the manufacturer does not cover a defect, we will work with you on a resolution.",
+      "Materials are covered at the manufacturer's warranty level. Every product we sell carries its own manufacturer warranty - we will coordinate the claim on your behalf, and if the manufacturer does not cover a defect, we will work with you on a resolution.",
     ],
   },
   {
@@ -22,7 +22,7 @@ const SECTIONS = [
   {
     heading: "Who handles service requests",
     body: [
-      "Our own technicians handle all warranty service. Requests are not routed to a third-party call center or a subcontractor — the same team that built the project handles the follow-up.",
+      "Our own technicians handle all warranty service. Requests are not routed to a third-party call center or a subcontractor - the same team that built the project handles the follow-up.",
     ],
   },
   {
@@ -35,7 +35,7 @@ const SECTIONS = [
     heading: "What is not covered",
     body: [
       "Normal wear and tear is not covered. This includes surface scratches from daily use, grout discoloration from heavy foot traffic, finish wear on high-use hardware, and any damage caused by improper care, cleaning products not recommended for the material, or modifications made by anyone other than our crew after project completion.",
-      "Damage caused by events outside our control — flooding, earthquakes, settling, or third-party work — is also excluded.",
+      "Damage caused by events outside our control - flooding, earthquakes, settling, or third-party work - is also excluded.",
     ],
   },
   {
@@ -67,7 +67,7 @@ export default function WarrantyPage() {
                 Our warranty, in plain language.
               </h1>
               <p style={{ fontSize: 16, color: "#4B4A45", lineHeight: 1.7, maxWidth: "44ch", paddingBottom: 4 }}>
-                A warranty is only as good as the company behind it. We write ours in plain terms because vague promises are not promises — they are escape clauses.
+                A warranty is only as good as the company behind it. We write ours in plain terms because vague promises are not promises - they are escape clauses.
               </p>
             </div>
           </div>

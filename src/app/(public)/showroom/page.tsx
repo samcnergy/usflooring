@@ -1,14 +1,14 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Showroom — US Floor Design Center",
+  title: "Showroom | US Floor Design Center",
   description: "Visit our Orange County showroom in Rancho Santa Margarita. See cabinets, countertops, flooring, tile, and fixtures in person before you decide.",
 };
 
 const WHAT_TO_EXPECT = [
   {
     heading: "See every material in person",
-    body: "The showroom carries the full catalog — cabinets, countertops, flooring, tile, fixtures, and finish hardware. Every product is displayed as an installed sample, not a chip or a swatch.",
+    body: "The showroom carries the full catalog - cabinets, countertops, flooring, tile, fixtures, and finish hardware. Every product is displayed as an installed sample, not a chip or a swatch.",
   },
   {
     heading: "Bring your plans or just your ideas",
@@ -16,7 +16,7 @@ const WHAT_TO_EXPECT = [
   },
   {
     heading: "Walk in or schedule ahead",
-    body: "Walk-ins are welcome during showroom hours. If you want dedicated time with one of our designers — no interruptions, a proper assessment, material recommendations — book a showroom discovery appointment.",
+    body: "Walk-ins are welcome during showroom hours. If you want dedicated time with one of our designers - no interruptions, a proper assessment, material recommendations - book a showroom discovery appointment.",
   },
   {
     heading: "Samples to take home",
@@ -27,8 +27,8 @@ const WHAT_TO_EXPECT = [
 const BRING_LIST = [
   "Photos of the existing space",
   "Room dimensions if you have them (not required)",
-  "Inspiration photos — a screenshot or magazine clipping is fine",
-  "Your honest budget range — it helps us show you the right options",
+  "Inspiration photos - a screenshot or magazine clipping is fine",
+  "Your honest budget range - it helps us show you the right options",
   "Any HOA restrictions if applicable",
 ];
 

@@ -3,14 +3,14 @@ import Link from "next/link";
 
 export const metadata = {
   title: "2027 Interior Design Trends | US Floor Design Center",
-  description: "Discover the 2027 interior design trends shaping Orange County homes — from natural wood kitchens and tactile tile to wellness baths and collected interiors.",
+  description: "Discover the 2027 interior design trends shaping Orange County homes - from natural wood kitchens and tactile tile to wellness baths and collected interiors.",
 };
 
 const TRENDS = [
   {
     n: "01",
     title: "Design for a Feeling, Not Just a Look",
-    body: "In 2027, wellness is moving beyond spa accessories and into the way a room is planned. Deep seating, softer shapes, warm light, natural materials and easier circulation can make a home feel calmer before any decorative layer is added. Comfort is becoming visible: chairs invite you to stay, a reading corner earns real space, and a bathroom is planned around an unhurried routine rather than a checklist of fixtures.\n\nThis approach also makes design more personal. Instead of copying a complete style, homeowners can begin with the feeling they want — grounded, energized, social or serene — and use that as a filter for layout, color, texture and lighting.",
+    body: "In 2027, wellness is moving beyond spa accessories and into the way a room is planned. Deep seating, softer shapes, warm light, natural materials and easier circulation can make a home feel calmer before any decorative layer is added. Comfort is becoming visible: chairs invite you to stay, a reading corner earns real space, and a bathroom is planned around an unhurried routine rather than a checklist of fixtures.\n\nThis approach also makes design more personal. Instead of copying a complete style, homeowners can begin with the feeling they want - grounded, energized, social or serene - and use that as a filter for layout, color, texture and lighting.",
     takeaway: "Define three words for how each room should feel before selecting finishes. Those words become a practical decision tool when dozens of tile, flooring and cabinet options compete for attention.",
   },
   {
@@ -34,7 +34,7 @@ const TRENDS = [
   {
     n: "05",
     title: "Bathrooms Become Immersive Architectural Retreats",
-    body: "Bathrooms are being treated as complete environments instead of collections of unrelated fixtures. Continuous surface treatments, large-format porcelain, coordinated wall and floor finishes, sculptural basins and carefully placed lighting can make even a compact bath feel composed. In more dramatic rooms, one color or material may wrap multiple surfaces to create an enveloping effect.\n\nWellness remains central, but the focus is practical: a generous shower, a comfortable tub where space supports it, warm surfaces, useful niches, flattering light and effective ventilation. Visual simplicity depends on technical precision behind the finish — especially waterproofing, drainage, substrate preparation and transitions.",
+    body: "Bathrooms are being treated as complete environments instead of collections of unrelated fixtures. Continuous surface treatments, large-format porcelain, coordinated wall and floor finishes, sculptural basins and carefully placed lighting can make even a compact bath feel composed. In more dramatic rooms, one color or material may wrap multiple surfaces to create an enveloping effect.\n\nWellness remains central, but the focus is practical: a generous shower, a comfortable tub where space supports it, warm surfaces, useful niches, flattering light and effective ventilation. Visual simplicity depends on technical precision behind the finish - especially waterproofing, drainage, substrate preparation and transitions.",
     takeaway: "Choose the waterproofing and tile assembly as carefully as the visible tile. For wet rooms, ask about slip resistance, grout maintenance, ventilation, access panels and how every edge will terminate before installation begins.",
   },
   {
@@ -46,7 +46,7 @@ const TRENDS = [
   {
     n: "07",
     title: "Warm Mineral Colors Meet Confident Accents",
-    body: "The emerging palette begins with earth: clay, sand, cocoa, muted terracotta, olive and softened green. These tones feel grounded and work naturally with wood and stone. Alongside them, concentrated accents — inky blue, teal, lavender, beetroot and electric blue — bring energy without turning the entire home into a color experiment.\n\nColor drenching can make a small room feel intentional by carrying one family of color across walls, trim, cabinetry or ceiling. In open plans, color can also define a zone without adding a wall. The most enduring schemes balance expressive color with materials that already contain natural variation.",
+    body: "The emerging palette begins with earth: clay, sand, cocoa, muted terracotta, olive and softened green. These tones feel grounded and work naturally with wood and stone. Alongside them, concentrated accents - inky blue, teal, lavender, beetroot and electric blue - bring energy without turning the entire home into a color experiment.\n\nColor drenching can make a small room feel intentional by carrying one family of color across walls, trim, cabinetry or ceiling. In open plans, color can also define a zone without adding a wall. The most enduring schemes balance expressive color with materials that already contain natural variation.",
     takeaway: "Put long-life colors in materials you genuinely love and use easier-to-change surfaces for experiments. Cabinet interiors, powder rooms, paint, art and textiles are lower-risk places for a bolder forecast color.",
   },
   {
@@ -58,7 +58,7 @@ const TRENDS = [
   {
     n: "09",
     title: "Homes Make More Room for Connection and Ritual",
-    body: "Design forecasts are putting renewed emphasis on game tables, statement dining tables, home lounges and dedicated beverage stations. The common purpose is connection. These spaces turn ordinary routines — morning coffee, family games, dinner with friends — into activities the floor plan actively supports.\n\nAn underused formal room can become a comfortable lounge or library without a major addition. A coffee or wellness bar can reduce traffic through the main work zone of a kitchen. Flexible tables and movable seating allow one room to support quiet weekdays and larger gatherings.",
+    body: "Design forecasts are putting renewed emphasis on game tables, statement dining tables, home lounges and dedicated beverage stations. The common purpose is connection. These spaces turn ordinary routines - morning coffee, family games, dinner with friends - into activities the floor plan actively supports.\n\nAn underused formal room can become a comfortable lounge or library without a major addition. A coffee or wellness bar can reduce traffic through the main work zone of a kitchen. Flexible tables and movable seating allow one room to support quiet weekdays and larger gatherings.",
     takeaway: "Before adding square footage, identify rooms or corners that are rarely used. A lighting change, built-in storage, durable flooring and purpose-specific furniture may create more daily value than a larger footprint.",
   },
   {
@@ -83,7 +83,7 @@ export default function Trends2027Page() {
       <div style={{ position: "relative", width: "100%", aspectRatio: "16/7", overflow: "hidden" }}>
         <Image
           src="/blog-2027-hero.png"
-          alt="Orange County kitchen and living room — 2027 design trends by US Floor Design Center"
+          alt="Orange County kitchen and living room - 2027 design trends by US Floor Design Center"
           fill
           priority
           style={{ objectFit: "cover", objectPosition: "center" }}
@@ -124,7 +124,7 @@ export default function Trends2027Page() {
                 The defining design story of 2027 is not one color, material or furniture shape. It is a shift away from perfectly staged rooms and toward homes that feel restorative, expressive, adaptable and built for real life.
               </p>
               <p style={{ fontSize: 16, color: "#4B4A45", lineHeight: 1.8, marginBottom: 48 }}>
-                This forecast synthesizes ideas appearing across four 2027 design reports and translates them into practical decisions for kitchens, bathrooms, flooring and whole-home renovations in Orange County. Trends are a source of direction — not a requirement to replace everything you already love.
+                This forecast synthesizes ideas appearing across four 2027 design reports and translates them into practical decisions for kitchens, bathrooms, flooring and whole-home renovations in Orange County. Trends are a source of direction - not a requirement to replace everything you already love.
               </p>
             </div>
             {/* Jump links */}
