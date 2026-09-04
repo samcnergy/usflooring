@@ -15,7 +15,7 @@ const TRENDS = [
   },
   {
     n: "02",
-    title: "The "Quiet Kitchen" Replaces Visual Clutter",
+    title: "The “Quiet Kitchen” Replaces Visual Clutter",
     body: "The so-called anti-kitchen does not eliminate the kitchen; it makes its hardworking parts less dominant. Integrated appliances, appliance garages, concealed charging, furniture-style cabinetry and disciplined storage help the main room read as calm architecture rather than a wall of equipment.\n\nWhere space allows, a scullery or back kitchen can hold small appliances, pantry goods and prep mess. In a smaller footprint, the same effect can come from full-height storage, fewer counter interruptions and cabinet interiors planned around specific tools. The best version is not empty minimalism. It is a warm, highly functional room whose visual order is supported by thoughtful storage.",
     takeaway: "A successful quiet kitchen begins with an inventory. Plan where the coffee maker, mixer, recycling, pet supplies and countertop devices will live before cabinet drawings are finalized.",
   },
