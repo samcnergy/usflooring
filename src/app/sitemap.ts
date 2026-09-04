@@ -19,6 +19,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/blog/natural-stone-countertop-care-maintenance`, lastModified: NOW, changeFrequency: "yearly", priority: 0.7 },
     { url: `${BASE}/trade`, lastModified: NOW, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE}/academy`, lastModified: NOW, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE}/about`, lastModified: NOW, changeFrequency: "yearly", priority: 0.7 },
     { url: `${BASE}/warranty`, lastModified: NOW, changeFrequency: "yearly", priority: 0.6 },
   ];
 }

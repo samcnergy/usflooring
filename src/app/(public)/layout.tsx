@@ -77,6 +77,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
             <Link href="/academy" style={{ color: "inherit", textDecoration: "none" }}>Academy</Link>
             <Link href="/blog" style={{ color: "inherit", textDecoration: "none" }}>Blog</Link>
             <Link href="/faq" style={{ color: "inherit", textDecoration: "none" }}>FAQ</Link>
+            <Link href="/about" style={{ color: "inherit", textDecoration: "none" }}>About</Link>
           </nav>
           <Link href="/request-a-visit" style={{
             border: "1px solid var(--pub-ink)", borderRadius: 2, padding: "9px 20px",
@@ -114,6 +115,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
                 <Link href="/academy" style={{ color: "var(--pub-ink)", textDecoration: "none" }}>Academy</Link>
                 <Link href="/blog" style={{ color: "var(--pub-ink)", textDecoration: "none" }}>Blog</Link>
                 <Link href="/faq" style={{ color: "var(--pub-ink)", textDecoration: "none" }}>FAQ</Link>
+                <Link href="/about" style={{ color: "var(--pub-ink)", textDecoration: "none" }}>About</Link>
               </div>
             </div>
             <div>
