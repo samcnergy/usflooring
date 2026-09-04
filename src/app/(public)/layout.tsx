@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 
 const ORG_SCHEMA = {
   "@context": "https://schema.org",
@@ -64,13 +63,11 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
           padding: "28px 0", borderBottom: "1px solid var(--pub-line)",
         }}>
           <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center" }}>
-            <Image
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src="/logo.jpg"
               alt="US Floor Design Center"
-              width={160}
-              height={101}
-              style={{ height: 52, width: "auto", objectFit: "contain" }}
-              priority
+              style={{ height: 52, width: "auto" }}
             />
           </Link>
           <nav style={{ display: "flex", gap: 36, fontSize: 14, color: "var(--pub-ink)" }}>
