@@ -67,7 +67,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
             <img
               src="/logo.png"
               alt="US Floor Design Center"
-              style={{ height: 48, width: "auto" }}
+              style={{ height: 60, width: "auto" }}
             />
           </Link>
           <nav style={{ display: "flex", gap: 36, fontSize: 14, color: "var(--pub-ink)" }}>
