@@ -33,6 +33,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
             <Link href="/projects" style={{ color: "inherit", textDecoration: "none" }}>Projects</Link>
             <Link href="/showroom" style={{ color: "inherit", textDecoration: "none" }}>Showroom</Link>
             <Link href="/academy" style={{ color: "inherit", textDecoration: "none" }}>Academy</Link>
+            <Link href="/blog/2027-interior-design-trends" style={{ color: "inherit", textDecoration: "none" }}>Blog</Link>
           </nav>
           <Link href="/request-a-visit" style={{
             border: "1px solid var(--pub-ink)", borderRadius: 2, padding: "9px 20px",
@@ -67,6 +68,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
                 <Link href="/trade" style={{ color: "var(--pub-ink)", textDecoration: "none" }}>Trade</Link>
                 <Link href="/warranty" style={{ color: "var(--pub-ink)", textDecoration: "none" }}>Warranty</Link>
                 <Link href="/academy" style={{ color: "var(--pub-ink)", textDecoration: "none" }}>Academy</Link>
+                <Link href="/blog/2027-interior-design-trends" style={{ color: "var(--pub-ink)", textDecoration: "none" }}>Blog</Link>
               </div>
             </div>
             <div>

@@ -43,6 +43,7 @@ export async function proxy(req: NextRequest) {
     path.startsWith("/warranty") ||
     path.startsWith("/showroom") ||
     path.startsWith("/academy") ||
+    path.startsWith("/blog") ||
     path.startsWith("/_next") ||
     path.startsWith("/api/auth");
 
