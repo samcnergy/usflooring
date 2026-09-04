@@ -540,8 +540,25 @@ export default function FAQPage() {
     });
   }, [activeCategory, search]);
 
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "name": "Frequently Asked Questions - US Floor Design Center",
+    "description": "100 questions about home remodeling, kitchen, bathroom, flooring, permits, and design trends answered by Parham Shariat, owner of US Floor Design Center in Rancho Santa Margarita, Orange County.",
+    "url": "https://usfloordesign.com/faq",
+    "mainEntity": FAQS.map((f) => ({
+      "@type": "Question",
+      "name": f.q,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": f.a,
+      },
+    })),
+  };
+
   return (
     <div>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
 
       {/* Header */}
       <div style={{ borderBottom: "1px solid var(--pub-line)", background: "var(--pub-stone)" }}>

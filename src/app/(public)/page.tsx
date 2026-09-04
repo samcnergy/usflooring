@@ -1,6 +1,24 @@
 import Link from "next/link";
 import Image from "next/image";
 
+export const metadata = {
+  title: "Kitchen, Bathroom and Flooring Remodeling | US Floor Design Center",
+  description: "Design-build studio in Rancho Santa Margarita, Orange County. Kitchens, bathrooms, flooring, tile, cabinets, and countertops. Visit our showroom or schedule a consultation.",
+};
+
+const HOME_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "US Floor Design Center",
+  "url": "https://usfloordesign.com",
+  "description": "Design-build studio in Rancho Santa Margarita, Orange County specializing in kitchen remodeling, bathroom remodeling, flooring, tile, cabinets, and countertops.",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": { "@type": "EntryPoint", "urlTemplate": "https://usfloordesign.com/shop?q={search_term_string}" },
+    "query-input": "required name=search_term_string"
+  }
+};
+
 const TRUST_SIGNALS = [
   { strong: "30 years", body: "In Orange County" },
   { strong: "Design + build", body: "One team, start to finish" },
@@ -24,6 +42,7 @@ const CONSULTATIONS = [
 export default function HomePage() {
   return (
     <div>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(HOME_SCHEMA) }} />
 
       {/* ── Hero ── */}
       <section style={{ background: "var(--pub-stone)", borderBottom: "1px solid var(--pub-line)" }}>

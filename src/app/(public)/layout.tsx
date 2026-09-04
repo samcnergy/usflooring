@@ -1,8 +1,47 @@
 import Link from "next/link";
 
+const ORG_SCHEMA = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": ["Organization", "LocalBusiness", "HomeAndConstructionBusiness"],
+      "@id": "https://usfloordesign.com/#organization",
+      "name": "US Floor Design Center",
+      "url": "https://usfloordesign.com",
+      "email": "info@usfloordesign.com",
+      "description": "Design-build studio specializing in kitchen, bathroom, and flooring remodeling in Rancho Santa Margarita, Orange County, California. Full design-build, countertops, cabinetry, tile, flooring, and installation.",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Rancho Santa Margarita",
+        "addressRegion": "CA",
+        "addressCountry": "US"
+      },
+      "openingHoursSpecification": [
+        { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "09:00", "closes": "17:30" },
+        { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "10:00", "closes": "16:00" }
+      ],
+      "areaServed": {
+        "@type": "Place",
+        "name": "Orange County, California"
+      },
+      "knowsAbout": ["kitchen remodeling", "bathroom remodeling", "flooring installation", "tile installation", "cabinet installation", "countertop fabrication", "design-build", "home remodeling"],
+      "founder": {
+        "@type": "Person",
+        "name": "Parham Shariat",
+        "jobTitle": "Owner",
+        "worksFor": { "@id": "https://usfloordesign.com/#organization" }
+      },
+      "sameAs": [
+        "https://usflooring.onrender.com"
+      ]
+    }
+  ]
+};
+
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
     <div style={{ background: "var(--pub-stone)", color: "var(--pub-ink)", minHeight: "100vh" }}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ORG_SCHEMA) }} />
       <style>{`
         :root {
           --pub-stone: #F1EEE7;

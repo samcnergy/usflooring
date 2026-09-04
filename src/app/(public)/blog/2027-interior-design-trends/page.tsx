@@ -6,6 +6,33 @@ export const metadata = {
   description: "Discover the 2027 interior design trends shaping Orange County homes - from natural wood kitchens and tactile tile to wellness baths and collected interiors.",
 };
 
+const ARTICLE_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "2027 Interior Design Trends",
+  "description": "Discover the 2027 interior design trends shaping Orange County homes - from natural wood kitchens and tactile tile to wellness baths and collected interiors.",
+  "url": "https://usfloordesign.com/blog/2027-interior-design-trends",
+  "image": "https://usfloordesign.com/blog-2027-hero.png",
+  "datePublished": "2026-09-03",
+  "dateModified": "2026-09-03",
+  "author": {
+    "@type": "Person",
+    "name": "Parham Shariat",
+    "jobTitle": "Owner",
+    "worksFor": { "@type": "Organization", "name": "US Floor Design Center", "url": "https://usfloordesign.com" }
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "US Floor Design Center",
+    "url": "https://usfloordesign.com"
+  },
+  "about": ["interior design trends", "kitchen design", "bathroom design", "Orange County home design", "2027 design trends"],
+  "keywords": "2027 interior design trends, Orange County kitchen design, home design trends, natural wood kitchens, wellness bathroom design",
+  "articleSection": "Design Trends",
+  "inLanguage": "en-US",
+  "isPartOf": { "@type": "WebSite", "name": "US Floor Design Center", "url": "https://usfloordesign.com" }
+};
+
 const TRENDS = [
   {
     n: "01",
@@ -78,6 +105,7 @@ const TRENDS = [
 export default function Trends2027Page() {
   return (
     <div>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ARTICLE_SCHEMA) }} />
 
       {/* Full-width hero image */}
       <div style={{ position: "relative", width: "100%", aspectRatio: "16/7", overflow: "hidden" }}>

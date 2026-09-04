@@ -6,9 +6,37 @@ export const metadata = {
   description: "Learn how to clean and protect porcelain countertops, remove common messes, prevent chips and preserve the finish with this homeowner guide.",
 };
 
+const ARTICLE_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Porcelain Countertop Care and Maintenance",
+  "description": "Learn how to clean and protect porcelain countertops, remove common messes, prevent chips and preserve the finish with this homeowner guide.",
+  "url": "https://usfloordesign.com/blog/porcelain-countertop-care-maintenance",
+  "image": "https://usfloordesign.com/blog-porcelain-cover.png",
+  "datePublished": "2026-09-03",
+  "dateModified": "2026-09-03",
+  "author": {
+    "@type": "Person",
+    "name": "Parham Shariat",
+    "jobTitle": "Owner",
+    "worksFor": { "@type": "Organization", "name": "US Floor Design Center", "url": "https://usfloordesign.com" }
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "US Floor Design Center",
+    "url": "https://usfloordesign.com"
+  },
+  "about": ["porcelain countertops", "countertop maintenance", "kitchen remodeling", "Orange County home improvement"],
+  "keywords": "porcelain countertop maintenance, how to clean porcelain countertops, porcelain slab care, porcelain countertop stains",
+  "articleSection": "Homeowner Care Guide",
+  "inLanguage": "en-US",
+  "isPartOf": { "@type": "WebSite", "name": "US Floor Design Center", "url": "https://usfloordesign.com" }
+};
+
 export default function PorcelainMaintenancePage() {
   return (
     <div>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ARTICLE_SCHEMA) }} />
 
       {/* Hero */}
       <div style={{ position: "relative", height: 480, overflow: "hidden" }}>

@@ -6,9 +6,37 @@ export const metadata = {
   description: "Learn how to clean quartz countertops, prevent heat damage, remove residue and protect the finish without unnecessary sealing or polish.",
 };
 
+const ARTICLE_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Quartz Countertop Maintenance Guide",
+  "description": "Learn how to clean quartz countertops, prevent heat damage, remove residue and protect the finish without unnecessary sealing or polish.",
+  "url": "https://usfloordesign.com/blog/quartz-countertop-maintenance-guide",
+  "image": "https://usfloordesign.com/blog-quartz-cover.png",
+  "datePublished": "2026-09-03",
+  "dateModified": "2026-09-03",
+  "author": {
+    "@type": "Person",
+    "name": "Parham Shariat",
+    "jobTitle": "Owner",
+    "worksFor": { "@type": "Organization", "name": "US Floor Design Center", "url": "https://usfloordesign.com" }
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "US Floor Design Center",
+    "url": "https://usfloordesign.com"
+  },
+  "about": ["quartz countertops", "countertop maintenance", "kitchen remodeling", "Orange County home improvement"],
+  "keywords": "quartz countertop maintenance, how to clean quartz countertops, quartz countertop heat damage, quartz care guide",
+  "articleSection": "Homeowner Care Guide",
+  "inLanguage": "en-US",
+  "isPartOf": { "@type": "WebSite", "name": "US Floor Design Center", "url": "https://usfloordesign.com" }
+};
+
 export default function QuartzMaintenancePage() {
   return (
     <div>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ARTICLE_SCHEMA) }} />
 
       {/* Hero */}
       <div style={{ position: "relative", height: 480, overflow: "hidden" }}>

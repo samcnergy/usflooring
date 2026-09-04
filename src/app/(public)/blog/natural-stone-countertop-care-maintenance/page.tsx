@@ -6,9 +6,37 @@ export const metadata = {
   description: "Learn how to clean, seal and protect granite, marble, quartzite and other natural stone countertops - and how to recognize stains versus etching.",
 };
 
+const ARTICLE_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Natural Stone Countertop Care and Maintenance",
+  "description": "Learn how to clean, seal and protect granite, marble, quartzite and other natural stone countertops - and how to recognize stains versus etching.",
+  "url": "https://usfloordesign.com/blog/natural-stone-countertop-care-maintenance",
+  "image": "https://usfloordesign.com/blog-natural-stone-cover.png",
+  "datePublished": "2026-09-03",
+  "dateModified": "2026-09-03",
+  "author": {
+    "@type": "Person",
+    "name": "Parham Shariat",
+    "jobTitle": "Owner",
+    "worksFor": { "@type": "Organization", "name": "US Floor Design Center", "url": "https://usfloordesign.com" }
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "US Floor Design Center",
+    "url": "https://usfloordesign.com"
+  },
+  "about": ["natural stone countertops", "granite care", "marble maintenance", "quartzite sealing", "Orange County home improvement"],
+  "keywords": "natural stone countertop maintenance, how to clean natural stone countertops, granite care, marble countertop maintenance, quartzite sealing",
+  "articleSection": "Homeowner Care Guide",
+  "inLanguage": "en-US",
+  "isPartOf": { "@type": "WebSite", "name": "US Floor Design Center", "url": "https://usfloordesign.com" }
+};
+
 export default function NaturalStoneMaintenancePage() {
   return (
     <div>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ARTICLE_SCHEMA) }} />
 
       {/* Hero */}
       <div style={{ position: "relative", height: 480, overflow: "hidden" }}>

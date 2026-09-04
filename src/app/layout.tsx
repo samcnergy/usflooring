@@ -15,9 +15,21 @@ const newsreader = Newsreader({
 });
 
 export const metadata: Metadata = {
-  title: "U.S. Floor, Kitchen & Bath",
-  description:
-    "Order management for U.S. Floor, Kitchen & Bath — Rancho Santa Margarita, CA.",
+  title: {
+    default: "US Floor Design Center | Kitchen, Bathroom and Flooring | Rancho Santa Margarita",
+    template: "%s | US Floor Design Center",
+  },
+  description: "Design-build studio in Rancho Santa Margarita, Orange County. Kitchen remodeling, bathroom remodeling, flooring, tile, cabinets, and countertops. Visit our showroom.",
+  metadataBase: new URL("https://usfloordesign.com"),
+  openGraph: {
+    type: "website",
+    siteName: "US Floor Design Center",
+    locale: "en_US",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
