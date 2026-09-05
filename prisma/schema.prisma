@@ -664,8 +664,9 @@ model Material {
   // What company pays vendor — visible to admin only, never sent to browser for salespeople
   defaultCostCents      Int?
 
-  isActive Boolean  @default(true)
-  notes    String?
+  isActive   Boolean  @default(true)
+  styleTags  String[] @default([])
+  notes      String?
 
   images          MaterialImage[]
   lineItems       OrderLineItem[]

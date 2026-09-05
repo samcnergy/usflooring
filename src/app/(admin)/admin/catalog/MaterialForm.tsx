@@ -3,6 +3,17 @@
 import { useActionState } from "react";
 import type { CatalogState } from "./actions";
 
+const STYLE_PRESETS = [
+  { value: "warm-modern",            label: "Warm Modern" },
+  { value: "coastal-contemporary",   label: "Coastal Contemporary" },
+  { value: "organic-modern",         label: "Organic Modern" },
+  { value: "transitional",           label: "Transitional" },
+  { value: "modern-mediterranean",   label: "Modern Mediterranean" },
+  { value: "traditional",            label: "Traditional" },
+  { value: "minimalist",             label: "Minimalist" },
+  { value: "california-casual",      label: "California Casual" },
+];
+
 const CATEGORIES = [
   { value: "carpet", label: "Carpet" },
   { value: "vinyl", label: "Vinyl" },
@@ -47,6 +58,7 @@ type DefaultValues = {
   defaultUnitPriceCents?: number | null;
   defaultCostCents?: number | null;
   notes?: string;
+  styleTags?: string[];
 };
 
 type Props = {
@@ -128,6 +140,26 @@ export function MaterialForm({ action, vendors, defaultValues = {}, defaultVendo
             <option value="">— no vendor —</option>
             {vendors.map((v) => <option key={v.id} value={v.id}>{v.name}</option>)}
           </select>
+        </div>
+      </section>
+
+      {/* Style Palettes */}
+      <section className="flex flex-col gap-3">
+        <h2 className="text-sm font-semibold text-marble-500 uppercase tracking-wide">Style Palettes</h2>
+        <p className="text-xs text-marble-500">Check every style that fits this product. Customers filtering by a palette will see it.</p>
+        <div className="grid grid-cols-2 gap-2">
+          {STYLE_PRESETS.map((preset) => (
+            <label key={preset.value} className="flex items-center gap-2 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                name="styleTags"
+                value={preset.value}
+                defaultChecked={defaultValues.styleTags?.includes(preset.value)}
+                className="rounded border-marble-300 text-brand-500 focus:ring-brand-500 h-4 w-4"
+              />
+              <span className="text-sm text-marble-900">{preset.label}</span>
+            </label>
+          ))}
         </div>
       </section>
 

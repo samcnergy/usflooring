@@ -34,13 +34,18 @@ async function getMaterials(cat?: string, q?: string, style?: string) {
           { sizeSpec: { contains: q, mode: "insensitive" } },
         ],
       } : stylePreset && !cat ? {
-        OR: stylePreset.keywords.map((kw) => ({
-          OR: [
-            { name: { contains: kw, mode: "insensitive" } },
-            { style: { contains: kw, mode: "insensitive" } },
-            { color: { contains: kw, mode: "insensitive" } },
-          ],
-        })),
+        OR: [
+          // Products explicitly tagged with this style palette take priority
+          { styleTags: { has: style } },
+          // Fall back to keyword matching for untagged products
+          ...stylePreset.keywords.map((kw) => ({
+            OR: [
+              { name: { contains: kw, mode: "insensitive" as const } },
+              { style: { contains: kw, mode: "insensitive" as const } },
+              { color: { contains: kw, mode: "insensitive" as const } },
+            ],
+          })),
+        ],
       } : {}),
     },
     orderBy: [{ category: "asc" }, { brand: "asc" }, { name: "asc" }],

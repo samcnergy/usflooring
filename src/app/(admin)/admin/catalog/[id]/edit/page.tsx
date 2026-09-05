@@ -40,6 +40,7 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
           defaultUnitPriceCents: material.defaultUnitPriceCents,
           defaultCostCents: material.defaultCostCents,
           notes: material.notes ?? undefined,
+          styleTags: material.styleTags,
         }}
         submitLabel="Update Product"
       />

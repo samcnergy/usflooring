@@ -24,6 +24,7 @@ const materialSchema = z.object({
   notes: z.string().trim().max(2000).optional(),
   imageUrl: z.string().trim().max(500).optional(),
   imageSourceType: z.enum(["upload", "link"]).optional(),
+  styleTags: z.array(z.string()).optional(),
 });
 
 export type CatalogState =
@@ -47,6 +48,7 @@ function parseMaterialForm(formData: FormData) {
     notes: String(formData.get("notes") ?? "") || undefined,
     imageUrl: String(formData.get("imageUrl") ?? "") || undefined,
     imageSourceType: (String(formData.get("imageSourceType") ?? "") || undefined) as "upload" | "link" | undefined,
+    styleTags: formData.getAll("styleTags").map(String).filter(Boolean),
   });
 }
 
@@ -82,6 +84,7 @@ export async function createMaterialAction(_prev: CatalogState, formData: FormDa
       defaultUnit: d.defaultUnit ? (d.defaultUnit as UnitOfMeasure) : null,
       defaultUnitPriceCents: priceCents,
       defaultCostCents: costCents,
+      styleTags: d.styleTags ?? [],
       notes: d.notes ?? null,
       ...(d.imageUrl
         ? {
@@ -135,6 +138,7 @@ export async function updateMaterialAction(id: string, _prev: CatalogState, form
       defaultUnit: d.defaultUnit ? (d.defaultUnit as UnitOfMeasure) : null,
       defaultUnitPriceCents: priceCents,
       defaultCostCents: costCents,
+      styleTags: d.styleTags ?? [],
       notes: d.notes ?? null,
     },
   });
