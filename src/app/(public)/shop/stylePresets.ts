@@ -15,7 +15,7 @@ export const STYLE_PRESETS: Record<string, {
   "coastal-contemporary": {
     label: "Coastal Contemporary",
     description: "Light tiles, soft whites, sandy textures. Airy, relaxed, and quietly refined.",
-    palette: ["#C8D8DC", "#E8E4DF", "#A8B8B8", "#F2EDE8"],
+    palette: ["#C8D8DC", "#E8E4DF", "#A8B8B8", "#F2EDE8", "#1B3A5C"],
     categories: ["tile", "ceramic", "vinyl", "stone"],
     keywords: ["white", "light", "sand", "soft", "coastal"],
   },
