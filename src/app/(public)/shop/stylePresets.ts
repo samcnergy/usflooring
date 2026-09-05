@@ -8,7 +8,7 @@ export const STYLE_PRESETS: Record<string, {
   "warm-modern": {
     label: "Warm Modern",
     description: "Natural wood tones, matte stone, and warm neutrals. Clean lines with organic materials.",
-    palette: ["#C9A87A", "#DDD0BB", "#7A6A55", "#EDE6D6"],
+    palette: ["#C9A87A", "#DDD0BB", "#7A6A55"],
     categories: ["wood", "counterTop", "stone"],
     keywords: ["walnut", "oak", "warm", "matte", "natural"],
   },
