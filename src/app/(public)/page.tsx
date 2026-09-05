@@ -94,37 +94,36 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Hero right - 2027 trends article card */}
-            <Link href="/blog/2027-interior-design-trends" style={{ textDecoration: "none", display: "block" }}>
+            {/* Hero right - project photo */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               <div style={{
-                border: "1px solid var(--pub-line)", borderRadius: 2, overflow: "hidden",
-                background: "#fff",
+                borderRadius: 2, overflow: "hidden",
+                aspectRatio: "4/3", position: "relative",
               }}>
-                <div style={{ position: "relative", width: "100%", aspectRatio: "16/9" }}>
-                  <Image
-                    src="/blog-2027-cover.png"
-                    alt="2027 Interior Design Trends by US Floor Design Center"
-                    fill
-                    priority
-                    style={{ objectFit: "cover" }}
-                  />
-                </div>
-                <div style={{ padding: "22px 24px 24px" }}>
-                  <div style={{ fontSize: 11, color: "var(--pub-brass)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 10 }}>
-                    2027 Design Forecast
-                  </div>
-                  <p style={{ fontFamily: "var(--pub-serif)", fontSize: 20, color: "var(--pub-ink)", lineHeight: 1.35, marginBottom: 10 }}>
-                    2027 Home Design Trends
-                  </p>
-                  <p style={{ fontSize: 14, color: "var(--pub-muted)", lineHeight: 1.65, margin: 0 }}>
-                    The best homes of 2027 will feel less staged and more personal - comfortable, tactile, and built for how you actually live.
-                  </p>
-                  <div style={{ marginTop: 18, fontSize: 13, color: "var(--pub-forest)", fontWeight: 500 }}>
-                    Read the full forecast →
-                  </div>
-                </div>
+                <Image
+                  src="/project-modern-kitchen.png"
+                  alt="Modern kitchen remodel by US Floor Design Center"
+                  fill
+                  priority
+                  style={{ objectFit: "cover" }}
+                />
               </div>
-            </Link>
+              {/* Compact article link below photo */}
+              <Link href="/blog/2027-interior-design-trends" style={{
+                textDecoration: "none", display: "flex", alignItems: "center",
+                gap: 14, padding: "14px 16px",
+                border: "1px solid var(--pub-line)", borderRadius: 2, background: "#fff",
+              }}>
+                <div style={{ fontSize: 11, color: "var(--pub-brass)", textTransform: "uppercase", letterSpacing: "0.1em", flexShrink: 0 }}>
+                  2027 Forecast
+                </div>
+                <div style={{ width: 1, height: 28, background: "var(--pub-line)", flexShrink: 0 }} />
+                <div style={{ fontFamily: "var(--pub-serif)", fontSize: 15, color: "var(--pub-ink)", lineHeight: 1.3, flex: 1 }}>
+                  2027 Home Design Trends
+                </div>
+                <div style={{ fontSize: 13, color: "var(--pub-forest)", flexShrink: 0 }}>Read →</div>
+              </Link>
+            </div>
           </div>
         </div>
       </section>

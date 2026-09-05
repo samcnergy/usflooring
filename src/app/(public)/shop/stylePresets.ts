@@ -4,6 +4,7 @@ export const STYLE_PRESETS: Record<string, {
   palette: string[];
   categories: string[];
   keywords: string[];
+  image: string;
 }> = {
   "warm-modern": {
     label: "Warm Modern",
@@ -11,6 +12,7 @@ export const STYLE_PRESETS: Record<string, {
     palette: ["#C9A87A", "#DDD0BB", "#7A6A55"],
     categories: ["wood", "counterTop", "stone"],
     keywords: ["walnut", "oak", "warm", "matte", "natural"],
+    image: "/style-warm-modern.png",
   },
   "coastal-contemporary": {
     label: "Coastal Contemporary",
@@ -18,6 +20,7 @@ export const STYLE_PRESETS: Record<string, {
     palette: ["#C8D8DC", "#E8E4DF", "#A8B8B8", "#F2EDE8", "#1B3A5C"],
     categories: ["tile", "ceramic", "vinyl", "stone"],
     keywords: ["white", "light", "sand", "soft", "coastal"],
+    image: "/style-coastal-contemporary.png",
   },
   "organic-modern": {
     label: "Organic Modern",
@@ -25,6 +28,7 @@ export const STYLE_PRESETS: Record<string, {
     palette: ["#B8A890", "#8C7868", "#D4C8B0", "#6A5A48"],
     categories: ["wood", "stone", "tile", "counterTop"],
     keywords: ["earthy", "raw", "linen", "terracotta", "natural stone"],
+    image: "/style-organic-modern.png",
   },
   "transitional": {
     label: "Transitional",
@@ -32,6 +36,7 @@ export const STYLE_PRESETS: Record<string, {
     palette: ["#C8C0B0", "#8C7A6A", "#E0D8CC", "#5A5048"],
     categories: ["wood", "tile", "carpet", "counterTop"],
     keywords: ["transitional", "classic", "balanced", "neutral"],
+    image: "/style-transitional.png",
   },
   "modern-mediterranean": {
     label: "Modern Mediterranean",
@@ -39,6 +44,7 @@ export const STYLE_PRESETS: Record<string, {
     palette: ["#C07848", "#D8B890", "#8C5830", "#EDD8B8"],
     categories: ["tile", "ceramic", "stone", "counterTop"],
     keywords: ["terracotta", "zellige", "warm", "handcrafted", "mediterranean"],
+    image: "/style-modern-mediterranean.png",
   },
   "traditional": {
     label: "Traditional",
@@ -46,6 +52,7 @@ export const STYLE_PRESETS: Record<string, {
     palette: ["#8C7058", "#C4A880", "#6A5040", "#E0D0B8"],
     categories: ["wood", "cabinet", "carpet", "counterTop"],
     keywords: ["traditional", "raised panel", "cherry", "marble", "formal"],
+    image: "/style-traditional.png",
   },
   "minimalist": {
     label: "Minimalist",
@@ -53,6 +60,7 @@ export const STYLE_PRESETS: Record<string, {
     palette: ["#D0CCCA", "#A8A8A4", "#E8E8E6", "#6C6C6A", "#1A1A1A"],
     categories: ["ceramic", "tile", "vinyl", "stone"],
     keywords: ["concrete", "gray", "large format", "minimal", "clean"],
+    image: "/style-minimalist.png",
   },
   "california-casual": {
     label: "California Casual",
@@ -60,5 +68,6 @@ export const STYLE_PRESETS: Record<string, {
     palette: ["#B8C8A0", "#D8D0B8", "#8A9E78", "#EDE8DC"],
     categories: ["vinyl", "wood", "tile", "stone"],
     keywords: ["california", "outdoor", "LVP", "wood look", "casual", "indoor outdoor"],
+    image: "/style-california-casual.png",
   },
 };

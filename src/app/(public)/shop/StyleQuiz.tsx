@@ -39,23 +39,42 @@ export function StyleQuiz() {
               onMouseLeave={() => setHovered(null)}
               style={{
                 border: `1px solid ${hovered === key ? "var(--pub-ink)" : "var(--pub-line)"}`,
-                borderRadius: 2, padding: "24px 22px", cursor: "pointer",
-                background: hovered === key ? "rgba(30,35,32,0.04)" : "transparent",
-                textAlign: "left", transition: "border-color .15s, background .15s",
+                borderRadius: 2, cursor: "pointer",
+                background: "transparent",
+                textAlign: "left", transition: "border-color .15s",
+                overflow: "hidden", padding: 0,
               }}
             >
-              {/* Palette dots */}
-              <div style={{ display: "flex", gap: 6, marginBottom: 14 }}>
-                {preset.palette.map((c) => (
-                  <div key={c} style={{ width: 14, height: 14, borderRadius: "50%", background: c }} />
-                ))}
+              {/* Style photo */}
+              <div style={{
+                width: "100%", aspectRatio: "16/10", overflow: "hidden",
+                position: "relative",
+              }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={preset.image}
+                  alt={preset.label}
+                  style={{
+                    width: "100%", height: "100%", objectFit: "cover",
+                    transition: "transform .3s ease",
+                    transform: hovered === key ? "scale(1.04)" : "scale(1)",
+                  }}
+                />
               </div>
-              <div style={{ fontFamily: "var(--pub-serif)", fontSize: 19, color: "var(--pub-ink)", marginBottom: 6 }}>
-                {preset.label}
+              <div style={{ padding: "16px 18px 20px" }}>
+                {/* Palette dots */}
+                <div style={{ display: "flex", gap: 5, marginBottom: 10 }}>
+                  {preset.palette.map((c) => (
+                    <div key={c} style={{ width: 12, height: 12, borderRadius: "50%", background: c, flexShrink: 0 }} />
+                  ))}
+                </div>
+                <div style={{ fontFamily: "var(--pub-serif)", fontSize: 17, color: "var(--pub-ink)", marginBottom: 5 }}>
+                  {preset.label}
+                </div>
+                <p style={{ fontSize: 12, color: "var(--pub-muted)", lineHeight: 1.55, margin: 0 }}>
+                  {preset.description}
+                </p>
               </div>
-              <p style={{ fontSize: 13, color: "var(--pub-muted)", lineHeight: 1.55, margin: 0 }}>
-                {preset.description}
-              </p>
             </button>
           ))}
         </div>
