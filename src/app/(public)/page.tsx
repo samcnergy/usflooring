@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 
 export const metadata = {
   title: "Kitchen, Bathroom and Flooring Remodeling | US Floor Design Center",
@@ -96,16 +95,12 @@ export default function HomePage() {
 
             {/* Hero right - project photo */}
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-              <div style={{
-                borderRadius: 2, overflow: "hidden",
-                aspectRatio: "4/3", position: "relative",
-              }}>
-                <Image
+              <div style={{ borderRadius: 2, overflow: "hidden", height: 480 }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
                   src="/project-modern-kitchen.png"
                   alt="Modern kitchen remodel by US Floor Design Center"
-                  fill
-                  priority
-                  style={{ objectFit: "cover" }}
+                  style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
                 />
               </div>
               {/* Compact article link below photo */}
