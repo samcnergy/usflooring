@@ -179,52 +179,42 @@ export default function InvestorsPage() {
       {/* ============================================================
           SECTION 1: HERO
       ============================================================ */}
-      <section
-        style={{
-          position: "relative",
-          height: 680,
-          overflow: "hidden",
-          display: "flex",
-          alignItems: "stretch",
-        }}
-      >
-        {/* Background image */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/investor-hero.png"
-          alt="Completed renovation by US Floor Design Center"
-          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 40%" }}
-        />
-
-        {/* Top gradient overlay for nav legibility */}
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            height: 140,
-            background:
-              "linear-gradient(to bottom, rgba(10,10,10,0.60) 0%, transparent 100%)",
-            zIndex: 1,
-          }}
-        />
-
-        {/* Scrim panel */}
-        <div
-          style={{
-            position: "relative",
-            zIndex: 2,
-            width: "42%",
-            background: "var(--surface-scrim)",
-            padding: "var(--s-7)",
-            borderBottom: "1px solid var(--gold)",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            gap: "var(--s-5)",
-          }}
-        >
+      <style>{`
+        .investor-hero { display: flex; min-height: 600px; }
+        .investor-hero-panel {
+          width: 50%;
+          background: var(--surface-scrim);
+          padding: var(--s-7);
+          border-bottom: 1px solid var(--gold);
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          gap: var(--s-5);
+          box-sizing: border-box;
+        }
+        .investor-hero-image {
+          flex: 1;
+          position: relative;
+          overflow: hidden;
+          min-height: 320px;
+        }
+        .investor-hero-image img {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center 20%;
+        }
+        @media (max-width: 768px) {
+          .investor-hero { flex-direction: column; }
+          .investor-hero-panel { width: 100%; padding: var(--s-6); }
+          .investor-hero-image { min-height: 280px; flex: none; }
+        }
+      `}</style>
+      <section className="investor-hero">
+        {/* Text panel */}
+        <div className="investor-hero-panel">
           {/* Red rule */}
           <div style={{ width: 48, height: 2, background: "var(--red)" }} />
 
@@ -287,6 +277,12 @@ export default function InvestorsPage() {
               REQUEST A FEASIBILITY STUDY
             </Link>
           </div>
+        </div>
+
+        {/* Photo — right half */}
+        <div className="investor-hero-image">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/investor-hero.png" alt="Completed renovation by US Floor Design Center" />
         </div>
       </section>
 
