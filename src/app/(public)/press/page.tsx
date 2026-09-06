@@ -648,7 +648,7 @@ export default function PressPage() {
                 Parham Shariat
               </h3>
               <p style={{ fontSize: "var(--t-body)", lineHeight: 1.55, color: "var(--text-muted)", margin: 0 }}>
-                Parham Shariat acquired US Floor Design Center in 2025. He spent eleven years as a real estate broker and worked in institutional real estate and private equity in Dubai before returning to Southern California. He runs the showroom, the build operation, and the company's investor services.
+                Parham Shariat has led US Floor Design Center since 2025. He spent eleven years as a real estate broker and worked in institutional real estate and private equity in Dubai before returning to Southern California. He runs the showroom, the build operation, and the company's investor services.
               </p>
             </div>
             {/* Shirin */}

@@ -69,7 +69,7 @@ export default function AboutPage() {
               maxWidth: "24ch",
               marginBottom: "var(--s-5)",
             }}>
-              We acquired a 30-year Orange County showroom in 2025, kept what worked, and built the systems it never had.
+              A 30-year Orange County showroom, with the crews and relationships that built it, and the systems it never had.
             </h1>
             <p style={{ fontSize: "var(--t-body-lg)", color: "var(--text-muted)", lineHeight: 1.35, maxWidth: "56ch" }}>
               US Floor Design Center has been remodeling kitchens, bathrooms, and floors in Orange County for three decades. The experienced crews, the supplier relationships, the showroom - all intact. The infrastructure around it, rebuilt from scratch.
@@ -138,7 +138,7 @@ export default function AboutPage() {
                 The business had one significant gap. Every quote, every invoice, every job order was on paper. There was no CRM, no digital record of 30 years of customers, no online presence worth mentioning, and no way to measure where business was coming from. The operation was strong. The infrastructure around it was not.
               </p>
               <p style={{ fontSize: "var(--t-body-lg)", color: "var(--text-muted)", lineHeight: 1.35 }}>
-                We acquired the business in 2025. The sales team and installation crews stayed. The relationships stayed. We added the systems.
+                Since 2025, Parham Shariat and Shirin Salamat have run the business. The sales team and installation crews stayed. The relationships stayed. They added the systems.
               </p>
             </div>
 
@@ -151,7 +151,7 @@ export default function AboutPage() {
                 What we built before we walked in
               </h2>
               <p style={{ fontSize: "var(--t-body-lg)", color: "var(--text-muted)", lineHeight: 1.35, marginBottom: "var(--s-4)" }}>
-                Before the acquisition closed, we built the order-management platform the business runs on. One entry creates the invoice, the work order, the installer's daily order, and the vendor purchase order. Thirty years of paper invoices are now a searchable customer database.
+                Before joining the business in 2025, we built the order-management platform the business now runs on. One entry creates the invoice, the work order, the installer's daily order, and the vendor purchase order. Thirty years of paper invoices are now a searchable customer database.
               </p>
               <p style={{ fontSize: "var(--t-body-lg)", color: "var(--text-muted)", lineHeight: 1.35, marginBottom: "var(--s-4)" }}>
                 We rebuilt the website as an actual lead channel and product catalog, not a placeholder. We added structured inventory, quote tracking, and a sales process the team can follow consistently.
@@ -189,10 +189,10 @@ export default function AboutPage() {
                 <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 400, fontSize: "var(--t-h3)", color: "var(--text)", marginBottom: "var(--s-5)" }}>Parham Shariat</h3>
 
                 <p style={{ fontSize: "var(--t-body-lg)", color: "var(--text-muted)", lineHeight: 1.35, marginBottom: "var(--s-4)" }}>
-                  Before acquiring US Floor, Parham spent four-plus years as a senior project manager at Millennium Tile and Marble, where he managed installation projects across Southern California. Before that, between 2003 and 2012, he was involved in purchasing and renovating residential properties for sale - which is how he came to understand what a remodel actually costs, what takes time, and where things go wrong.
+                  Before joining US Floor in 2025, Parham spent four-plus years as a senior project manager at Millennium Tile and Marble, where he managed installation projects across Southern California. Before that, between 2003 and 2012, he was involved in purchasing and renovating residential properties for sale - which is how he came to understand what a remodel actually costs, what takes time, and where things go wrong.
                 </p>
                 <p style={{ fontSize: "var(--t-body-lg)", color: "var(--text-muted)", lineHeight: 1.35, marginBottom: "var(--s-4)" }}>
-                  He is also a systems builder. He built the order-management and e-commerce platform that runs this business before the acquisition closed. He has 20-plus years of executive and engineering experience, including managing mission-critical systems for a major healthcare network.
+                  He is also a systems builder. He built the order-management and e-commerce platform that runs this business before joining in 2025. He has 20-plus years of executive and engineering experience, including managing mission-critical systems for a major healthcare network.
                 </p>
                 <p style={{ fontSize: "var(--t-body-lg)", color: "var(--text-muted)", lineHeight: 1.35, marginBottom: "var(--s-6)" }}>
                   He is a published author of five books, including a book on generative engine optimization - the discipline of making businesses visible in AI-generated search results. He holds AI certifications from the Wharton School.

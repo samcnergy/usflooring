@@ -16,7 +16,7 @@ const BOILERPLATE = [
   {
     id: "long",
     label: "Long — 104 words",
-    text: "US Floor Design Center is a design and build showroom in Rancho Santa Margarita, California, serving homeowners and property investors across Orange County. The original business opened in the early 1990s and has completed more than 800 projects. Parham Shariat and Shirin Salamat acquired it in 2025 and kept the crews and supplier relationships in place while adding the order and scheduling systems the business had not previously had.\n\nThe company handles kitchen, bath and flooring renovations under one contract, covering design, material selection, procurement, permitting and installation with its own crews. It also produces renovation feasibility studies for investors before a property purchase.",
+    text: "US Floor Design Center is a design and build showroom in Rancho Santa Margarita, California, serving homeowners and property investors across Orange County. The business has operated in Orange County since the early 1990s and has completed more than 800 projects. Parham Shariat and Shirin Salamat have led the business since 2025, keeping the crews and supplier relationships in place while adding the order and scheduling systems the business had not previously had.\n\nThe company handles kitchen, bath and flooring renovations under one contract, covering design, material selection, procurement, permitting and installation with its own crews. It also produces renovation feasibility studies for investors before a property purchase.",
   },
 ];
 
