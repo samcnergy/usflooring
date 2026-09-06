@@ -68,8 +68,8 @@ export default function AboutPage() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 0, padding: "32px 0" }}>
             {[
               { n: "30+", label: "Years in Orange County" },
-              { n: "$4M", label: "Annual gross sales" },
-              { n: "1", label: "Showroom, RSM" },
+              { n: "800+", label: "Projects completed" },
+              { n: "1", label: "Showroom, Orange County" },
               { n: "Design + build", label: "One team, start to finish" },
             ].map((item, i) => (
               <div key={item.n} style={{
