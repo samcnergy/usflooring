@@ -113,9 +113,15 @@ export default function PublicNav() {
           <Link href="/" style={{ textDecoration: "none", display: "block" }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={transparent ? "/logo-knockout.svg" : "/logo.png"}
+              src="/logo.png"
               alt="US Floor Design Center"
-              style={{ height: scrolled ? 36 : 48, width: "auto", transition: `height var(--dur) var(--ease)`, display: "block" }}
+              style={{
+                height: scrolled ? 36 : 48,
+                width: "auto",
+                display: "block",
+                transition: `height var(--dur) var(--ease), filter var(--dur) var(--ease)`,
+                filter: transparent ? "brightness(0) invert(1)" : "none",
+              }}
             />
           </Link>
 
