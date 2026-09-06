@@ -119,8 +119,7 @@ export default function PublicNav() {
                 height: scrolled ? 36 : 48,
                 width: "auto",
                 display: "block",
-                transition: `height var(--dur) var(--ease), filter var(--dur) var(--ease)`,
-                filter: transparent ? "brightness(0) invert(1)" : "none",
+                transition: `height var(--dur) var(--ease)`,
               }}
             />
           </Link>
@@ -134,7 +133,7 @@ export default function PublicNav() {
                   key={href}
                   href={href}
                   className={`pub-nav-link${active ? " active" : ""}`}
-                  style={{ color: transparent ? "var(--text-invert)" : "var(--text)" }}
+                  style={{ color: "var(--text)" }}
                 >
                   {label}
                 </Link>
