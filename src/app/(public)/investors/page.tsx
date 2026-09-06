@@ -191,7 +191,7 @@ export default function InvestorsPage() {
       >
         {/* Background image */}
         <Image
-          src="/kitchen-flooring.png"
+          src="/investor-hero.png"
           alt="Completed renovation by US Floor Design Center"
           fill
           style={{ objectFit: "cover", objectPosition: "center 40%" }}
