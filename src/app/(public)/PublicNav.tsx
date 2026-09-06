@@ -105,8 +105,7 @@ export default function PublicNav() {
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            height: scrolled ? 60 : 80,
-            transition: `height var(--dur) var(--ease)`,
+            height: 80,
           }}
         >
           {/* Logo */}
@@ -116,10 +115,9 @@ export default function PublicNav() {
               src="/logo.png"
               alt="US Floor Design Center"
               style={{
-                height: scrolled ? 36 : 48,
+                height: 48,
                 width: "auto",
                 display: "block",
-                transition: `height var(--dur) var(--ease)`,
               }}
             />
           </Link>
