@@ -60,7 +60,6 @@ const FACTS: [string, string][] = [
   ["Legal and trade name", "US Floor Design Center"],
   ["Former name", "US Floor, Kitchen and Bath (retired)"],
   ["Founded", "Early 1990s"],
-  ["Current ownership since", "2025"],
   ["Owner and Operator", "Parham Shariat"],
   ["Co-Owner", "Shirin Salamat"],
   ["Showroom", "30092 Santa Margarita Pkwy, Suite G, Rancho Santa Margarita, CA 92688"],
@@ -648,7 +647,7 @@ export default function PressPage() {
                 Parham Shariat
               </h3>
               <p style={{ fontSize: "var(--t-body)", lineHeight: 1.55, color: "var(--text-muted)", margin: 0 }}>
-                Parham Shariat has led US Floor Design Center since 2025. He spent eleven years as a real estate broker and worked in institutional real estate and private equity in Dubai before returning to Southern California. He runs the showroom, the build operation, and the company's investor services.
+                Parham Shariat leads US Floor Design Center. He spent eleven years as a real estate broker and worked in institutional real estate and private equity in Dubai before returning to Southern California. He runs the showroom, the build operation, and the company's investor services.
               </p>
             </div>
             {/* Shirin */}
