@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
-import InvestorFAQ, { FAQ_ITEMS } from "./InvestorFAQ";
+import InvestorFAQ from "./InvestorFAQ";
+import { FAQ_ITEMS } from "./faqData";
 import InvestorForm from "./InvestorForm";
 
 export const metadata = {
