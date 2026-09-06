@@ -135,6 +135,12 @@ export default function AboutPage() {
 
               {/* Parham */}
               <div>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/parham-shariat.png"
+                  alt="Parham Shariat - Owner and Operator, US Floor Design Center"
+                  style={{ width: "100%", maxWidth: 280, height: 340, objectFit: "cover", objectPosition: "center top", display: "block", marginBottom: 24, borderRadius: 2 }}
+                />
                 <div style={{ fontSize: 11, color: "var(--pub-muted)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>Owner and Operator</div>
                 <h3 style={{ fontFamily: "var(--pub-serif)", fontWeight: 400, fontSize: 26, color: "var(--pub-ink)", marginBottom: 20 }}>Parham Shariat</h3>
 
@@ -167,6 +173,12 @@ export default function AboutPage() {
 
               {/* Shirin */}
               <div>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/shirin-salamat.png"
+                  alt="Shirin Salamat - Co-Owner, US Floor Design Center"
+                  style={{ width: "100%", maxWidth: 280, height: 340, objectFit: "cover", objectPosition: "center top", display: "block", marginBottom: 24, borderRadius: 2 }}
+                />
                 <div style={{ fontSize: 11, color: "var(--pub-muted)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>Co-Owner</div>
                 <h3 style={{ fontFamily: "var(--pub-serif)", fontWeight: 400, fontSize: 26, color: "var(--pub-ink)", marginBottom: 20 }}>Shirin Salamat</h3>
 

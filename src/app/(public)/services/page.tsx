@@ -82,6 +82,27 @@ export default function ServicesPage() {
         </div>
       </div>
 
+      {/* Full-bleed kitchen photo */}
+      <div style={{ position: "relative", height: 480, overflow: "hidden" }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/project-modern-kitchen.png"
+          alt="Modern kitchen remodel by US Floor Design Center"
+          style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 55%", display: "block" }}
+        />
+        <div style={{
+          position: "absolute", inset: 0,
+          background: "linear-gradient(to bottom, rgba(30,35,32,0.15) 0%, rgba(30,35,32,0.55) 100%)",
+          display: "flex", alignItems: "flex-end",
+        }}>
+          <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px 48px", width: "100%" }}>
+            <p style={{ fontFamily: "var(--pub-serif)", fontSize: 22, color: "#F1EEE7", lineHeight: 1.3, maxWidth: "32ch", margin: 0 }}>
+              From the first sketch to the finished room - one team, one point of contact.
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Four service sections */}
       <div style={{ background: "#fff" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
