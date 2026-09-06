@@ -64,8 +64,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: false, error: "missing_fields", fields: missing }, { status: 422 });
   }
 
+  const from = process.env.RESEND_FROM_EMAIL ?? "US Floor Design Center <noreply@usfloordesign.com>";
+
   const { error } = await resend.emails.send({
-    from: "US Floor Design Center <noreply@usfloordesign.com>",
+    from,
     to: "info@usfloordesign.com",
     replyTo: data.email,
     subject: `Investor inquiry: ${data.full_name} — ${data.target_area}`,
