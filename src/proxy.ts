@@ -46,8 +46,10 @@ export async function proxy(req: NextRequest) {
     path.startsWith("/blog") ||
     path.startsWith("/faq") ||
     path.startsWith("/about") ||
+    path.startsWith("/investors") ||
     path.startsWith("/_next") ||
-    path.startsWith("/api/auth");
+    path.startsWith("/api/auth") ||
+    path.startsWith("/api/investors");
 
   if (isPublic) return res;
 
