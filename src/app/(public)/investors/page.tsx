@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import InvestorFAQ from "./InvestorFAQ";
 import { FAQ_ITEMS } from "./faqData";
 import InvestorForm from "./InvestorForm";
@@ -190,12 +189,11 @@ export default function InvestorsPage() {
         }}
       >
         {/* Background image */}
-        <Image
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
           src="/investor-hero.png"
           alt="Completed renovation by US Floor Design Center"
-          fill
-          style={{ objectFit: "cover", objectPosition: "center 40%" }}
-          priority
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 40%" }}
         />
 
         {/* Top gradient overlay for nav legibility */}
