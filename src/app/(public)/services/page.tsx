@@ -104,8 +104,8 @@ export default function ServicesPage() {
                   {s.number}
                 </div>
                 <div style={{
-                  fontSize: 11, fontWeight: 600, textTransform: "uppercase",
-                  letterSpacing: "0.1em", color: "var(--pub-brass)", marginBottom: 14,
+                  fontFamily: "var(--pub-serif)", fontSize: 64, fontWeight: 400,
+                  color: "var(--pub-ink)", lineHeight: 1, marginBottom: 20,
                 }}>
                   {s.label}
                 </div>
