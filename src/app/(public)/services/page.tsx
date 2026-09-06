@@ -71,7 +71,7 @@ export default function ServicesPage() {
             <div style={{ fontSize: 13, color: "var(--pub-brass)", marginBottom: 16 }}>Services</div>
             <h1 style={{
               fontFamily: "var(--pub-serif)", fontWeight: 400, fontSize: 48,
-              lineHeight: 1.15, color: "var(--pub-ink)", maxWidth: "18ch", marginBottom: 20,
+              lineHeight: 1.15, color: "var(--pub-ink)", whiteSpace: "nowrap", marginBottom: 20,
             }}>
               Design. Remodel. Delivery. Warranty.
             </h1>
