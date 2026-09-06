@@ -86,8 +86,8 @@ export default function ServicesPage() {
       <div style={{ position: "relative", height: 480, overflow: "hidden" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/project-modern-kitchen.png"
-          alt="Modern kitchen remodel by US Floor Design Center"
+          src="/services-kitchen.png"
+          alt="Kitchen remodel by US Floor Design Center"
           style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 55%", display: "block" }}
         />
         <div style={{
