@@ -561,17 +561,6 @@ export default function InvestorsPage() {
                 >
                   COST OF STUDY
                 </div>
-                {/* TODO [DECIDE]: Study pricing -- free or fee-credited. See open decisions in INVESTOR-PAGE.md. */}
-                <p
-                  style={{
-                    color: "var(--red)",
-                    fontWeight: 700,
-                    fontSize: "var(--t-body)",
-                    margin: "0 0 var(--s-2)",
-                  }}
-                >
-                  [TO BE DETERMINED]
-                </p>
                 <p
                   style={{
                     fontSize: "var(--t-body)",
@@ -580,7 +569,7 @@ export default function InvestorsPage() {
                     margin: 0,
                   }}
                 >
-                  Contact us to discuss study pricing for your specific situation.
+                  The study is free. We produce it because we want the renovation, and because we would rather spend a day on a walkthrough than build a project that should not have been bought.
                 </p>
               </div>
             </div>

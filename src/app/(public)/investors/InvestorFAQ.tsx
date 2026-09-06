@@ -9,7 +9,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "What does the feasibility study cost?",
-    a: "[TODO: Set study pricing before publishing. Two options: free or fee-credited. See open decisions in INVESTOR-PAGE.md.]",
+    a: "The study is free. We produce it because we want the renovation, and because we would rather spend a day on a walkthrough than build a project that should not have been bought.",
   },
   {
     q: "What happens if the numbers do not work?",
@@ -29,7 +29,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "Do you work outside Orange County?",
-    a: "[TODO: Confirm service area radius before publishing.]",
+    a: "We work within Orange County. If your property is just outside the county line, contact us and we will let you know whether we can take it on.",
   },
   {
     q: "Can you manage the property after the renovation?",
