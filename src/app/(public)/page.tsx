@@ -56,6 +56,8 @@ export default function HomePage() {
           alt="Modern kitchen remodel by US Floor Design Center"
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 40%" }}
         />
+        {/* Nav legibility gradient — darkens the top of the hero behind the sticky nav */}
+        <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 140, background: "linear-gradient(to bottom, rgba(10,10,10,0.60) 0%, transparent 100%)", pointerEvents: "none" }} />
         <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center" }}>
           <div style={{ maxWidth: "var(--container)", width: "100%", margin: "0 auto", padding: "0 var(--gutter)" }}>
             <div style={{

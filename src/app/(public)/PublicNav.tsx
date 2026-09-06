@@ -110,26 +110,13 @@ export default function PublicNav() {
           }}
         >
           {/* Logo */}
-          <Link href="/" style={{ textDecoration: "none", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 0 }}>
+          <Link href="/" style={{ textDecoration: "none", display: "block" }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/logo.png"
+              src={transparent ? "/logo-knockout.svg" : "/logo.png"}
               alt="US Floor Design Center"
-              style={{ height: scrolled ? 36 : 48, width: "auto", transition: `height var(--dur) var(--ease)` }}
+              style={{ height: scrolled ? 36 : 48, width: "auto", transition: `height var(--dur) var(--ease)`, display: "block" }}
             />
-            <div style={{ borderTop: `1px solid var(--gold)`, marginTop: 4, paddingTop: 3, width: "100%" }}>
-              <span style={{
-                fontSize: 10,
-                fontFamily: "var(--font-body)",
-                fontWeight: 700,
-                letterSpacing: "0.12em",
-                textTransform: "uppercase",
-                color: transparent ? "var(--text-invert-muted)" : "var(--text-muted)",
-                transition: `color var(--dur) var(--ease)`,
-              }}>
-                Design Center
-              </span>
-            </div>
           </Link>
 
           {/* Nav links */}

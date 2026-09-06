@@ -101,9 +101,9 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
           <div>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/logo.png"
+              src="/logo-knockout.svg"
               alt="US Floor Design Center"
-              style={{ height: 48, width: "auto", marginBottom: "var(--s-5)", filter: "brightness(0) invert(1)" }}
+              style={{ height: 48, width: "auto", marginBottom: "var(--s-5)" }}
             />
             <p style={{
               fontSize: "var(--t-small)",
