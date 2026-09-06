@@ -80,13 +80,13 @@ export default function TradePage() {
 
   const inputStyle: React.CSSProperties = {
     width: "100%", padding: "12px 14px",
-    border: "1px solid var(--pub-line)", borderRadius: 2,
-    fontSize: 15, color: "var(--pub-ink)", background: "#fff",
-    fontFamily: "var(--pub-sans)", outline: "none", boxSizing: "border-box",
+    border: "1px solid var(--line)", borderRadius: 0,
+    fontSize: 15, color: "var(--text)", background: "#fff",
+    fontFamily: "var(--font-body)", outline: "none", boxSizing: "border-box",
   };
 
   const labelStyle: React.CSSProperties = {
-    display: "block", fontSize: 13, color: "var(--pub-ink)",
+    display: "block", fontSize: 13, color: "var(--text)",
     marginBottom: 6, fontWeight: 500,
   };
 
@@ -94,19 +94,19 @@ export default function TradePage() {
     <div>
 
       {/* Header */}
-      <div style={{ borderBottom: "1px solid var(--pub-line)", background: "var(--pub-stone)" }}>
+      <div style={{ borderBottom: "1px solid var(--line)", background: "var(--surface)" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
           <div style={{ padding: "64px 0 56px" }}>
-            <div style={{ fontSize: 13, color: "var(--pub-brass)", marginBottom: 16 }}>Trade portal</div>
+            <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 16 }}>Trade portal</div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "end" }}>
               <h1 style={{
-                fontFamily: "var(--pub-serif)", fontWeight: 400, fontSize: 48,
-                lineHeight: 1.15, color: "var(--pub-ink)", maxWidth: "14ch",
+                fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 48,
+                lineHeight: 1.15, color: "var(--text)", maxWidth: "14ch",
               }}>
                 Built for designers, builders, and contractors.
               </h1>
               <div>
-                <p style={{ fontSize: 16, color: "#4B4A45", lineHeight: 1.7, maxWidth: "42ch", marginBottom: 0 }}>
+                <p style={{ fontSize: 16, color: "var(--text-muted)", lineHeight: 1.45, maxWidth: "42ch", marginBottom: 0 }}>
                   A dedicated trade account gives you wholesale pricing, project management tools, a direct account manager, and faster access to the materials you order regularly.
                 </p>
               </div>
@@ -116,25 +116,25 @@ export default function TradePage() {
       </div>
 
       {/* Benefits */}
-      <div style={{ background: "#fff", borderBottom: "1px solid var(--pub-line)" }}>
+      <div style={{ background: "#fff", borderBottom: "1px solid var(--line)" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
           <div style={{ padding: "72px 0" }}>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: 64, alignItems: "start" }}>
               <div>
-                <div style={{ fontSize: 13, color: "var(--pub-brass)", marginBottom: 14 }}>What you get</div>
-                <h2 style={{ fontFamily: "var(--pub-serif)", fontWeight: 400, fontSize: 30, color: "var(--pub-ink)", lineHeight: 1.3 }}>
+                <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 14 }}>What you get</div>
+                <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 30, color: "var(--text)", lineHeight: 1.3 }}>
                   Six things your account includes from day one.
                 </h2>
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
                 {BENEFITS.map((b) => (
                   <div key={b.heading} style={{
-                    padding: "22px 24px", border: "1px solid var(--pub-line)", borderRadius: 2,
+                    padding: "22px 24px", border: "1px solid var(--line)", borderRadius: 0,
                   }}>
-                    <div style={{ fontFamily: "var(--pub-serif)", fontSize: 17, color: "var(--pub-ink)", marginBottom: 8, lineHeight: 1.35 }}>
+                    <div style={{ fontFamily: "var(--font-display)", fontSize: 17, color: "var(--text)", marginBottom: 8, lineHeight: 1.35 }}>
                       {b.heading}
                     </div>
-                    <p style={{ fontSize: 13, color: "var(--pub-muted)", lineHeight: 1.65, margin: 0 }}>
+                    <p style={{ fontSize: 13, color: "var(--text-muted)", lineHeight: 1.45, margin: 0 }}>
                       {b.body}
                     </p>
                   </div>
@@ -146,15 +146,15 @@ export default function TradePage() {
       </div>
 
       {/* Who qualifies */}
-      <div style={{ background: "var(--pub-stone)", borderBottom: "1px solid var(--pub-line)" }}>
+      <div style={{ background: "var(--surface)", borderBottom: "1px solid var(--line)" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
           <div style={{ padding: "72px 0", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "start" }}>
             <div>
-              <div style={{ fontSize: 13, color: "var(--pub-brass)", marginBottom: 14 }}>Eligibility</div>
-              <h2 style={{ fontFamily: "var(--pub-serif)", fontWeight: 400, fontSize: 30, color: "var(--pub-ink)", lineHeight: 1.3, marginBottom: 16 }}>
+              <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 14 }}>Eligibility</div>
+              <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 30, color: "var(--text)", lineHeight: 1.3, marginBottom: 16 }}>
                 Who can apply.
               </h2>
-              <p style={{ fontSize: 15, color: "var(--pub-muted)", lineHeight: 1.7, maxWidth: "36ch" }}>
+              <p style={{ fontSize: 15, color: "var(--text-muted)", lineHeight: 1.45, maxWidth: "36ch" }}>
                 We verify credentials before activating trade pricing. If you are not sure whether you qualify, apply and we will let you know.
               </p>
             </div>
@@ -163,10 +163,10 @@ export default function TradePage() {
                 <li key={item} style={{
                   display: "flex", gap: 12, alignItems: "center",
                   padding: "14px 18px", background: "#fff",
-                  border: "1px solid var(--pub-line)", borderRadius: 2,
-                  fontSize: 15, color: "var(--pub-ink)",
+                  border: "1px solid var(--line)", borderRadius: 0,
+                  fontSize: 15, color: "var(--text)",
                 }}>
-                  <span style={{ color: "var(--pub-brass)", flexShrink: 0 }}>&#10003;</span>
+                  <span style={{ color: "var(--text-muted)", flexShrink: 0 }}>&#10003;</span>
                   {item}
                 </li>
               ))}
@@ -180,16 +180,16 @@ export default function TradePage() {
         <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
           <div style={{ padding: "72px 0", display: "grid", gridTemplateColumns: "1fr 1.6fr", gap: 80, alignItems: "start" }}>
             <div>
-              <div style={{ fontSize: 13, color: "var(--pub-brass)", marginBottom: 14 }}>Apply</div>
-              <h2 style={{ fontFamily: "var(--pub-serif)", fontWeight: 400, fontSize: 30, color: "var(--pub-ink)", lineHeight: 1.3, marginBottom: 16 }}>
+              <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 14 }}>Apply</div>
+              <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 30, color: "var(--text)", lineHeight: 1.3, marginBottom: 16 }}>
                 Open a trade account.
               </h2>
-              <p style={{ fontSize: 15, color: "var(--pub-muted)", lineHeight: 1.7, maxWidth: "34ch", marginBottom: 24 }}>
+              <p style={{ fontSize: 15, color: "var(--text-muted)", lineHeight: 1.45, maxWidth: "34ch", marginBottom: 24 }}>
                 Submit the form and we will review your credentials within one business day. You will receive confirmation by email once your account is active.
               </p>
-              <div style={{ fontSize: 14, color: "var(--pub-muted)", lineHeight: 1.7 }}>
+              <div style={{ fontSize: 14, color: "var(--text-muted)", lineHeight: 1.45 }}>
                 Have questions first?<br />
-                <a href="mailto:info@usfloordesign.com?subject=Trade%20Account%20Question" style={{ color: "var(--pub-ink)" }}>
+                <a href="mailto:info@usfloordesign.com?subject=Trade%20Account%20Question" style={{ color: "var(--text)" }}>
                   Email us directly
                 </a>
               </div>
@@ -198,19 +198,19 @@ export default function TradePage() {
             <div>
               {status === "success" ? (
                 <div style={{
-                  padding: "40px 36px", border: "1px solid var(--pub-line)", borderRadius: 2,
+                  padding: "40px 36px", border: "1px solid var(--line)", borderRadius: 0,
                   textAlign: "center",
                 }}>
-                  <div style={{ fontFamily: "var(--pub-serif)", fontSize: 26, color: "var(--pub-ink)", marginBottom: 12, fontWeight: 400 }}>
+                  <div style={{ fontFamily: "var(--font-display)", fontSize: 26, color: "var(--text)", marginBottom: 12, fontWeight: 400 }}>
                     Application received.
                   </div>
-                  <p style={{ fontSize: 15, color: "var(--pub-muted)", lineHeight: 1.7, maxWidth: "36ch", margin: "0 auto 24px" }}>
+                  <p style={{ fontSize: 15, color: "var(--text-muted)", lineHeight: 1.45, maxWidth: "36ch", margin: "0 auto 24px" }}>
                     We will review your application and follow up by email within one business day.
                   </p>
                   <Link href="/" style={{
                     display: "inline-block",
-                    background: "var(--pub-forest)", color: "var(--pub-stone)",
-                    fontSize: 14, padding: "12px 22px", textDecoration: "none", borderRadius: 2,
+                    background: "var(--red)", color: "var(--text-invert)",
+                    fontSize: 14, padding: "12px 22px", textDecoration: "none", borderRadius: 0,
                   }}>
                     Back to home
                   </Link>
@@ -282,12 +282,12 @@ export default function TradePage() {
                     type="submit"
                     disabled={status === "submitting"}
                     style={{
-                      background: status === "submitting" ? "var(--pub-muted)" : "var(--pub-forest)",
-                      color: "var(--pub-stone)",
-                      border: "none", borderRadius: 2,
+                      background: status === "submitting" ? "var(--text-muted)" : "var(--red)",
+                      color: "var(--text-invert)",
+                      border: "none", borderRadius: 0,
                       fontSize: 15, padding: "15px 28px",
                       cursor: status === "submitting" ? "default" : "pointer",
-                      fontFamily: "var(--pub-sans)", width: "fit-content",
+                      fontFamily: "var(--font-body)", width: "fit-content",
                     }}
                   >
                     {status === "submitting" ? "Submitting…" : "Submit application"}

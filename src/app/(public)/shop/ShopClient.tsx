@@ -78,11 +78,11 @@ export function CategoryTabs({ current, counts, styleParam }: { current: string;
             key={tab.value}
             onClick={() => navigate(tab.value)}
             style={{
-              padding: "7px 14px", borderRadius: 2, fontSize: 13, cursor: "pointer",
-              border: `1px solid ${isActive ? "var(--pub-forest)" : "var(--pub-line)"}`,
-              background: isActive ? "var(--pub-forest)" : "transparent",
-              color: isActive ? "var(--pub-stone)" : "var(--pub-ink)",
-              fontFamily: "var(--pub-sans)", transition: "all .15s",
+              padding: "7px 14px", borderRadius: 0, fontSize: 13, cursor: "pointer",
+              border: `1px solid ${isActive ? "var(--red)" : "var(--line)"}`,
+              background: isActive ? "var(--red)" : "transparent",
+              color: isActive ? "var(--text-invert)" : "var(--text)",
+              fontFamily: "var(--font-body)", transition: "all .15s",
             }}
           >
             {tab.label}
@@ -116,9 +116,9 @@ export function SearchBox({ defaultValue }: { defaultValue: string }) {
       onChange={handleChange}
       placeholder="Search by brand, style, color..."
       style={{
-        padding: "10px 14px", borderRadius: 2, border: "1px solid var(--pub-line)",
+        padding: "10px 14px", borderRadius: 0, border: "1px solid var(--line)",
         fontSize: 14, width: "100%", maxWidth: 340, background: "#fff",
-        color: "var(--pub-ink)", fontFamily: "var(--pub-sans)", outline: "none",
+        color: "var(--text)", fontFamily: "var(--font-body)", outline: "none",
       }}
     />
   );
@@ -127,7 +127,7 @@ export function SearchBox({ defaultValue }: { defaultValue: string }) {
 export function MaterialGrid({ materials }: { materials: Material[] }) {
   if (materials.length === 0) {
     return (
-      <div style={{ textAlign: "center", padding: "80px 0", color: "var(--pub-muted)", fontSize: 15 }}>
+      <div style={{ textAlign: "center", padding: "80px 0", color: "var(--text-muted)", fontSize: 15 }}>
         No materials found. Try a different search or category.
       </div>
     );
@@ -152,7 +152,7 @@ function MaterialCard({ material: m }: { material: Material }) {
 
   return (
     <div style={{
-      border: "1px solid var(--pub-line)", borderRadius: 2, overflow: "hidden",
+      border: "1px solid var(--line)", borderRadius: 0, overflow: "hidden",
       background: "#fff", display: "flex", flexDirection: "column",
     }}>
       {/* Swatch */}
@@ -170,8 +170,8 @@ function MaterialCard({ material: m }: { material: Material }) {
         )}
         <span style={{
           position: "absolute", top: 12, left: 12, fontSize: 11,
-          background: "rgba(241,238,231,0.9)", color: "var(--pub-brass)",
-          padding: "3px 8px", borderRadius: 2, letterSpacing: "0.05em",
+          background: "var(--text-invert-muted)", color: "var(--text-muted)",
+          padding: "3px 8px", borderRadius: 0, letterSpacing: "0.05em",
           textTransform: "uppercase",
         }}>
           {label}
@@ -181,20 +181,20 @@ function MaterialCard({ material: m }: { material: Material }) {
       {/* Info */}
       <div style={{ padding: "16px 18px 20px", flex: 1, display: "flex", flexDirection: "column", gap: 4 }}>
         {m.brand && (
-          <p style={{ fontSize: 11, color: "var(--pub-muted)", textTransform: "uppercase", letterSpacing: "0.06em", margin: 0 }}>
+          <p style={{ fontSize: 11, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.06em", margin: 0 }}>
             {m.brand}
           </p>
         )}
-        <p style={{ fontFamily: "var(--pub-serif)", fontSize: 18, color: "var(--pub-ink)", margin: "2px 0 6px" }}>
+        <p style={{ fontFamily: "var(--font-display)", fontSize: 18, color: "var(--text)", margin: "2px 0 6px" }}>
           {m.style ?? m.name}
         </p>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 6, fontSize: 12, color: "var(--pub-muted)" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 6, fontSize: 12, color: "var(--text-muted)" }}>
           {m.color && <span>{m.color}</span>}
           {m.color && m.sizeSpec && <span>·</span>}
           {m.sizeSpec && <span>{m.sizeSpec}</span>}
         </div>
         <div style={{ marginTop: "auto", paddingTop: 14, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
-          <span style={{ fontSize: 13, color: "var(--pub-ink)", fontWeight: 500 }}>
+          <span style={{ fontSize: 13, color: "var(--text)", fontWeight: 500 }}>
             {m.defaultUnitPriceCents && m.defaultUnit
               ? formatCents(m.defaultUnitPriceCents, m.defaultUnit)
               : "Contact for pricing"}
@@ -202,8 +202,8 @@ function MaterialCard({ material: m }: { material: Material }) {
           <Link
             href={`/request-a-visit?material=${encodeURIComponent(m.name)}`}
             style={{
-              background: "var(--pub-forest)", color: "var(--pub-stone)", fontSize: 12,
-              padding: "8px 14px", textDecoration: "none", borderRadius: 2, whiteSpace: "nowrap",
+              background: "var(--red)", color: "var(--text-invert)", fontSize: 12,
+              padding: "8px 14px", textDecoration: "none", borderRadius: 0, whiteSpace: "nowrap",
             }}
           >
             Get pricing

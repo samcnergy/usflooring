@@ -9,22 +9,22 @@ export function StyleQuiz() {
 
   return (
     <div style={{ padding: "56px 0 0" }}>
-      <div style={{ fontSize: 13, color: "var(--pub-brass)", marginBottom: 14 }}>Find your style</div>
+      <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 14 }}>Find your style</div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1.8fr", gap: 48, alignItems: "start", marginBottom: 48 }}>
         <div>
           <h2 style={{
-            fontFamily: "var(--pub-serif)", fontWeight: 400, fontSize: 32,
-            color: "var(--pub-ink)", lineHeight: 1.25, marginBottom: 14,
+            fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 32,
+            color: "var(--text)", lineHeight: 1.25, marginBottom: 14,
           }}>
             What direction are you thinking?
           </h2>
-          <p style={{ fontSize: 15, color: "var(--pub-muted)", lineHeight: 1.65, maxWidth: "36ch" }}>
+          <p style={{ fontSize: 15, color: "var(--text-muted)", lineHeight: 1.45, maxWidth: "36ch" }}>
             Pick the style closest to what you have in mind. We will show you the materials that fit it best - and our designers can help narrow it down further in the showroom.
           </p>
           <a href="/shop?browse=1" onClick={(e) => { e.preventDefault(); router.push("/shop?browse=1"); }} style={{
             display: "inline-block", marginTop: 20,
-            fontSize: 13, color: "var(--pub-muted)",
-            borderBottom: "1px solid var(--pub-line)", paddingBottom: 2,
+            fontSize: 13, color: "var(--text-muted)",
+            borderBottom: "1px solid var(--line)", paddingBottom: 2,
             textDecoration: "none",
           }}>
             Skip - browse everything
@@ -38,8 +38,8 @@ export function StyleQuiz() {
               onMouseEnter={() => setHovered(key)}
               onMouseLeave={() => setHovered(null)}
               style={{
-                border: `1px solid ${hovered === key ? "var(--pub-ink)" : "var(--pub-line)"}`,
-                borderRadius: 2, cursor: "pointer",
+                border: `1px solid ${hovered === key ? "var(--text)" : "var(--line)"}`,
+                borderRadius: 0, cursor: "pointer",
                 background: "transparent",
                 textAlign: "left", transition: "border-color .15s",
                 overflow: "hidden", padding: 0,
@@ -65,10 +65,10 @@ export function StyleQuiz() {
                     <div key={c} style={{ width: 12, height: 12, borderRadius: "50%", background: c, flexShrink: 0 }} />
                   ))}
                 </div>
-                <div style={{ fontFamily: "var(--pub-serif)", fontSize: 17, color: "var(--pub-ink)", marginBottom: 5 }}>
+                <div style={{ fontFamily: "var(--font-display)", fontSize: 17, color: "var(--text)", marginBottom: 5 }}>
                   {preset.label}
                 </div>
-                <p style={{ fontSize: 12, color: "var(--pub-muted)", lineHeight: 1.55, margin: 0 }}>
+                <p style={{ fontSize: 12, color: "var(--text-muted)", lineHeight: 1.45, margin: 0 }}>
                   {preset.description}
                 </p>
               </div>
@@ -76,7 +76,7 @@ export function StyleQuiz() {
           ))}
         </div>
       </div>
-      <div style={{ borderBottom: "1px solid var(--pub-line)" }} />
+      <div style={{ borderBottom: "1px solid var(--line)" }} />
     </div>
   );
 }

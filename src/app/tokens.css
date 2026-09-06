@@ -1,0 +1,85 @@
+/*
+ * US Floor Design Center — Design tokens.
+ * Single source of truth. No value from this file may be duplicated elsewhere.
+ * Section 2 + 3 of DESIGN-BRIEF.md, verbatim.
+ */
+
+:root {
+  /* Ground */
+  --surface:         #FFFFFF;
+  --surface-alt:     #F4F5F6;               /* light gray band */
+  --surface-ink:     #0A0A0A;               /* near-black band */
+  --surface-scrim:   rgba(10, 10, 10, 0.82); /* hero panel over photography */
+
+  /* Text */
+  --text:            #1A1D1F;
+  --text-muted:      #6D7276;
+  --text-faint:      #8C8C8C;
+  --text-invert:     #FFFFFF;
+  --text-invert-muted: #B4B7BA;
+
+  /* Red */
+  --red:             #D03238;   /* primary: buttons, rules, active state */
+  --red-bright:      #DD0033;   /* sparing: badges, urgent CTA */
+  --red-deep:        #790000;   /* hover and pressed only */
+
+  /* Gold — hairlines and large numerals only */
+  --gold:            #B8912F;
+
+  /* Lines */
+  --line:            #DCDDDF;
+  --line-strong:     #1A1D1F;
+  --line-invert:     rgba(255, 255, 255, 0.16);
+
+  /* Radius. Zero. There is one value. */
+  --radius: 0px;
+
+  /* Spacing — 8px base */
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px; --s-4: 16px; --s-5: 24px;
+  --s-6: 32px; --s-7: 48px; --s-8: 64px; --s-9: 96px; --s-10: 128px;
+
+  --section-y:        96px;
+  --section-y-mobile: 56px;
+
+  --container: 1280px;
+  --gutter: 24px;
+
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  --dur: 150ms;
+
+  /* Typography families (resolved by next/font CSS variables) */
+  --font-display: var(--font-domine, 'Domine', Georgia, serif);
+  --font-body:    var(--font-source-sans-3, 'Source Sans 3', system-ui, sans-serif);
+
+  /* Type scale */
+  --t-hero:     64px;
+  --t-h1:       48px;
+  --t-h2:       42px;
+  --t-h3:       24px;
+  --t-body-lg:  18px;
+  --t-body:     16px;
+  --t-small:    14px;
+  --t-label:    13px;
+  --t-btn:      15px;
+  --t-numeral:  56px;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --t-hero:    38px;
+    --t-h1:      32px;
+    --t-h2:      28px;
+    --t-h3:      21px;
+    --t-body-lg: 17px;
+    --t-label:   12px;
+    --t-numeral: 40px;
+    --section-y: var(--section-y-mobile);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+  }
+}

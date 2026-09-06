@@ -50,12 +50,12 @@ export default function QuartzMaintenancePage() {
       </div>
 
       {/* Breadcrumb */}
-      <div style={{ background: "var(--pub-stone)", borderBottom: "1px solid var(--pub-line)" }}>
+      <div style={{ background: "var(--surface)", borderBottom: "1px solid var(--line)" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
-          <div style={{ padding: "14px 0", fontSize: 13, color: "var(--pub-muted)", display: "flex", gap: 8, alignItems: "center" }}>
+          <div style={{ padding: "14px 0", fontSize: 13, color: "var(--text-muted)", display: "flex", gap: 8, alignItems: "center" }}>
             <Link href="/blog" style={{ color: "inherit", textDecoration: "none" }}>Blog</Link>
             <span>/</span>
-            <span style={{ color: "var(--pub-ink)" }}>Quartz Countertop Maintenance Guide</span>
+            <span style={{ color: "var(--text)" }}>Quartz Countertop Maintenance Guide</span>
           </div>
         </div>
       </div>
@@ -67,13 +67,13 @@ export default function QuartzMaintenancePage() {
 
             {/* Article */}
             <article style={{ maxWidth: 680 }}>
-              <div style={{ fontSize: 12, color: "var(--pub-brass)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 16 }}>
+              <div style={{ fontSize: 12, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 16 }}>
                 Homeowner care guide - Orange County, California
               </div>
-              <h1 style={{ fontFamily: "var(--pub-serif)", fontWeight: 400, fontSize: 38, lineHeight: 1.2, color: "var(--pub-ink)", marginBottom: 16 }}>
+              <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 38, lineHeight: 1.2, color: "var(--text)", marginBottom: 16 }}>
                 Quartz Countertop Maintenance Guide
               </h1>
-              <p style={{ fontSize: 16, color: "var(--pub-muted)", lineHeight: 1.6, marginBottom: 40 }}>
+              <p style={{ fontSize: 16, color: "var(--text-muted)", lineHeight: 1.45, marginBottom: 40 }}>
                 Simple cleaning, heat protection and long-term care for engineered quartz surfaces
               </p>
 
@@ -83,8 +83,8 @@ export default function QuartzMaintenancePage() {
 
               {/* Short version callout */}
               <div style={callout}>
-                <div style={{ fontSize: 11, color: "var(--pub-brass)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>The short version</div>
-                <p style={{ fontSize: 15, color: "var(--pub-ink)", lineHeight: 1.7, margin: 0 }}>
+                <div style={{ fontSize: 11, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>The short version</div>
+                <p style={{ fontSize: 15, color: "var(--text)", lineHeight: 1.45, margin: 0 }}>
                   Clean with warm water, mild soap and a soft cloth. Rinse and dry, use cutting boards and trivets, avoid harsh chemicals and abrasive pads, and never seal or polish unless the exact manufacturer instructs you to do so.
                 </p>
               </div>
@@ -175,9 +175,9 @@ export default function QuartzMaintenancePage() {
                 { q: "Can I use abrasive scrub pads?", a: "Avoid aggressive pads and powders unless the manufacturer specifically approves one. Abrasives can create a dull area that stands out from the surrounding finish." },
                 { q: "Can quartz be used outdoors?", a: "Many quartz products are interior-only because UV exposure can alter the resin or color. Use outdoors only when the exact product is approved for it." },
               ].map((item) => (
-                <div key={item.q} style={{ borderBottom: "1px solid var(--pub-line)", padding: "20px 0" }}>
-                  <p style={{ fontWeight: 500, fontSize: 15, color: "var(--pub-ink)", marginBottom: 8 }}>{item.q}</p>
-                  <p style={{ fontSize: 15, color: "#4B4A45", lineHeight: 1.7, margin: 0 }}>{item.a}</p>
+                <div key={item.q} style={{ borderBottom: "1px solid var(--line)", padding: "20px 0" }}>
+                  <p style={{ fontWeight: 500, fontSize: 15, color: "var(--text)", marginBottom: 8 }}>{item.q}</p>
+                  <p style={{ fontSize: 15, color: "var(--text-muted)", lineHeight: 1.45, margin: 0 }}>{item.a}</p>
                 </div>
               ))}
 
@@ -193,7 +193,7 @@ export default function QuartzMaintenancePage() {
 
             {/* Sidebar */}
             <aside style={{ position: "sticky", top: 80 }}>
-              <div style={{ fontSize: 11, color: "var(--pub-muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 16 }}>In this guide</div>
+              <div style={{ fontSize: 11, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 16 }}>In this guide</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
                 {[
                   ["#daily-cleaning", "Daily cleaning routine"],
@@ -206,33 +206,33 @@ export default function QuartzMaintenancePage() {
                   ["#professionals", "When to call a professional"],
                   ["#faq", "FAQ"],
                 ].map(([href, label]) => (
-                  <a key={href} href={href} style={{ fontSize: 13, color: "var(--pub-muted)", textDecoration: "none", padding: "6px 0", borderBottom: "1px solid var(--pub-line)" }}>
+                  <a key={href} href={href} style={{ fontSize: 13, color: "var(--text-muted)", textDecoration: "none", padding: "6px 0", borderBottom: "1px solid var(--line)" }}>
                     {label}
                   </a>
                 ))}
               </div>
 
-              <div style={{ marginTop: 40, padding: "24px", background: "var(--pub-stone)", borderRadius: 2 }}>
-                <p style={{ fontSize: 14, color: "var(--pub-ink)", fontWeight: 500, marginBottom: 8 }}>Choosing a countertop?</p>
-                <p style={{ fontSize: 13, color: "var(--pub-muted)", lineHeight: 1.6, marginBottom: 16 }}>Come to the showroom and compare quartz, porcelain and natural stone side by side.</p>
+              <div style={{ marginTop: 40, padding: "24px", background: "var(--surface)", borderRadius: 0 }}>
+                <p style={{ fontSize: 14, color: "var(--text)", fontWeight: 500, marginBottom: 8 }}>Choosing a countertop?</p>
+                <p style={{ fontSize: 13, color: "var(--text-muted)", lineHeight: 1.45, marginBottom: 16 }}>Come to the showroom and compare quartz, porcelain and natural stone side by side.</p>
                 <Link href="/request-a-visit" style={{
                   display: "block", textAlign: "center",
-                  background: "var(--pub-forest)", color: "var(--pub-stone)",
-                  fontSize: 13, padding: "12px 16px", textDecoration: "none", borderRadius: 2,
+                  background: "var(--red)", color: "var(--text-invert)",
+                  fontSize: 13, padding: "12px 16px", textDecoration: "none", borderRadius: 0,
                 }}>
                   Schedule a consultation
                 </Link>
               </div>
 
               <div style={{ marginTop: 20 }}>
-                <p style={{ fontSize: 12, color: "var(--pub-muted)", marginBottom: 10 }}>Related guides</p>
-                <Link href="/blog/porcelain-countertop-care-maintenance" style={{ display: "block", fontSize: 13, color: "var(--pub-ink)", textDecoration: "none", padding: "8px 0", borderBottom: "1px solid var(--pub-line)" }}>
+                <p style={{ fontSize: 12, color: "var(--text-muted)", marginBottom: 10 }}>Related guides</p>
+                <Link href="/blog/porcelain-countertop-care-maintenance" style={{ display: "block", fontSize: 13, color: "var(--text)", textDecoration: "none", padding: "8px 0", borderBottom: "1px solid var(--line)" }}>
                   Porcelain countertop care
                 </Link>
-                <Link href="/blog/natural-stone-countertop-care-maintenance" style={{ display: "block", fontSize: 13, color: "var(--pub-ink)", textDecoration: "none", padding: "8px 0", borderBottom: "1px solid var(--pub-line)" }}>
+                <Link href="/blog/natural-stone-countertop-care-maintenance" style={{ display: "block", fontSize: 13, color: "var(--text)", textDecoration: "none", padding: "8px 0", borderBottom: "1px solid var(--line)" }}>
                   Natural stone countertop care
                 </Link>
-                <Link href="/blog/2027-interior-design-trends" style={{ display: "block", fontSize: 13, color: "var(--pub-ink)", textDecoration: "none", padding: "8px 0" }}>
+                <Link href="/blog/2027-interior-design-trends" style={{ display: "block", fontSize: 13, color: "var(--text)", textDecoration: "none", padding: "8px 0" }}>
                   2027 interior design trends
                 </Link>
               </div>
@@ -243,21 +243,21 @@ export default function QuartzMaintenancePage() {
       </div>
 
       {/* CTA */}
-      <div style={{ background: "var(--pub-ink)" }}>
+      <div style={{ background: "var(--surface-ink)" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
           <div style={{ padding: "56px 0", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 40, flexWrap: "wrap" }}>
             <div>
-              <p style={{ fontFamily: "var(--pub-serif)", fontSize: 26, color: "var(--pub-stone)", fontWeight: 400, lineHeight: 1.3, marginBottom: 10 }}>
+              <p style={{ fontFamily: "var(--font-display)", fontSize: 26, color: "var(--text-invert)", fontWeight: 400, lineHeight: 1.3, marginBottom: 10 }}>
                 Plan your countertop project
               </p>
-              <p style={{ fontSize: 15, color: "rgba(241,238,231,0.65)", lineHeight: 1.65, maxWidth: "44ch" }}>
+              <p style={{ fontSize: 15, color: "var(--text-invert-muted)", lineHeight: 1.45, maxWidth: "44ch" }}>
                 Visit US Floor Design Center in Rancho Santa Margarita to compare quartz colors, finishes and countertop alternatives.
               </p>
             </div>
             <Link href="/request-a-visit" style={{
               display: "inline-block",
-              background: "var(--pub-brass)", color: "#fff",
-              fontSize: 14, padding: "14px 28px", textDecoration: "none", borderRadius: 2,
+              background: "var(--surface)", color: "var(--red)",
+              fontSize: 14, padding: "14px 28px", textDecoration: "none", borderRadius: 0,
             }}>
               Schedule a consultation
             </Link>
@@ -269,11 +269,11 @@ export default function QuartzMaintenancePage() {
   );
 }
 
-const body: React.CSSProperties = { fontSize: 16, color: "#4B4A45", lineHeight: 1.8, marginBottom: 20 };
-const h2: React.CSSProperties = { fontFamily: "var(--pub-serif)", fontWeight: 400, fontSize: 26, color: "var(--pub-ink)", lineHeight: 1.3, marginTop: 48, marginBottom: 16 };
-const h3: React.CSSProperties = { fontSize: 16, fontWeight: 600, color: "var(--pub-ink)", marginTop: 24, marginBottom: 8 };
-const callout: React.CSSProperties = { background: "var(--pub-stone)", border: "1px solid var(--pub-line)", borderRadius: 2, padding: "20px 24px", marginBottom: 32, marginTop: 8 };
-const tip: React.CSSProperties = { borderLeft: "3px solid var(--pub-brass)", paddingLeft: 20, marginTop: 24, marginBottom: 28, fontSize: 15, color: "#4B4A45", lineHeight: 1.7 };
-const scheduleCard: React.CSSProperties = { border: "1px solid var(--pub-line)", borderRadius: 2, overflow: "hidden", marginBottom: 28 };
-const scheduleRow: React.CSSProperties = { padding: "16px 20px", borderBottom: "1px solid var(--pub-line)", fontSize: 15, color: "#4B4A45", lineHeight: 1.65, display: "flex", gap: 16 };
-const scheduleLabel: React.CSSProperties = { color: "var(--pub-ink)", minWidth: 80, flexShrink: 0 };
+const body: React.CSSProperties = { fontSize: 16, color: "var(--text-muted)", lineHeight: 1.45, marginBottom: 20 };
+const h2: React.CSSProperties = { fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 26, color: "var(--text)", lineHeight: 1.3, marginTop: 48, marginBottom: 16 };
+const h3: React.CSSProperties = { fontSize: 16, fontWeight: 600, color: "var(--text)", marginTop: 24, marginBottom: 8 };
+const callout: React.CSSProperties = { background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 0, padding: "20px 24px", marginBottom: 32, marginTop: 8 };
+const tip: React.CSSProperties = { borderLeft: "3px solid var(--text-muted)", paddingLeft: 20, marginTop: 24, marginBottom: 28, fontSize: 15, color: "var(--text-muted)", lineHeight: 1.45 };
+const scheduleCard: React.CSSProperties = { border: "1px solid var(--line)", borderRadius: 0, overflow: "hidden", marginBottom: 28 };
+const scheduleRow: React.CSSProperties = { padding: "16px 20px", borderBottom: "1px solid var(--line)", fontSize: 15, color: "var(--text-muted)", lineHeight: 1.45, display: "flex", gap: 16 };
+const scheduleLabel: React.CSSProperties = { color: "var(--text)", minWidth: 80, flexShrink: 0 };

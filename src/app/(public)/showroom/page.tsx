@@ -37,25 +37,25 @@ export default function ShowroomPage() {
     <div>
 
       {/* Header */}
-      <div style={{ borderBottom: "1px solid var(--pub-line)", background: "var(--pub-stone)" }}>
+      <div style={{ borderBottom: "1px solid var(--line)", background: "var(--surface)" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
           <div style={{ padding: "64px 0 56px" }}>
-            <div style={{ fontSize: 13, color: "var(--pub-brass)", marginBottom: 16 }}>Showroom</div>
+            <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 16 }}>Showroom</div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "end" }}>
               <h1 style={{
-                fontFamily: "var(--pub-serif)", fontWeight: 400, fontSize: 48,
-                lineHeight: 1.15, color: "var(--pub-ink)", maxWidth: "13ch",
+                fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 48,
+                lineHeight: 1.15, color: "var(--text)", maxWidth: "13ch",
               }}>
                 Come see it before you decide.
               </h1>
               <div>
-                <p style={{ fontSize: 16, color: "#4B4A45", lineHeight: 1.7, maxWidth: "42ch", marginBottom: 28 }}>
+                <p style={{ fontSize: 16, color: "var(--text-muted)", lineHeight: 1.45, maxWidth: "42ch", marginBottom: 28 }}>
                   Most material decisions look different under real lighting, next to real finishes, at full scale. Our showroom exists so you can see what you are actually buying before anything is ordered.
                 </p>
                 <Link href="/request-a-visit" style={{
                   display: "inline-block",
-                  background: "var(--pub-forest)", color: "var(--pub-stone)",
-                  fontSize: 14, padding: "14px 26px", textDecoration: "none", borderRadius: 2,
+                  background: "var(--red)", color: "var(--text-invert)",
+                  fontSize: 14, padding: "14px 26px", textDecoration: "none", borderRadius: 0,
                 }}>
                   Book a showroom appointment
                 </Link>
@@ -66,20 +66,20 @@ export default function ShowroomPage() {
       </div>
 
       {/* Location and hours */}
-      <div style={{ background: "#fff", borderBottom: "1px solid var(--pub-line)" }}>
+      <div style={{ background: "#fff", borderBottom: "1px solid var(--line)" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 48, padding: "56px 0" }}>
 
             <div>
-              <div style={{ fontSize: 12, color: "var(--pub-muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 14 }}>
+              <div style={{ fontSize: 12, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 14 }}>
                 Address
               </div>
-              <p style={{ fontFamily: "var(--pub-serif)", fontSize: 20, color: "var(--pub-ink)", lineHeight: 1.5, margin: 0 }}>
+              <p style={{ fontFamily: "var(--font-display)", fontSize: 20, color: "var(--text)", lineHeight: 1.45, margin: 0 }}>
                 30092 Santa Margarita Pkwy<br />
                 Suite G<br />
                 Rancho Santa Margarita, CA 92688
               </p>
-              <p style={{ fontSize: 14, color: "var(--pub-muted)", marginTop: 10, lineHeight: 1.6 }}>
+              <p style={{ fontSize: 14, color: "var(--text-muted)", marginTop: 10, lineHeight: 1.45 }}>
                 Arroyo Crossroads Shopping Center.<br />
                 Free parking in the lot.<br />
                 Accessible entrance at the main door.
@@ -87,7 +87,7 @@ export default function ShowroomPage() {
             </div>
 
             <div>
-              <div style={{ fontSize: 12, color: "var(--pub-muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 14 }}>
+              <div style={{ fontSize: 12, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 14 }}>
                 Showroom hours
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -97,29 +97,29 @@ export default function ShowroomPage() {
                   { days: "Sunday", hours: "Closed" },
                 ].map((row) => (
                   <div key={row.days} style={{ display: "flex", justifyContent: "space-between", fontSize: 14 }}>
-                    <span style={{ color: "var(--pub-ink)" }}>{row.days}</span>
-                    <span style={{ color: row.hours === "Closed" ? "var(--pub-muted)" : "var(--pub-ink)" }}>{row.hours}</span>
+                    <span style={{ color: "var(--text)" }}>{row.days}</span>
+                    <span style={{ color: row.hours === "Closed" ? "var(--text-muted)" : "var(--text)" }}>{row.hours}</span>
                   </div>
                 ))}
               </div>
-              <p style={{ fontSize: 13, color: "var(--pub-muted)", marginTop: 14, lineHeight: 1.55 }}>
+              <p style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 14, lineHeight: 1.45 }}>
                 Hours may vary on holidays. Call ahead to confirm.
               </p>
             </div>
 
             <div>
-              <div style={{ fontSize: 12, color: "var(--pub-muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 14 }}>
+              <div style={{ fontSize: 12, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 14 }}>
                 Contact
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 10, fontSize: 14 }}>
-                <a href="tel:+16196267545" style={{ color: "var(--pub-ink)", textDecoration: "none" }}>(619) 626-7545</a>
-                <a href="mailto:info@usfloordesign.com" style={{ color: "var(--pub-ink)", textDecoration: "none" }}>info@usfloordesign.com</a>
+                <a href="tel:+16196267545" style={{ color: "var(--text)", textDecoration: "none" }}>(619) 626-7545</a>
+                <a href="mailto:info@usfloordesign.com" style={{ color: "var(--text)", textDecoration: "none" }}>info@usfloordesign.com</a>
               </div>
               <div style={{ marginTop: 20 }}>
                 <Link href="/request-a-visit" style={{
                   display: "inline-block",
-                  border: "1px solid var(--pub-ink)", color: "var(--pub-ink)",
-                  fontSize: 13, padding: "10px 18px", textDecoration: "none", borderRadius: 2,
+                  border: "1px solid var(--text)", color: "var(--text)",
+                  fontSize: 13, padding: "10px 18px", textDecoration: "none", borderRadius: 0,
                 }}>
                   Book an appointment
                 </Link>
@@ -131,14 +131,14 @@ export default function ShowroomPage() {
       </div>
 
       {/* What to expect */}
-      <div style={{ background: "var(--pub-stone)" }}>
+      <div style={{ background: "var(--surface)" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
           <div style={{ padding: "72px 0" }}>
-            <div style={{ fontSize: 13, color: "var(--pub-brass)", marginBottom: 14 }}>What to expect</div>
+            <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 14 }}>What to expect</div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1.8fr", gap: 64, alignItems: "start" }}>
               <h2 style={{
-                fontFamily: "var(--pub-serif)", fontWeight: 400, fontSize: 32,
-                color: "var(--pub-ink)", lineHeight: 1.3,
+                fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 32,
+                color: "var(--text)", lineHeight: 1.3,
               }}>
                 A working showroom, not a sales floor.
               </h2>
@@ -146,12 +146,12 @@ export default function ShowroomPage() {
                 {WHAT_TO_EXPECT.map((item) => (
                   <div key={item.heading} style={{
                     padding: "24px", background: "#fff",
-                    border: "1px solid var(--pub-line)", borderRadius: 2,
+                    border: "1px solid var(--line)", borderRadius: 0,
                   }}>
-                    <div style={{ fontFamily: "var(--pub-serif)", fontSize: 17, color: "var(--pub-ink)", marginBottom: 10, lineHeight: 1.35 }}>
+                    <div style={{ fontFamily: "var(--font-display)", fontSize: 17, color: "var(--text)", marginBottom: 10, lineHeight: 1.35 }}>
                       {item.heading}
                     </div>
-                    <p style={{ fontSize: 13, color: "var(--pub-muted)", lineHeight: 1.65, margin: 0 }}>
+                    <p style={{ fontSize: 13, color: "var(--text-muted)", lineHeight: 1.45, margin: 0 }}>
                       {item.body}
                     </p>
                   </div>
@@ -163,15 +163,15 @@ export default function ShowroomPage() {
       </div>
 
       {/* What to bring */}
-      <div style={{ background: "#fff", borderTop: "1px solid var(--pub-line)" }}>
+      <div style={{ background: "#fff", borderTop: "1px solid var(--line)" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
           <div style={{ padding: "72px 0", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "start" }}>
             <div>
-              <div style={{ fontSize: 13, color: "var(--pub-brass)", marginBottom: 14 }}>Before you visit</div>
-              <h2 style={{ fontFamily: "var(--pub-serif)", fontWeight: 400, fontSize: 30, color: "var(--pub-ink)", lineHeight: 1.3, marginBottom: 16 }}>
+              <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 14 }}>Before you visit</div>
+              <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 30, color: "var(--text)", lineHeight: 1.3, marginBottom: 16 }}>
                 Useful to bring. None of it required.
               </h2>
-              <p style={{ fontSize: 15, color: "var(--pub-muted)", lineHeight: 1.7, maxWidth: "36ch" }}>
+              <p style={{ fontSize: 15, color: "var(--text-muted)", lineHeight: 1.45, maxWidth: "36ch" }}>
                 Walk-ins are welcome. If you want to get the most out of an hour in the showroom, these help our designers give you more specific direction.
               </p>
             </div>
@@ -180,10 +180,10 @@ export default function ShowroomPage() {
                 {BRING_LIST.map((item) => (
                   <li key={item} style={{
                     display: "flex", gap: 14, alignItems: "flex-start",
-                    padding: "16px 20px", border: "1px solid var(--pub-line)", borderRadius: 2,
-                    fontSize: 15, color: "var(--pub-ink)", lineHeight: 1.45,
+                    padding: "16px 20px", border: "1px solid var(--line)", borderRadius: 0,
+                    fontSize: 15, color: "var(--text)", lineHeight: 1.45,
                   }}>
-                    <span style={{ color: "var(--pub-brass)", flexShrink: 0, marginTop: 1 }}>&#10003;</span>
+                    <span style={{ color: "var(--text-muted)", flexShrink: 0, marginTop: 1 }}>&#10003;</span>
                     {item}
                   </li>
                 ))}

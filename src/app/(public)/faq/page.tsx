@@ -561,18 +561,18 @@ export default function FAQPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
 
       {/* Header */}
-      <div style={{ borderBottom: "1px solid var(--pub-line)", background: "var(--pub-stone)" }}>
+      <div style={{ borderBottom: "1px solid var(--line)", background: "var(--surface)" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
           <div style={{ padding: "64px 0 48px" }}>
-            <div style={{ fontSize: 13, color: "var(--pub-brass)", marginBottom: 16 }}>Frequently asked questions</div>
+            <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 16 }}>Frequently asked questions</div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "end" }}>
               <h1 style={{
-                fontFamily: "var(--pub-serif)", fontWeight: 400, fontSize: 44,
-                lineHeight: 1.15, color: "var(--pub-ink)", maxWidth: "18ch",
+                fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 44,
+                lineHeight: 1.15, color: "var(--text)", maxWidth: "18ch",
               }}>
                 Questions we hear every week.
               </h1>
-              <p style={{ fontSize: 16, color: "#4B4A45", lineHeight: 1.7, maxWidth: "42ch" }}>
+              <p style={{ fontSize: 16, color: "var(--text-muted)", lineHeight: 1.45, maxWidth: "42ch" }}>
                 Straight answers about planning, budgeting, materials, permits, and what to expect from a remodel in Orange County. If your question is not here, ask us directly.
               </p>
             </div>
@@ -581,7 +581,7 @@ export default function FAQPage() {
       </div>
 
       {/* Search + filter */}
-      <div style={{ background: "#fff", borderBottom: "1px solid var(--pub-line)", position: "sticky", top: 0, zIndex: 10 }}>
+      <div style={{ background: "#fff", borderBottom: "1px solid var(--line)", position: "sticky", top: 0, zIndex: 10 }}>
         <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
           <div style={{ padding: "16px 0", display: "flex", gap: 16, alignItems: "center", flexWrap: "wrap" }}>
             <input
@@ -590,9 +590,9 @@ export default function FAQPage() {
               value={search}
               onChange={(e) => { setSearch(e.target.value); setOpenIndex(null); }}
               style={{
-                padding: "10px 14px", border: "1px solid var(--pub-line)", borderRadius: 2,
-                fontSize: 14, color: "var(--pub-ink)", background: "var(--pub-stone)",
-                fontFamily: "var(--pub-sans)", width: 260, outline: "none",
+                padding: "10px 14px", border: "1px solid var(--line)", borderRadius: 0,
+                fontSize: 14, color: "var(--text)", background: "var(--surface)",
+                fontFamily: "var(--font-body)", width: 260, outline: "none",
               }}
             />
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
@@ -601,11 +601,11 @@ export default function FAQPage() {
                   key={cat}
                   onClick={() => { setActiveCategory(cat); setOpenIndex(null); }}
                   style={{
-                    padding: "8px 14px", borderRadius: 2, border: "1px solid",
-                    borderColor: activeCategory === cat ? "var(--pub-ink)" : "var(--pub-line)",
-                    background: activeCategory === cat ? "var(--pub-ink)" : "#fff",
-                    color: activeCategory === cat ? "var(--pub-stone)" : "var(--pub-muted)",
-                    fontSize: 13, cursor: "pointer", fontFamily: "var(--pub-sans)",
+                    padding: "8px 14px", borderRadius: 0, border: "1px solid",
+                    borderColor: activeCategory === cat ? "var(--text)" : "var(--line)",
+                    background: activeCategory === cat ? "var(--text)" : "#fff",
+                    color: activeCategory === cat ? "var(--text-invert)" : "var(--text-muted)",
+                    fontSize: 13, cursor: "pointer", fontFamily: "var(--font-body)",
                     whiteSpace: "nowrap",
                   }}
                 >
@@ -624,13 +624,13 @@ export default function FAQPage() {
 
             {filtered.length === 0 && (
               <div style={{ padding: "60px 0", textAlign: "center" }}>
-                <p style={{ fontSize: 16, color: "var(--pub-muted)" }}>No questions match that search.</p>
+                <p style={{ fontSize: 16, color: "var(--text-muted)" }}>No questions match that search.</p>
                 <button
                   onClick={() => { setSearch(""); setActiveCategory("All"); }}
                   style={{
-                    marginTop: 16, fontSize: 14, color: "var(--pub-ink)", background: "none",
-                    border: "1px solid var(--pub-line)", borderRadius: 2, padding: "10px 20px",
-                    cursor: "pointer", fontFamily: "var(--pub-sans)",
+                    marginTop: 16, fontSize: 14, color: "var(--text)", background: "none",
+                    border: "1px solid var(--line)", borderRadius: 0, padding: "10px 20px",
+                    cursor: "pointer", fontFamily: "var(--font-body)",
                   }}
                 >
                   Clear filters
@@ -638,37 +638,37 @@ export default function FAQPage() {
               </div>
             )}
 
-            {filtered.map((item, i) => {
+            {filtered.map((item) => {
               const globalIndex = FAQS.indexOf(item);
               const isOpen = openIndex === globalIndex;
               return (
-                <div key={globalIndex} style={{ borderBottom: "1px solid var(--pub-line)" }}>
+                <div key={globalIndex} style={{ borderBottom: "1px solid var(--line)" }}>
                   <button
                     onClick={() => setOpenIndex(isOpen ? null : globalIndex)}
                     style={{
                       width: "100%", textAlign: "left", background: "none", border: "none",
                       padding: "22px 0", cursor: "pointer",
                       display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 24,
-                      fontFamily: "var(--pub-sans)",
+                      fontFamily: "var(--font-body)",
                     }}
                   >
                     <div style={{ flex: 1 }}>
                       {activeCategory === "All" && (
-                        <div style={{ fontSize: 11, color: "var(--pub-brass)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>
+                        <div style={{ fontSize: 11, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>
                           {item.cat}
                         </div>
                       )}
-                      <span style={{ fontSize: 16, color: "var(--pub-ink)", fontWeight: 500, lineHeight: 1.45 }}>
+                      <span style={{ fontSize: 16, color: "var(--text)", fontWeight: 500, lineHeight: 1.45 }}>
                         {item.q}
                       </span>
                     </div>
-                    <span style={{ color: "var(--pub-muted)", fontSize: 20, lineHeight: 1, flexShrink: 0, marginTop: 2 }}>
+                    <span style={{ color: "var(--text-muted)", fontSize: 20, lineHeight: 1, flexShrink: 0, marginTop: 2 }}>
                       {isOpen ? "-" : "+"}
                     </span>
                   </button>
                   {isOpen && (
                     <div style={{ paddingBottom: 24 }}>
-                      <p style={{ fontSize: 15, color: "#4B4A45", lineHeight: 1.8, margin: 0, maxWidth: "68ch" }}>
+                      <p style={{ fontSize: 15, color: "var(--text-muted)", lineHeight: 1.45, margin: 0, maxWidth: "68ch" }}>
                         {item.a}
                       </p>
                     </div>
@@ -681,31 +681,31 @@ export default function FAQPage() {
       </div>
 
       {/* CTA */}
-      <div style={{ background: "var(--pub-stone)", borderTop: "1px solid var(--pub-line)" }}>
+      <div style={{ background: "var(--surface)", borderTop: "1px solid var(--line)" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
           <div style={{ padding: "56px 0", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 40, flexWrap: "wrap" }}>
             <div>
-              <p style={{ fontFamily: "var(--pub-serif)", fontSize: 26, color: "var(--pub-ink)", fontWeight: 400, lineHeight: 1.3, marginBottom: 10 }}>
+              <p style={{ fontFamily: "var(--font-display)", fontSize: 26, color: "var(--text)", fontWeight: 400, lineHeight: 1.3, marginBottom: 10 }}>
                 Still have a question?
               </p>
-              <p style={{ fontSize: 15, color: "var(--pub-muted)", lineHeight: 1.65, maxWidth: "42ch" }}>
+              <p style={{ fontSize: 15, color: "var(--text-muted)", lineHeight: 1.45, maxWidth: "42ch" }}>
                 Come into the showroom or schedule a consultation. We would rather talk through the specifics of your project than give you a generic answer.
               </p>
             </div>
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
               <Link href="/request-a-visit" style={{
                 display: "inline-block",
-                background: "var(--pub-forest)", color: "var(--pub-stone)",
+                background: "var(--red)", color: "var(--text-invert)",
                 fontSize: 14, fontWeight: 500, padding: "14px 26px",
-                textDecoration: "none", borderRadius: 2,
+                textDecoration: "none", borderRadius: 0,
               }}>
                 Schedule a consultation
               </Link>
               <Link href="/showroom" style={{
                 display: "inline-block",
-                color: "var(--pub-ink)", border: "1px solid var(--pub-ink)",
+                color: "var(--text)", border: "1px solid var(--text)",
                 fontSize: 14, padding: "14px 26px",
-                textDecoration: "none", borderRadius: 2,
+                textDecoration: "none", borderRadius: 0,
               }}>
                 Visit the showroom
               </Link>

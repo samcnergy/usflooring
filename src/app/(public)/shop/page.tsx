@@ -97,8 +97,8 @@ export default async function ShopPage({
         <div style={{
           margin: "48px 0 0",
           padding: "32px 40px",
-          background: "var(--pub-ink)",
-          borderRadius: 2,
+          background: "var(--surface-ink)",
+          borderRadius: 0,
           display: "flex", alignItems: "center", justifyContent: "space-between",
           gap: 32, flexWrap: "wrap",
         }}>
@@ -108,25 +108,25 @@ export default async function ShopPage({
                 <div key={c} style={{ width: 18, height: 18, borderRadius: "50%", background: c }} />
               ))}
             </div>
-            <div style={{ fontSize: 12, color: "var(--pub-brass)", letterSpacing: "0.06em", marginBottom: 6 }}>
+            <div style={{ fontSize: 12, color: "var(--text-muted)", letterSpacing: "0.06em", marginBottom: 6 }}>
               {stylePreset.label.toUpperCase()} STYLE
             </div>
-            <p style={{ fontFamily: "var(--pub-serif)", fontSize: 20, color: "var(--pub-stone)", margin: 0 }}>
+            <p style={{ fontFamily: "var(--font-display)", fontSize: 20, color: "var(--text-invert)", margin: 0 }}>
               {stylePreset.description}
             </p>
           </div>
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
             <a href="/shop" style={{
-              fontSize: 13, color: "rgba(241,238,231,0.6)",
+              fontSize: 13, color: "var(--text-invert-muted)",
               textDecoration: "none", borderBottom: "1px solid rgba(241,238,231,0.3)",
               paddingBottom: 2,
             }}>
               See all styles
             </a>
             <a href="/request-a-visit" style={{
-              background: "var(--pub-stone)", color: "var(--pub-forest)",
+              background: "var(--surface)", color: "var(--red)",
               fontSize: 13, fontWeight: 500, padding: "10px 18px",
-              textDecoration: "none", borderRadius: 2, whiteSpace: "nowrap",
+              textDecoration: "none", borderRadius: 0, whiteSpace: "nowrap",
             }}>
               Talk to a designer
             </a>
@@ -135,16 +135,16 @@ export default async function ShopPage({
       )}
 
       {/* Header */}
-      <div style={{ padding: "48px 0 32px", borderBottom: "1px solid var(--pub-line)", marginBottom: 32, marginTop: activeStyle ? 32 : 0 }}>
-        <div style={{ fontSize: 13, color: "var(--pub-brass)", marginBottom: 14 }}>Materials</div>
+      <div style={{ padding: "48px 0 32px", borderBottom: "1px solid var(--line)", marginBottom: 32, marginTop: activeStyle ? 32 : 0 }}>
+        <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 14 }}>Materials</div>
         <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 24, flexWrap: "wrap" }}>
           <h1 style={{
-            fontFamily: "var(--pub-serif)", fontWeight: 400, fontSize: 38,
-            color: "var(--pub-ink)", lineHeight: 1.15,
+            fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 38,
+            color: "var(--text)", lineHeight: 1.15,
           }}>
             {stylePreset ? `${stylePreset.label} materials.` : "Browse our catalog."}
           </h1>
-          <p style={{ fontSize: 14, color: "var(--pub-muted)", maxWidth: "40ch", lineHeight: 1.65, paddingBottom: 4 }}>
+          <p style={{ fontSize: 14, color: "var(--text-muted)", maxWidth: "40ch", lineHeight: 1.45, paddingBottom: 4 }}>
             Every material is available in the showroom. Come in and see it in person before you decide.
           </p>
         </div>
@@ -161,7 +161,7 @@ export default async function ShopPage({
       </div>
 
       {/* Results count */}
-      <p style={{ fontSize: 13, color: "var(--pub-muted)", marginBottom: 24 }}>
+      <p style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 24 }}>
         {materials.length} {materials.length === 1 ? "material" : "materials"}
         {stylePreset ? ` matching ${stylePreset.label} style` : ""}
         {cat ? ` in ${CATEGORY_LABELS[cat] ?? cat}` : ""}
@@ -174,23 +174,23 @@ export default async function ShopPage({
       {/* CTA banner */}
       <div style={{
         margin: "72px 0 80px",
-        background: "var(--pub-forest)", borderRadius: 2,
+        background: "var(--red)", borderRadius: 0,
         padding: "48px 56px",
         display: "flex", alignItems: "center", justifyContent: "space-between",
         gap: 32, flexWrap: "wrap",
       }}>
         <div>
-          <p style={{ fontFamily: "var(--pub-serif)", fontSize: 26, color: "var(--pub-stone)", marginBottom: 10, fontWeight: 400 }}>
+          <p style={{ fontFamily: "var(--font-display)", fontSize: 26, color: "var(--text-invert)", marginBottom: 10, fontWeight: 400 }}>
             Not sure what to choose?
           </p>
-          <p style={{ fontSize: 15, color: "rgba(241,238,231,0.75)", lineHeight: 1.65, maxWidth: "44ch" }}>
+          <p style={{ fontSize: 15, color: "var(--text-invert-muted)", lineHeight: 1.45, maxWidth: "44ch" }}>
             Come to the showroom and see every material in person. Our designers will help you find what fits your space, your style, and your budget.
           </p>
         </div>
         <a href="/request-a-visit" style={{
-          background: "var(--pub-stone)", color: "var(--pub-forest)",
+          background: "var(--surface)", color: "var(--red)",
           fontSize: 14, fontWeight: 500, padding: "14px 28px",
-          textDecoration: "none", borderRadius: 2, whiteSpace: "nowrap",
+          textDecoration: "none", borderRadius: 0, whiteSpace: "nowrap",
         }}>
           Schedule a visit
         </a>

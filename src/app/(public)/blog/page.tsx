@@ -42,15 +42,15 @@ export default function BlogIndexPage() {
     <div>
 
       {/* Header */}
-      <div style={{ borderBottom: "1px solid var(--pub-line)", background: "var(--pub-stone)" }}>
+      <div style={{ borderBottom: "1px solid var(--line)", background: "var(--surface)" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
           <div style={{ padding: "64px 0 48px" }}>
-            <div style={{ fontSize: 13, color: "var(--pub-brass)", marginBottom: 16 }}>From US Floor Design Center</div>
+            <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 16 }}>From US Floor Design Center</div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "end" }}>
-              <h1 style={{ fontFamily: "var(--pub-serif)", fontWeight: 400, fontSize: 44, lineHeight: 1.15, color: "var(--pub-ink)" }}>
+              <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 44, lineHeight: 1.15, color: "var(--text)" }}>
                 Guides, trends, and care advice.
               </h1>
-              <p style={{ fontSize: 16, color: "#4B4A45", lineHeight: 1.7, maxWidth: "42ch" }}>
+              <p style={{ fontSize: 16, color: "var(--text-muted)", lineHeight: 1.45, maxWidth: "42ch" }}>
                 Practical resources for homeowners planning a remodel, caring for their materials, or figuring out what direction to take a room.
               </p>
             </div>
@@ -65,8 +65,8 @@ export default function BlogIndexPage() {
             {POSTS.map((post, i) => (
               <Link key={post.href} href={post.href} style={{ textDecoration: "none", display: "block" }}>
                 <div style={{
-                  borderBottom: "1px solid var(--pub-line)",
-                  borderRight: i % 2 === 0 ? "1px solid var(--pub-line)" : "none",
+                  borderBottom: "1px solid var(--line)",
+                  borderRight: i % 2 === 0 ? "1px solid var(--line)" : "none",
                   padding: "0 0 40px",
                 }}>
                   <div style={{ position: "relative", height: 260, overflow: "hidden", marginBottom: 24 }}>
@@ -78,16 +78,16 @@ export default function BlogIndexPage() {
                     />
                   </div>
                   <div style={{ padding: "0 32px" }}>
-                    <div style={{ fontSize: 11, color: "var(--pub-brass)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 10 }}>
+                    <div style={{ fontSize: 11, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 10 }}>
                       {post.label}
                     </div>
-                    <h2 style={{ fontFamily: "var(--pub-serif)", fontWeight: 400, fontSize: 22, color: "var(--pub-ink)", lineHeight: 1.3, marginBottom: 12 }}>
+                    <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 22, color: "var(--text)", lineHeight: 1.3, marginBottom: 12 }}>
                       {post.title}
                     </h2>
-                    <p style={{ fontSize: 14, color: "var(--pub-muted)", lineHeight: 1.65, margin: 0 }}>
+                    <p style={{ fontSize: 14, color: "var(--text-muted)", lineHeight: 1.45, margin: 0 }}>
                       {post.description}
                     </p>
-                    <div style={{ marginTop: 20, fontSize: 13, color: "var(--pub-ink)", display: "flex", alignItems: "center", gap: 6 }}>
+                    <div style={{ marginTop: 20, fontSize: 13, color: "var(--text)", display: "flex", alignItems: "center", gap: 6 }}>
                       Read the guide <span style={{ fontSize: 16 }}>→</span>
                     </div>
                   </div>
@@ -99,31 +99,31 @@ export default function BlogIndexPage() {
       </div>
 
       {/* CTA */}
-      <div style={{ background: "var(--pub-stone)", borderTop: "1px solid var(--pub-line)" }}>
+      <div style={{ background: "var(--surface)", borderTop: "1px solid var(--line)" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
           <div style={{ padding: "56px 0", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 40, flexWrap: "wrap" }}>
             <div>
-              <p style={{ fontFamily: "var(--pub-serif)", fontSize: 26, color: "var(--pub-ink)", fontWeight: 400, lineHeight: 1.3, marginBottom: 10 }}>
+              <p style={{ fontFamily: "var(--font-display)", fontSize: 26, color: "var(--text)", fontWeight: 400, lineHeight: 1.3, marginBottom: 10 }}>
                 Ready to start a project?
               </p>
-              <p style={{ fontSize: 15, color: "var(--pub-muted)", lineHeight: 1.65, maxWidth: "44ch" }}>
+              <p style={{ fontSize: 15, color: "var(--text-muted)", lineHeight: 1.45, maxWidth: "44ch" }}>
                 Visit the showroom or schedule a consultation with our design team in Rancho Santa Margarita.
               </p>
             </div>
             <div style={{ display: "flex", gap: 12 }}>
               <Link href="/request-a-visit" style={{
                 display: "inline-block",
-                background: "var(--pub-forest)", color: "var(--pub-stone)",
+                background: "var(--red)", color: "var(--text-invert)",
                 fontSize: 14, fontWeight: 500, padding: "14px 26px",
-                textDecoration: "none", borderRadius: 2,
+                textDecoration: "none", borderRadius: 0,
               }}>
                 Schedule a consultation
               </Link>
               <Link href="/faq" style={{
                 display: "inline-block",
-                color: "var(--pub-ink)", border: "1px solid var(--pub-ink)",
+                color: "var(--text)", border: "1px solid var(--text)",
                 fontSize: 14, padding: "14px 26px",
-                textDecoration: "none", borderRadius: 2,
+                textDecoration: "none", borderRadius: 0,
               }}>
                 Read the FAQ
               </Link>

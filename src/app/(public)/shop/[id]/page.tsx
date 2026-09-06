@@ -109,12 +109,12 @@ export default function ProductDetailPage() {
     <div>
 
       {/* Breadcrumb */}
-      <div style={{ background: "var(--pub-stone)", borderBottom: "1px solid var(--pub-line)" }}>
+      <div style={{ background: "var(--surface)", borderBottom: "1px solid var(--line)" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
-          <div style={{ padding: "14px 0", fontSize: 13, color: "var(--pub-muted)", display: "flex", gap: 8, alignItems: "center" }}>
-            <Link href="/shop" style={{ color: "var(--pub-muted)", textDecoration: "none" }}>Shop</Link>
+          <div style={{ padding: "14px 0", fontSize: 13, color: "var(--text-muted)", display: "flex", gap: 8, alignItems: "center" }}>
+            <Link href="/shop" style={{ color: "var(--text-muted)", textDecoration: "none" }}>Shop</Link>
             <span>›</span>
-            <span style={{ color: "var(--pub-ink)" }}>{product.name}</span>
+            <span style={{ color: "var(--text)" }}>{product.name}</span>
           </div>
         </div>
       </div>
@@ -129,16 +129,16 @@ export default function ProductDetailPage() {
               <div style={{
                 width: "100%", aspectRatio: "1 / 1",
                 background: "linear-gradient(135deg, #E8E4DD 0%, #D6CFC4 60%, #C9C0B3 100%)",
-                borderRadius: 2, display: "flex", alignItems: "center", justifyContent: "center",
+                borderRadius: 0, display: "flex", alignItems: "center", justifyContent: "center",
               }}>
-                <span style={{ fontSize: 13, color: "var(--pub-muted)" }}>Product image</span>
+                <span style={{ fontSize: 13, color: "var(--text-muted)" }}>Product image</span>
               </div>
               <div style={{ display: "flex", gap: 10, marginTop: 12 }}>
                 {[1, 2, 3].map((n) => (
                   <div key={n} style={{
                     width: 64, height: 64,
                     background: "linear-gradient(135deg, #E8E4DD, #C9C0B3)",
-                    borderRadius: 2, border: "1px solid var(--pub-line)", cursor: "pointer",
+                    borderRadius: 0, border: "1px solid var(--line)", cursor: "pointer",
                   }} />
                 ))}
               </div>
@@ -146,39 +146,39 @@ export default function ProductDetailPage() {
 
             {/* Right - details */}
             <div>
-              <div style={{ fontSize: 12, color: "var(--pub-muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 10 }}>
+              <div style={{ fontSize: 12, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 10 }}>
                 {product.category} · {product.sku}
               </div>
-              <h1 style={{ fontFamily: "var(--pub-serif)", fontWeight: 400, fontSize: 32, color: "var(--pub-ink)", lineHeight: 1.2, marginBottom: 16 }}>
+              <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 32, color: "var(--text)", lineHeight: 1.2, marginBottom: 16 }}>
                 {product.name}
               </h1>
-              <p style={{ fontSize: 15, color: "#4B4A45", lineHeight: 1.7, marginBottom: 24 }}>
+              <p style={{ fontSize: 15, color: "var(--text-muted)", lineHeight: 1.45, marginBottom: 24 }}>
                 {product.description}
               </p>
 
               {/* Price */}
-              <div style={{ marginBottom: 28, padding: "18px 20px", border: "1px solid var(--pub-line)", borderRadius: 2 }}>
+              <div style={{ marginBottom: 28, padding: "18px 20px", border: "1px solid var(--line)", borderRadius: 0 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
                   <div>
-                    <span style={{ fontFamily: "var(--pub-serif)", fontSize: 28, color: "var(--pub-ink)" }}>${product.price.toFixed(2)}</span>
-                    <span style={{ fontSize: 14, color: "var(--pub-muted)", marginLeft: 6 }}>per {product.unit}</span>
+                    <span style={{ fontFamily: "var(--font-display)", fontSize: 28, color: "var(--text)" }}>${product.price.toFixed(2)}</span>
+                    <span style={{ fontSize: 14, color: "var(--text-muted)", marginLeft: 6 }}>per {product.unit}</span>
                   </div>
-                  <div style={{ fontSize: 13, color: "var(--pub-forest)", fontWeight: 500 }}>
+                  <div style={{ fontSize: 13, color: "var(--red)", fontWeight: 500 }}>
                     {product.availability}
                   </div>
                 </div>
-                <div style={{ fontSize: 13, color: "var(--pub-muted)" }}>
+                <div style={{ fontSize: 13, color: "var(--text-muted)" }}>
                   {product.coverage} · {product.leadTime}
                 </div>
               </div>
 
               {/* Coverage calculator */}
-              <div style={{ marginBottom: 24, padding: "20px", background: "var(--pub-stone)", borderRadius: 2 }}>
-                <div style={{ fontSize: 13, fontWeight: 600, color: "var(--pub-ink)", marginBottom: 12 }}>
+              <div style={{ marginBottom: 24, padding: "20px", background: "var(--surface)", borderRadius: 0 }}>
+                <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text)", marginBottom: 12 }}>
                   Coverage calculator
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
-                  <label style={{ fontSize: 14, color: "var(--pub-ink)", flexShrink: 0 }}>Room size (sq ft)</label>
+                  <label style={{ fontSize: 14, color: "var(--text)", flexShrink: 0 }}>Room size (sq ft)</label>
                   <input
                     type="number"
                     min={1}
@@ -186,14 +186,14 @@ export default function ProductDetailPage() {
                     onChange={(e) => setSqft(Number(e.target.value))}
                     style={{
                       width: 90, padding: "8px 12px",
-                      border: "1px solid var(--pub-line)", borderRadius: 2,
+                      border: "1px solid var(--line)", borderRadius: 0,
                       fontSize: 15, textAlign: "right", background: "#fff",
                     }}
                   />
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", fontSize: 14 }}>
-                  <span style={{ color: "var(--pub-muted)" }}>Recommended (12% waste): <strong style={{ color: "var(--pub-ink)" }}>{recommended} sq ft</strong></span>
-                  <span style={{ color: "var(--pub-ink)", fontWeight: 600 }}>${total}</span>
+                  <span style={{ color: "var(--text-muted)" }}>Recommended (12% waste): <strong style={{ color: "var(--text)" }}>{recommended} sq ft</strong></span>
+                  <span style={{ color: "var(--text)", fontWeight: 600 }}>${total}</span>
                 </div>
               </div>
 
@@ -201,8 +201,8 @@ export default function ProductDetailPage() {
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                 <Link href="/request-a-visit?type=order" style={{
                   display: "block", textAlign: "center",
-                  background: "var(--pub-forest)", color: "var(--pub-stone)",
-                  fontSize: 15, padding: "15px 24px", textDecoration: "none", borderRadius: 2,
+                  background: "var(--red)", color: "var(--text-invert)",
+                  fontSize: 15, padding: "15px 24px", textDecoration: "none", borderRadius: 0,
                 }}>
                   Request a quote
                 </Link>
@@ -210,38 +210,38 @@ export default function ProductDetailPage() {
                 <button
                   onClick={() => setSampleOpen(!sampleOpen)}
                   style={{
-                    background: "#fff", color: "var(--pub-ink)",
-                    border: "1px solid var(--pub-line)", borderRadius: 2,
+                    background: "#fff", color: "var(--text)",
+                    border: "1px solid var(--line)", borderRadius: 0,
                     fontSize: 14, padding: "13px 24px", cursor: "pointer",
-                    fontFamily: "var(--pub-sans)",
+                    fontFamily: "var(--font-body)",
                   }}
                 >
                   Order a sample
                 </button>
 
                 {sampleOpen && (
-                  <div style={{ border: "1px solid var(--pub-line)", borderRadius: 2, overflow: "hidden" }}>
+                  <div style={{ border: "1px solid var(--line)", borderRadius: 0, overflow: "hidden" }}>
                     {SAMPLE_OPTIONS.map((opt) => (
                       <div
                         key={opt.key}
                         onClick={() => setSelectedSample(opt.key)}
                         style={{
                           padding: "16px 18px", cursor: "pointer",
-                          background: selectedSample === opt.key ? "var(--pub-stone)" : "#fff",
-                          borderBottom: "1px solid var(--pub-line)",
+                          background: selectedSample === opt.key ? "var(--surface)" : "#fff",
+                          borderBottom: "1px solid var(--line)",
                         }}
                       >
-                        <div style={{ fontSize: 14, fontWeight: 500, color: "var(--pub-ink)", marginBottom: 4 }}>
+                        <div style={{ fontSize: 14, fontWeight: 500, color: "var(--text)", marginBottom: 4 }}>
                           {opt.label}
                         </div>
-                        <div style={{ fontSize: 13, color: "var(--pub-muted)" }}>{opt.desc}</div>
+                        <div style={{ fontSize: 13, color: "var(--text-muted)" }}>{opt.desc}</div>
                       </div>
                     ))}
                     {selectedSample && (
-                      <div style={{ padding: "14px 18px", background: "var(--pub-stone)", display: "flex", justifyContent: "flex-end" }}>
+                      <div style={{ padding: "14px 18px", background: "var(--surface)", display: "flex", justifyContent: "flex-end" }}>
                         <Link href={`/request-a-visit?type=sample&product=${params.id}&option=${selectedSample}`} style={{
-                          background: "var(--pub-forest)", color: "var(--pub-stone)",
-                          fontSize: 13, padding: "10px 20px", textDecoration: "none", borderRadius: 2,
+                          background: "var(--red)", color: "var(--text-invert)",
+                          fontSize: 13, padding: "10px 20px", textDecoration: "none", borderRadius: 0,
                         }}>
                           Continue
                         </Link>
@@ -252,7 +252,7 @@ export default function ProductDetailPage() {
 
                 <Link href="/request-a-visit?type=designer" style={{
                   display: "block", textAlign: "center",
-                  color: "var(--pub-muted)", fontSize: 13, textDecoration: "none",
+                  color: "var(--text-muted)", fontSize: 13, textDecoration: "none",
                   padding: "10px 0",
                 }}>
                   Ask a designer about this product →
@@ -264,11 +264,11 @@ export default function ProductDetailPage() {
       </div>
 
       {/* Tab section: Specs / Care / Install / Shipping */}
-      <div style={{ background: "var(--pub-stone)", borderTop: "1px solid var(--pub-line)" }}>
+      <div style={{ background: "var(--surface)", borderTop: "1px solid var(--line)" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
 
           {/* Tab nav */}
-          <div style={{ display: "flex", borderBottom: "1px solid var(--pub-line)", gap: 0 }}>
+          <div style={{ display: "flex", borderBottom: "1px solid var(--line)", gap: 0 }}>
             {(["specs", "care", "install", "shipping"] as const).map((t) => {
               const labels = { specs: "Specifications", care: "Care and cleaning", install: "Installation notes", shipping: "Shipping and returns" };
               return (
@@ -276,10 +276,10 @@ export default function ProductDetailPage() {
                   key={t}
                   onClick={() => setTab(t)}
                   style={{
-                    background: "none", border: "none", borderBottom: tab === t ? "2px solid var(--pub-ink)" : "2px solid transparent",
+                    background: "none", border: "none", borderBottom: tab === t ? "2px solid var(--text)" : "2px solid transparent",
                     padding: "20px 24px", cursor: "pointer",
-                    fontSize: 14, color: tab === t ? "var(--pub-ink)" : "var(--pub-muted)",
-                    fontFamily: "var(--pub-sans)", fontWeight: tab === t ? 600 : 400,
+                    fontSize: 14, color: tab === t ? "var(--text)" : "var(--text-muted)",
+                    fontFamily: "var(--font-body)", fontWeight: tab === t ? 600 : 400,
                     marginBottom: -1,
                   }}
                 >
@@ -294,9 +294,9 @@ export default function ProductDetailPage() {
             {tab === "specs" && (
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, maxWidth: 800 }}>
                 {product.specs.map((s) => (
-                  <div key={s.label} style={{ display: "flex", gap: 16, padding: "14px 0", borderBottom: "1px solid var(--pub-line)" }}>
-                    <span style={{ fontSize: 13, color: "var(--pub-muted)", minWidth: 140, flexShrink: 0 }}>{s.label}</span>
-                    <span style={{ fontSize: 14, color: "var(--pub-ink)" }}>{s.value}</span>
+                  <div key={s.label} style={{ display: "flex", gap: 16, padding: "14px 0", borderBottom: "1px solid var(--line)" }}>
+                    <span style={{ fontSize: 13, color: "var(--text-muted)", minWidth: 140, flexShrink: 0 }}>{s.label}</span>
+                    <span style={{ fontSize: 14, color: "var(--text)" }}>{s.value}</span>
                   </div>
                 ))}
               </div>
@@ -304,8 +304,8 @@ export default function ProductDetailPage() {
             {tab === "care" && (
               <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 14, maxWidth: 680 }}>
                 {product.care.map((item) => (
-                  <li key={item} style={{ display: "flex", gap: 14, alignItems: "flex-start", fontSize: 15, color: "#4B4A45", lineHeight: 1.65 }}>
-                    <span style={{ color: "var(--pub-brass)", flexShrink: 0, marginTop: 2 }}>·</span>
+                  <li key={item} style={{ display: "flex", gap: 14, alignItems: "flex-start", fontSize: 15, color: "var(--text-muted)", lineHeight: 1.45 }}>
+                    <span style={{ color: "var(--text-muted)", flexShrink: 0, marginTop: 2 }}>·</span>
                     {item}
                   </li>
                 ))}
@@ -314,8 +314,8 @@ export default function ProductDetailPage() {
             {tab === "install" && (
               <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 14, maxWidth: 680 }}>
                 {product.installation.map((item) => (
-                  <li key={item} style={{ display: "flex", gap: 14, alignItems: "flex-start", fontSize: 15, color: "#4B4A45", lineHeight: 1.65 }}>
-                    <span style={{ color: "var(--pub-brass)", flexShrink: 0, marginTop: 2 }}>·</span>
+                  <li key={item} style={{ display: "flex", gap: 14, alignItems: "flex-start", fontSize: 15, color: "var(--text-muted)", lineHeight: 1.45 }}>
+                    <span style={{ color: "var(--text-muted)", flexShrink: 0, marginTop: 2 }}>·</span>
                     {item}
                   </li>
                 ))}
@@ -324,23 +324,23 @@ export default function ProductDetailPage() {
             {tab === "shipping" && (
               <div style={{ maxWidth: 680, display: "flex", flexDirection: "column", gap: 0 }}>
                 {SHIPPING_POLICY.map((item, i) => (
-                  <div key={i} style={{ borderBottom: "1px solid var(--pub-line)" }}>
+                  <div key={i} style={{ borderBottom: "1px solid var(--line)" }}>
                     <button
                       onClick={() => setOpenPolicy(openPolicy === i ? null : i)}
                       style={{
                         width: "100%", textAlign: "left", background: "none", border: "none",
                         padding: "18px 0", cursor: "pointer",
                         display: "flex", justifyContent: "space-between", alignItems: "center",
-                        fontFamily: "var(--pub-sans)", fontSize: 15, color: "var(--pub-ink)", fontWeight: 500,
+                        fontFamily: "var(--font-body)", fontSize: 15, color: "var(--text)", fontWeight: 500,
                       }}
                     >
                       {item.q}
-                      <span style={{ color: "var(--pub-muted)", fontSize: 18, lineHeight: 1 }}>
+                      <span style={{ color: "var(--text-muted)", fontSize: 18, lineHeight: 1 }}>
                         {openPolicy === i ? "−" : "+"}
                       </span>
                     </button>
                     {openPolicy === i && (
-                      <p style={{ fontSize: 14, color: "#4B4A45", lineHeight: 1.75, margin: "0 0 18px" }}>
+                      <p style={{ fontSize: 14, color: "var(--text-muted)", lineHeight: 1.45, margin: "0 0 18px" }}>
                         {item.a}
                       </p>
                     )}
@@ -353,14 +353,14 @@ export default function ProductDetailPage() {
       </div>
 
       {/* Coordinating products */}
-      <div style={{ background: "#fff", borderTop: "1px solid var(--pub-line)" }}>
+      <div style={{ background: "#fff", borderTop: "1px solid var(--line)" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
           <div style={{ padding: "56px 0" }}>
-            <div style={{ fontSize: 13, color: "var(--pub-brass)", marginBottom: 16 }}>Coordinates with</div>
+            <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 16 }}>Coordinates with</div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
               {product.coordinating.map((c) => (
                 <Link href={`/shop/${c.sku.toLowerCase()}`} key={c.sku} style={{
-                  textDecoration: "none", border: "1px solid var(--pub-line)", borderRadius: 2,
+                  textDecoration: "none", border: "1px solid var(--line)", borderRadius: 0,
                   overflow: "hidden",
                 }}>
                   <div style={{
@@ -368,8 +368,8 @@ export default function ProductDetailPage() {
                     background: "linear-gradient(135deg, #E8E4DD, #C9C0B3)",
                   }} />
                   <div style={{ padding: "12px 14px" }}>
-                    <div style={{ fontSize: 14, color: "var(--pub-ink)", marginBottom: 4, lineHeight: 1.35 }}>{c.label}</div>
-                    <div style={{ fontSize: 12, color: "var(--pub-muted)" }}>{c.sku}</div>
+                    <div style={{ fontSize: 14, color: "var(--text)", marginBottom: 4, lineHeight: 1.35 }}>{c.label}</div>
+                    <div style={{ fontSize: 12, color: "var(--text-muted)" }}>{c.sku}</div>
                   </div>
                 </Link>
               ))}

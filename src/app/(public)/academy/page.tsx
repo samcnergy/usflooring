@@ -80,19 +80,19 @@ export default function AcademyPage() {
     <div>
 
       {/* Header */}
-      <div style={{ borderBottom: "1px solid var(--pub-line)", background: "var(--pub-stone)" }}>
+      <div style={{ borderBottom: "1px solid var(--line)", background: "var(--surface)" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
           <div style={{ padding: "64px 0 56px" }}>
-            <div style={{ fontSize: 13, color: "var(--pub-brass)", marginBottom: 16 }}>US Floor Academy</div>
+            <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 16 }}>US Floor Academy</div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "end" }}>
               <h1 style={{
-                fontFamily: "var(--pub-serif)", fontWeight: 400, fontSize: 48,
-                lineHeight: 1.15, color: "var(--pub-ink)", maxWidth: "15ch",
+                fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 48,
+                lineHeight: 1.15, color: "var(--text)", maxWidth: "15ch",
               }}>
                 Learn how the work is actually done.
               </h1>
               <div>
-                <p style={{ fontSize: 16, color: "#4B4A45", lineHeight: 1.7, maxWidth: "44ch", marginBottom: 0 }}>
+                <p style={{ fontSize: 16, color: "var(--text-muted)", lineHeight: 1.45, maxWidth: "44ch", marginBottom: 0 }}>
                   Free, self-paced installation courses with a certificate on completion. Built for people who want to develop real skills - whether you are changing careers, growing your capabilities, or just want to understand what a professional installation actually involves.
                 </p>
               </div>
@@ -102,11 +102,11 @@ export default function AcademyPage() {
       </div>
 
       {/* Certificate disclaimer */}
-      <div style={{ background: "var(--pub-ink)", borderBottom: "1px solid rgba(241,238,231,0.15)" }}>
+      <div style={{ background: "var(--surface-ink)", borderBottom: "1px solid rgba(241,238,231,0.15)" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
           <div style={{ padding: "20px 0", display: "flex", gap: 14, alignItems: "flex-start" }}>
-            <span style={{ color: "var(--pub-brass)", fontSize: 16, flexShrink: 0, marginTop: 1 }}>&#9432;</span>
-            <p style={{ fontSize: 14, color: "rgba(241,238,231,0.7)", lineHeight: 1.65, margin: 0, maxWidth: "80ch" }}>
+            <span style={{ color: "var(--text-muted)", fontSize: 16, flexShrink: 0, marginTop: 1 }}>&#9432;</span>
+            <p style={{ fontSize: 14, color: "var(--text-invert-muted)", lineHeight: 1.45, margin: 0, maxWidth: "80ch" }}>
               Certificates from US Floor Academy confirm completion of a training course. They are not professional licenses and do not guarantee employment, placement on our installer list, or a specific rate of pay. All certificates say this plainly.
             </p>
           </div>
@@ -117,52 +117,52 @@ export default function AcademyPage() {
       <div style={{ background: "#fff" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
           <div style={{ padding: "72px 0" }}>
-            <div style={{ fontSize: 13, color: "var(--pub-brass)", marginBottom: 16 }}>Course catalog</div>
+            <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 16 }}>Course catalog</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
               {COURSES.map((course, i) => (
                 <div key={course.slug} style={{
                   padding: "48px 0",
-                  borderBottom: i < COURSES.length - 1 ? "1px solid var(--pub-line)" : "none",
+                  borderBottom: i < COURSES.length - 1 ? "1px solid var(--line)" : "none",
                   display: "grid", gridTemplateColumns: "1fr 1.8fr", gap: 64, alignItems: "start",
                 }}>
                   {/* Left */}
                   <div>
                     <h2 style={{
-                      fontFamily: "var(--pub-serif)", fontWeight: 400, fontSize: 26,
-                      color: "var(--pub-ink)", lineHeight: 1.3, marginBottom: 12,
+                      fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 26,
+                      color: "var(--text)", lineHeight: 1.3, marginBottom: 12,
                       textTransform: "capitalize",
                     }}>
                       {course.label}
                     </h2>
                     <div style={{ display: "flex", gap: 12, marginBottom: 20, flexWrap: "wrap" }}>
                       <span style={{
-                        fontSize: 12, padding: "4px 10px", borderRadius: 2,
-                        background: "var(--pub-stone)", color: "var(--pub-muted)",
+                        fontSize: 12, padding: "4px 10px", borderRadius: 0,
+                        background: "var(--surface)", color: "var(--text-muted)",
                       }}>
                         {course.level}
                       </span>
                       <span style={{
-                        fontSize: 12, padding: "4px 10px", borderRadius: 2,
-                        background: "var(--pub-stone)", color: "var(--pub-muted)",
+                        fontSize: 12, padding: "4px 10px", borderRadius: 0,
+                        background: "var(--surface)", color: "var(--text-muted)",
                       }}>
                         {course.duration}
                       </span>
                     </div>
                     <div style={{
-                      padding: "16px 18px", border: "1px solid var(--pub-line)", borderRadius: 2,
+                      padding: "16px 18px", border: "1px solid var(--line)", borderRadius: 0,
                       marginBottom: 20,
                     }}>
-                      <div style={{ fontSize: 11, color: "var(--pub-muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>
+                      <div style={{ fontSize: 11, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>
                         Certificate awarded
                       </div>
-                      <div style={{ fontSize: 14, color: "var(--pub-ink)", lineHeight: 1.4 }}>
+                      <div style={{ fontSize: 14, color: "var(--text)", lineHeight: 1.4 }}>
                         {course.cert}
                       </div>
                     </div>
                     <Link href={`/academy/${course.slug}`} style={{
                       display: "inline-block",
-                      background: "var(--pub-forest)", color: "var(--pub-stone)",
-                      fontSize: 13, padding: "12px 22px", textDecoration: "none", borderRadius: 2,
+                      background: "var(--red)", color: "var(--text-invert)",
+                      fontSize: 13, padding: "12px 22px", textDecoration: "none", borderRadius: 0,
                     }}>
                       Enroll - free
                     </Link>
@@ -170,23 +170,23 @@ export default function AcademyPage() {
 
                   {/* Right - topics */}
                   <div>
-                    <div style={{ fontSize: 13, color: "var(--pub-muted)", marginBottom: 14, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                    <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 14, textTransform: "uppercase", letterSpacing: "0.06em" }}>
                       What this course covers
                     </div>
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
                       {course.topics.map((t) => (
                         <div key={t} style={{
-                          padding: "14px 16px", border: "1px solid var(--pub-line)", borderRadius: 2,
-                          fontSize: 14, color: "var(--pub-ink)", lineHeight: 1.45,
+                          padding: "14px 16px", border: "1px solid var(--line)", borderRadius: 0,
+                          fontSize: 14, color: "var(--text)", lineHeight: 1.45,
                           display: "flex", alignItems: "flex-start", gap: 10,
                         }}>
-                          <span style={{ color: "var(--pub-brass)", flexShrink: 0, marginTop: 1 }}>·</span>
+                          <span style={{ color: "var(--text-muted)", flexShrink: 0, marginTop: 1 }}>·</span>
                           {t}
                         </div>
                       ))}
                     </div>
                     {course.note && (
-                      <p style={{ fontSize: 13, color: "var(--pub-muted)", lineHeight: 1.6, marginTop: 16 }}>
+                      <p style={{ fontSize: 13, color: "var(--text-muted)", lineHeight: 1.45, marginTop: 16 }}>
                         {course.note}
                       </p>
                     )}
@@ -199,33 +199,33 @@ export default function AcademyPage() {
       </div>
 
       {/* Video library */}
-      <div style={{ background: "var(--pub-stone)", borderTop: "1px solid var(--pub-line)" }}>
+      <div style={{ background: "var(--surface)", borderTop: "1px solid var(--line)" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
           <div style={{ padding: "72px 0" }}>
-            <div style={{ fontSize: 13, color: "var(--pub-brass)", marginBottom: 16 }}>Video library</div>
+            <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 16 }}>Video library</div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "start" }}>
 
               {/* DIY videos */}
               <div>
-                <h2 style={{ fontFamily: "var(--pub-serif)", fontWeight: 400, fontSize: 22, color: "var(--pub-ink)", lineHeight: 1.3, marginBottom: 20 }}>
+                <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 22, color: "var(--text)", lineHeight: 1.3, marginBottom: 20 }}>
                   DIY homeowner guides
                 </h2>
                 <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
                   {VIDEOS.diy.map((v, i) => (
                     <div key={v.title} style={{
-                      padding: "16px 0", borderBottom: "1px solid var(--pub-line)",
+                      padding: "16px 0", borderBottom: "1px solid var(--line)",
                       display: "flex", alignItems: "center", gap: 14, cursor: "pointer",
                     }}>
                       <div style={{
-                        width: 40, height: 40, borderRadius: 2, flexShrink: 0,
+                        width: 40, height: 40, borderRadius: 0, flexShrink: 0,
                         background: "linear-gradient(135deg, #D6CFC4, #C0B9AD)",
                         display: "flex", alignItems: "center", justifyContent: "center",
                       }}>
                         <span style={{ fontSize: 14, color: "#fff" }}>▶</span>
                       </div>
                       <div style={{ flex: 1 }}>
-                        <div style={{ fontSize: 14, color: "var(--pub-ink)", lineHeight: 1.4 }}>{v.title}</div>
-                        <div style={{ fontSize: 12, color: "var(--pub-muted)", marginTop: 3 }}>{v.duration}</div>
+                        <div style={{ fontSize: 14, color: "var(--text)", lineHeight: 1.4 }}>{v.title}</div>
+                        <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 3 }}>{v.duration}</div>
                       </div>
                     </div>
                   ))}
@@ -234,25 +234,25 @@ export default function AcademyPage() {
 
               {/* Process videos */}
               <div>
-                <h2 style={{ fontFamily: "var(--pub-serif)", fontWeight: 400, fontSize: 22, color: "var(--pub-ink)", lineHeight: 1.3, marginBottom: 20 }}>
+                <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 22, color: "var(--text)", lineHeight: 1.3, marginBottom: 20 }}>
                   How we do it - our process
                 </h2>
                 <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
                   {VIDEOS.process.map((v) => (
                     <div key={v.title} style={{
-                      padding: "16px 0", borderBottom: "1px solid var(--pub-line)",
+                      padding: "16px 0", borderBottom: "1px solid var(--line)",
                       display: "flex", alignItems: "center", gap: 14, cursor: "pointer",
                     }}>
                       <div style={{
-                        width: 40, height: 40, borderRadius: 2, flexShrink: 0,
-                        background: "linear-gradient(135deg, #2F4A38, #1E2320)",
+                        width: 40, height: 40, borderRadius: 0, flexShrink: 0,
+                        background: "var(--surface-ink)",
                         display: "flex", alignItems: "center", justifyContent: "center",
                       }}>
-                        <span style={{ fontSize: 14, color: "rgba(241,238,231,0.9)" }}>▶</span>
+                        <span style={{ fontSize: 14, color: "var(--text-invert-muted)" }}>▶</span>
                       </div>
                       <div style={{ flex: 1 }}>
-                        <div style={{ fontSize: 14, color: "var(--pub-ink)", lineHeight: 1.4 }}>{v.title}</div>
-                        <div style={{ fontSize: 12, color: "var(--pub-muted)", marginTop: 3 }}>{v.duration}</div>
+                        <div style={{ fontSize: 14, color: "var(--text)", lineHeight: 1.4 }}>{v.title}</div>
+                        <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 3 }}>{v.duration}</div>
                       </div>
                     </div>
                   ))}
@@ -265,14 +265,14 @@ export default function AcademyPage() {
       </div>
 
       {/* CTA */}
-      <div style={{ background: "var(--pub-ink)" }}>
+      <div style={{ background: "var(--surface-ink)" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
           <div style={{ padding: "64px 0", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 40, flexWrap: "wrap" }}>
             <div>
-              <p style={{ fontFamily: "var(--pub-serif)", fontSize: 30, color: "var(--pub-stone)", marginBottom: 10, fontWeight: 400, lineHeight: 1.3 }}>
+              <p style={{ fontFamily: "var(--font-display)", fontSize: 30, color: "var(--text-invert)", marginBottom: 10, fontWeight: 400, lineHeight: 1.3 }}>
                 Start with any course. It&apos;s free.
               </p>
-              <p style={{ fontSize: 15, color: "rgba(241,238,231,0.65)", lineHeight: 1.65, maxWidth: "44ch" }}>
+              <p style={{ fontSize: 15, color: "var(--text-invert-muted)", lineHeight: 1.45, maxWidth: "44ch" }}>
                 All three courses are self-paced and at no cost. A certificate is issued once you pass the final assessment.
               </p>
             </div>
@@ -280,9 +280,9 @@ export default function AcademyPage() {
               {COURSES.map((c) => (
                 <Link key={c.slug} href={`/academy/${c.slug}`} style={{
                   display: "block",
-                  background: "rgba(241,238,231,0.1)", color: "var(--pub-stone)",
+                  background: "rgba(241,238,231,0.1)", color: "var(--text-invert)",
                   border: "1px solid rgba(241,238,231,0.2)",
-                  fontSize: 14, padding: "13px 24px", textDecoration: "none", borderRadius: 2,
+                  fontSize: 14, padding: "13px 24px", textDecoration: "none", borderRadius: 0,
                   textTransform: "capitalize",
                 }}>
                   Enroll in {c.label} →

@@ -58,18 +58,18 @@ export default function ProjectsPage() {
     <div>
 
       {/* Page header */}
-      <div style={{ borderBottom: "1px solid var(--pub-line)", background: "var(--pub-stone)" }}>
+      <div style={{ borderBottom: "1px solid var(--line)", background: "var(--surface)" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
           <div style={{ padding: "64px 0 56px" }}>
-            <div style={{ fontSize: 13, color: "var(--pub-brass)", marginBottom: 16 }}>Projects</div>
+            <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 16 }}>Projects</div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "end" }}>
               <h1 style={{
-                fontFamily: "var(--pub-serif)", fontWeight: 400, fontSize: 48,
-                lineHeight: 1.15, color: "var(--pub-ink)", maxWidth: "14ch",
+                fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 48,
+                lineHeight: 1.15, color: "var(--text)", maxWidth: "14ch",
               }}>
                 Real rooms. Real numbers. Real results.
               </h1>
-              <p style={{ fontSize: 16, color: "#4B4A45", lineHeight: 1.7, maxWidth: "48ch", paddingBottom: 4 }}>
+              <p style={{ fontSize: 16, color: "var(--text-muted)", lineHeight: 1.45, maxWidth: "48ch", paddingBottom: 4 }}>
                 Every case study on this page shows the original problem, what we found during the design phase, the decisions we made together, and what the project actually cost and took. No stock photography. No ranges so wide they are meaningless.
               </p>
             </div>
@@ -83,29 +83,29 @@ export default function ProjectsPage() {
           {CASE_STUDIES.map((cs, i) => (
             <div key={cs.id} style={{
               padding: "72px 0",
-              borderBottom: "1px solid var(--pub-line)",
+              borderBottom: "1px solid var(--line)",
             }}>
               {/* Study header */}
               <div style={{ display: "flex", gap: 12, marginBottom: 20, flexWrap: "wrap" }}>
                 <span style={{
-                  fontSize: 11, color: "var(--pub-brass)", letterSpacing: "0.08em",
-                  textTransform: "uppercase", border: "1px solid var(--pub-line)",
-                  padding: "3px 10px", borderRadius: 2,
+                  fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.08em",
+                  textTransform: "uppercase", border: "1px solid var(--line)",
+                  padding: "3px 10px", borderRadius: 0,
                 }}>
                   {cs.city}
                 </span>
                 <span style={{
-                  fontSize: 11, color: "var(--pub-muted)", letterSpacing: "0.08em",
-                  textTransform: "uppercase", border: "1px solid var(--pub-line)",
-                  padding: "3px 10px", borderRadius: 2,
+                  fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.08em",
+                  textTransform: "uppercase", border: "1px solid var(--line)",
+                  padding: "3px 10px", borderRadius: 0,
                 }}>
                   {cs.homeStyle}
                 </span>
               </div>
 
               <h2 style={{
-                fontFamily: "var(--pub-serif)", fontWeight: 400, fontSize: 32,
-                color: "var(--pub-ink)", lineHeight: 1.25, marginBottom: 32,
+                fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 32,
+                color: "var(--text)", lineHeight: 1.25, marginBottom: 32,
                 maxWidth: "22ch",
               }}>
                 {cs.title}
@@ -121,14 +121,14 @@ export default function ProjectsPage() {
                         aspectRatio: "4/3", background: label === "Before"
                           ? "linear-gradient(135deg,#C8C0B0 0%,#B8B0A0 100%)"
                           : "linear-gradient(135deg,#D4A870 0%,#EDE6D6 100%)",
-                        borderRadius: 2, marginBottom: 8,
+                        borderRadius: 0, marginBottom: 8,
                         display: "flex", alignItems: "center", justifyContent: "center",
                       }}>
-                        <span style={{ fontSize: 12, color: "rgba(30,35,32,0.4)", letterSpacing: "0.06em" }}>
+                        <span style={{ fontSize: 12, color: "var(--surface-scrim)", letterSpacing: "0.06em" }}>
                           {label.toUpperCase()} PHOTO
                         </span>
                       </div>
-                      <span style={{ fontSize: 12, color: "var(--pub-muted)" }}>{label}</span>
+                      <span style={{ fontSize: 12, color: "var(--text-muted)" }}>{label}</span>
                     </div>
                   ))}
                 </div>
@@ -136,31 +136,31 @@ export default function ProjectsPage() {
                 {/* Project details */}
                 <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
                   <div>
-                    <div style={{ fontSize: 12, color: "var(--pub-muted)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 6 }}>
+                    <div style={{ fontSize: 12, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 6 }}>
                       Client objective
                     </div>
-                    <p style={{ fontSize: 15, color: "#4B4A45", lineHeight: 1.65, margin: 0 }}>{cs.objective}</p>
+                    <p style={{ fontSize: 15, color: "var(--text-muted)", lineHeight: 1.45, margin: 0 }}>{cs.objective}</p>
                   </div>
                   <div>
-                    <div style={{ fontSize: 12, color: "var(--pub-muted)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 6 }}>
+                    <div style={{ fontSize: 12, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 6 }}>
                       Scope
                     </div>
-                    <p style={{ fontSize: 15, color: "#4B4A45", lineHeight: 1.65, margin: 0 }}>{cs.scope}</p>
+                    <p style={{ fontSize: 15, color: "var(--text-muted)", lineHeight: 1.45, margin: 0 }}>{cs.scope}</p>
                   </div>
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
                     <div>
-                      <div style={{ fontSize: 12, color: "var(--pub-muted)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 6 }}>
+                      <div style={{ fontSize: 12, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 6 }}>
                         Investment range
                       </div>
-                      <div style={{ fontFamily: "var(--pub-serif)", fontSize: 20, color: "var(--pub-ink)" }}>
+                      <div style={{ fontFamily: "var(--font-display)", fontSize: 20, color: "var(--text)" }}>
                         {cs.investmentRange}
                       </div>
                     </div>
                     <div>
-                      <div style={{ fontSize: 12, color: "var(--pub-muted)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 6 }}>
+                      <div style={{ fontSize: 12, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 6 }}>
                         Duration
                       </div>
-                      <div style={{ fontSize: 14, color: "var(--pub-ink)", lineHeight: 1.5 }}>
+                      <div style={{ fontSize: 14, color: "var(--text)", lineHeight: 1.45 }}>
                         Planned: {cs.duration.planned}<br />
                         Actual: {cs.duration.actual}
                       </div>
@@ -173,37 +173,37 @@ export default function ProjectsPage() {
               <div style={{
                 marginTop: 36, padding: "24px 28px",
                 background: "rgba(169,134,63,0.07)", border: "1px solid rgba(169,134,63,0.25)",
-                borderRadius: 2,
+                borderRadius: 0,
               }}>
-                <div style={{ fontSize: 11, color: "var(--pub-brass)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>
+                <div style={{ fontSize: 11, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>
                   Found during the design phase
                 </div>
-                <p style={{ fontSize: 15, color: "#4B4A45", lineHeight: 1.65, margin: 0 }}>{cs.designNote}</p>
+                <p style={{ fontSize: 15, color: "var(--text-muted)", lineHeight: 1.45, margin: 0 }}>{cs.designNote}</p>
               </div>
 
               {/* Materials and testimonial */}
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, marginTop: 36 }}>
                 <div>
-                  <div style={{ fontSize: 12, color: "var(--pub-muted)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 12 }}>
+                  <div style={{ fontSize: 12, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 12 }}>
                     Materials selected
                   </div>
                   <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 8 }}>
                     {cs.materials.map((m) => (
-                      <li key={m} style={{ fontSize: 14, color: "var(--pub-ink)", display: "flex", gap: 10, alignItems: "flex-start" }}>
-                        <span style={{ color: "var(--pub-brass)", flexShrink: 0 }}>&#10003;</span>
+                      <li key={m} style={{ fontSize: 14, color: "var(--text)", display: "flex", gap: 10, alignItems: "flex-start" }}>
+                        <span style={{ color: "var(--text-muted)", flexShrink: 0 }}>&#10003;</span>
                         {m}
                       </li>
                     ))}
                   </ul>
                 </div>
                 <div style={{
-                  padding: "24px", background: "var(--pub-stone)",
-                  border: "1px solid var(--pub-line)", borderRadius: 2,
+                  padding: "24px", background: "var(--surface)",
+                  border: "1px solid var(--line)", borderRadius: 0,
                 }}>
-                  <p style={{ fontFamily: "var(--pub-serif)", fontSize: 18, color: "var(--pub-ink)", lineHeight: 1.6, margin: "0 0 14px", fontStyle: "italic" }}>
+                  <p style={{ fontFamily: "var(--font-display)", fontSize: 18, color: "var(--text)", lineHeight: 1.45, margin: "0 0 14px", fontStyle: "italic" }}>
                     &ldquo;{cs.testimonial.quote}&rdquo;
                   </p>
-                  <p style={{ fontSize: 13, color: "var(--pub-muted)", margin: 0 }}>
+                  <p style={{ fontSize: 13, color: "var(--text-muted)", margin: 0 }}>
                     {cs.testimonial.name} - {cs.testimonial.city}
                   </p>
                 </div>
@@ -214,33 +214,33 @@ export default function ProjectsPage() {
       </div>
 
       {/* Design Discovery Package */}
-      <div style={{ background: "var(--pub-ink)" }}>
+      <div style={{ background: "var(--surface-ink)" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
           <div style={{ padding: "80px 0" }}>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1.8fr", gap: 72, alignItems: "start" }}>
 
               {/* Left - pitch */}
               <div>
-                <div style={{ fontSize: 13, color: "var(--pub-brass)", marginBottom: 16 }}>
+                <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 16 }}>
                   Design discovery package
                 </div>
                 <h2 style={{
-                  fontFamily: "var(--pub-serif)", fontWeight: 400, fontSize: 32,
-                  color: "var(--pub-stone)", lineHeight: 1.3, marginBottom: 18,
+                  fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 32,
+                  color: "var(--text-invert)", lineHeight: 1.3, marginBottom: 18,
                 }}>
                   The most expensive mistake in remodeling is skipping the planning.
                 </h2>
-                <p style={{ fontSize: 15, color: "rgba(241,238,231,0.7)", lineHeight: 1.75, marginBottom: 18 }}>
+                <p style={{ fontSize: 15, color: "var(--text-invert-muted)", lineHeight: 1.45, marginBottom: 18 }}>
                   Every case study above contains at least one thing we found during measurement or design that changed the scope, the budget, or both. A client who does not go through a proper discovery phase finds those things after the crew is already on-site - when fixing them costs three times as much.
                 </p>
-                <p style={{ fontSize: 15, color: "rgba(241,238,231,0.7)", lineHeight: 1.75, marginBottom: 28 }}>
+                <p style={{ fontSize: 15, color: "var(--text-invert-muted)", lineHeight: 1.45, marginBottom: 28 }}>
                   Our structured discovery package documents the space, assesses the real scope, and produces a set of deliverables you can take to any contractor. If you build with us, the full fee is credited toward construction.
                 </p>
                 <Link href="/request-a-visit?type=discovery" style={{
                   display: "inline-block",
-                  background: "var(--pub-stone)", color: "var(--pub-forest)",
+                  background: "var(--surface)", color: "var(--red)",
                   fontSize: 14, fontWeight: 500, padding: "14px 24px",
-                  textDecoration: "none", borderRadius: 2,
+                  textDecoration: "none", borderRadius: 0,
                 }}>
                   Schedule a discovery session
                 </Link>
@@ -248,7 +248,7 @@ export default function ProjectsPage() {
 
               {/* Right - deliverables */}
               <div>
-                <div style={{ fontSize: 12, color: "rgba(241,238,231,0.45)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 20 }}>
+                <div style={{ fontSize: 12, color: "var(--text-invert-muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 20 }}>
                   What the package includes
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
@@ -259,10 +259,10 @@ export default function ProjectsPage() {
                       display: "grid", gridTemplateColumns: "1.1fr 1.6fr", gap: 24,
                     }}>
                       <div style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
-                        <span style={{ color: "var(--pub-brass)", flexShrink: 0, marginTop: 1 }}>&#10003;</span>
-                        <span style={{ fontSize: 15, color: "var(--pub-stone)", lineHeight: 1.45 }}>{d.item}</span>
+                        <span style={{ color: "var(--text-muted)", flexShrink: 0, marginTop: 1 }}>&#10003;</span>
+                        <span style={{ fontSize: 15, color: "var(--text-invert)", lineHeight: 1.45 }}>{d.item}</span>
                       </div>
-                      <p style={{ fontSize: 13, color: "rgba(241,238,231,0.55)", lineHeight: 1.65, margin: 0 }}>
+                      <p style={{ fontSize: 13, color: "var(--text-invert-muted)", lineHeight: 1.45, margin: 0 }}>
                         {d.detail}
                       </p>
                     </div>
@@ -270,10 +270,10 @@ export default function ProjectsPage() {
                 </div>
                 <div style={{
                   marginTop: 28, padding: "18px 22px",
-                  border: "1px solid rgba(169,134,63,0.4)", borderRadius: 2,
+                  border: "1px solid rgba(169,134,63,0.4)", borderRadius: 0,
                   background: "rgba(169,134,63,0.08)",
                 }}>
-                  <p style={{ fontSize: 14, color: "var(--pub-brass)", margin: 0, lineHeight: 1.6 }}>
+                  <p style={{ fontSize: 14, color: "var(--text-muted)", margin: 0, lineHeight: 1.45 }}>
                     <strong>Credit toward construction.</strong> The full discovery fee applies to your construction contract if you proceed with us. You are not paying for a sales pitch - you are paying for deliverables you own regardless of who builds the project.
                   </p>
                 </div>

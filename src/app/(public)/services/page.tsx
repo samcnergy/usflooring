@@ -7,7 +7,7 @@ export const metadata = {
 
 const SERVICES = [
   {
-    number: "01",
+    id: "design",
     label: "Design",
     headline: "We figure out what you actually want before anything is ordered.",
     body: "Every project starts in the showroom. You walk through real materials - tile, stone, cabinet doors, flooring - and our designers help you narrow it down. We do space planning, layout drawings, and 3D visualization so you can see the finished room before construction begins. No guessing. No surprises when the samples arrive.",
@@ -20,7 +20,7 @@ const SERVICES = [
     ],
   },
   {
-    number: "02",
+    id: "remodel",
     label: "Remodel",
     headline: "Our crew does the work. No handoffs to subcontractors you have never met.",
     body: "We handle kitchens, bathrooms, and every surface in between - flooring, tile, countertops, cabinets, vanities, and backsplashes. Whether the layout is staying the same or changing completely, the same team that designed it is the one installing it. That is the only way to hold both accountable.",
@@ -33,7 +33,7 @@ const SERVICES = [
     ],
   },
   {
-    number: "03",
+    id: "delivery",
     label: "Delivery",
     headline: "One point of contact from permit to punch list.",
     body: "We coordinate everything - scheduling, material lead times, permit submissions, and site access. You get one person to call, not a chain of contractors pointing at each other. We set a timeline at the start, communicate when things shift, and do not consider the job done until the space is clean and complete.",
@@ -46,7 +46,7 @@ const SERVICES = [
     ],
   },
   {
-    number: "04",
+    id: "warranty",
     label: "Warranty",
     headline: "Written warranty on every project. A direct line when something needs attention.",
     body: "Every completed project comes with a written warranty covering our workmanship. If something is not right, you call us - not a call center, not a different contractor. We also coordinate product warranties from the manufacturers we work with. For clients who want ongoing coverage, an optional annual inspection is available to catch small issues before they become expensive ones.",
@@ -65,18 +65,35 @@ export default function ServicesPage() {
     <div>
 
       {/* Header */}
-      <div style={{ borderBottom: "1px solid var(--pub-line)", background: "var(--pub-stone)" }}>
-        <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
-          <div style={{ padding: "64px 0 56px" }}>
-            <div style={{ fontSize: 13, color: "var(--pub-brass)", marginBottom: 16 }}>Services</div>
+      <div style={{ borderBottom: "1px solid var(--line)", background: "var(--surface-alt)" }}>
+        <div style={{ maxWidth: "var(--container)", margin: "0 auto", padding: "0 var(--gutter)" }}>
+          <div style={{ padding: "var(--s-9) 0 var(--s-8)" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "var(--s-3)", marginBottom: "var(--s-5)" }}>
+              <div style={{ width: 32, height: 2, background: "var(--red)", flexShrink: 0 }} />
+              <span style={{
+                fontSize: "var(--t-label)",
+                fontFamily: "var(--font-body)",
+                fontWeight: 700,
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                color: "var(--text-muted)",
+              }}>
+                Services
+              </span>
+            </div>
             <h1 style={{
-              fontFamily: "var(--pub-serif)", fontWeight: 400, fontSize: 48,
-              lineHeight: 1.15, color: "var(--pub-ink)", whiteSpace: "nowrap", marginBottom: 20,
+              fontFamily: "var(--font-display)",
+              fontWeight: 400,
+              fontSize: "var(--t-h1)",
+              lineHeight: 1.10,
+              letterSpacing: "-0.01em",
+              color: "var(--text)",
+              marginBottom: "var(--s-5)",
             }}>
-              Design. Remodel. Delivery. Warranty.
+              We handle every phase of a renovation, from the first showroom conversation to the written warranty when the job is done.
             </h1>
-            <p style={{ fontSize: 16, color: "#4B4A45", lineHeight: 1.7, maxWidth: "50ch" }}>
-              Four phases. One team. We handle every part of a renovation - from the first conversation in the showroom to the written warranty when the job is done.
+            <p style={{ fontSize: "var(--t-body-lg)", color: "var(--text-muted)", lineHeight: 1.35, maxWidth: "56ch" }}>
+              One team. One point of contact. Design, materials, installation, and post-project support - all under one roof in Orange County.
             </p>
           </div>
         </div>
@@ -92,11 +109,23 @@ export default function ServicesPage() {
         />
         <div style={{
           position: "absolute", inset: 0,
-          background: "linear-gradient(to bottom, rgba(30,35,32,0.15) 0%, rgba(30,35,32,0.55) 100%)",
+          background: "var(--surface-scrim)",
+          opacity: 0.45,
+        }} />
+        <div style={{
+          position: "absolute", inset: 0,
           display: "flex", alignItems: "flex-end",
         }}>
-          <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px 48px", width: "100%" }}>
-            <p style={{ fontFamily: "var(--pub-serif)", fontSize: 22, color: "#F1EEE7", lineHeight: 1.3, maxWidth: "32ch", margin: 0 }}>
+          <div style={{ maxWidth: "var(--container)", margin: "0 auto", padding: `0 var(--gutter) var(--s-7)`, width: "100%" }}>
+            <p style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "var(--t-h2)",
+              fontWeight: 400,
+              lineHeight: 1.14,
+              color: "var(--text-invert)",
+              maxWidth: "32ch",
+              margin: 0,
+            }}>
               From the first sketch to the finished room - one team, one point of contact.
             </p>
           </div>
@@ -104,56 +133,56 @@ export default function ServicesPage() {
       </div>
 
       {/* Four service sections */}
-      <div style={{ background: "#fff" }}>
-        <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
+      <div style={{ background: "var(--surface)" }}>
+        <div style={{ maxWidth: "var(--container)", margin: "0 auto", padding: "0 var(--gutter)" }}>
           {SERVICES.map((s, i) => (
             <div
               key={s.label}
+              id={s.id}
               style={{
-                display: "grid", gridTemplateColumns: "1fr 1.8fr", gap: 80,
-                padding: "80px 0",
-                borderBottom: i < SERVICES.length - 1 ? "1px solid var(--pub-line)" : "none",
+                display: "grid", gridTemplateColumns: "1fr 1.8fr", gap: "var(--s-10)",
+                padding: "var(--s-9) 0",
+                borderBottom: i < SERVICES.length - 1 ? "1px solid var(--line)" : "none",
                 alignItems: "start",
               }}
             >
               {/* Left */}
               <div>
-                <div style={{
-                  fontFamily: "var(--pub-serif)", fontSize: 64, color: "var(--pub-line)",
-                  lineHeight: 1, marginBottom: 16,
-                }}>
-                  {s.number}
-                </div>
-                <div style={{
-                  fontFamily: "var(--pub-serif)", fontSize: 64, fontWeight: 400,
-                  color: "var(--pub-ink)", lineHeight: 1, marginBottom: 20,
-                }}>
-                  {s.label}
+                <div style={{ display: "flex", alignItems: "center", gap: "var(--s-3)", marginBottom: "var(--s-5)" }}>
+                  <div style={{ width: 32, height: 2, background: "var(--red)", flexShrink: 0 }} />
+                  <span style={{ fontSize: "var(--t-label)", fontFamily: "var(--font-body)", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--text-muted)" }}>
+                    {s.label}
+                  </span>
                 </div>
                 <h2 style={{
-                  fontFamily: "var(--pub-serif)", fontWeight: 400, fontSize: 26,
-                  color: "var(--pub-ink)", lineHeight: 1.35, marginBottom: 16,
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 400,
+                  fontSize: "var(--t-h2)",
+                  color: "var(--text)",
+                  lineHeight: 1.14,
+                  letterSpacing: "-0.01em",
+                  marginBottom: "var(--s-5)",
                 }}>
                   {s.headline}
                 </h2>
-                <p style={{ fontSize: 15, color: "#4B4A45", lineHeight: 1.75, margin: 0 }}>
+                <p style={{ fontSize: "var(--t-body-lg)", color: "var(--text-muted)", lineHeight: 1.35, margin: 0 }}>
                   {s.body}
                 </p>
               </div>
 
               {/* Right - detail list */}
-              <div style={{ paddingTop: 90 }}>
+              <div style={{ paddingTop: "var(--s-9)" }}>
                 {s.details.map((d, j) => (
                   <div
                     key={d}
                     style={{
-                      display: "flex", alignItems: "flex-start", gap: 16,
-                      padding: "18px 0",
-                      borderBottom: j < s.details.length - 1 ? "1px solid var(--pub-line)" : "none",
+                      display: "flex", alignItems: "flex-start", gap: "var(--s-4)",
+                      padding: "var(--s-4) 0",
+                      borderBottom: j < s.details.length - 1 ? "1px solid var(--line)" : "none",
                     }}
                   >
-                    <span style={{ color: "var(--pub-brass)", fontSize: 13, flexShrink: 0, marginTop: 1 }}>&#10003;</span>
-                    <span style={{ fontSize: 15, color: "var(--pub-ink)", lineHeight: 1.5 }}>{d}</span>
+                    <span style={{ color: "var(--red)", fontSize: "var(--t-label)", flexShrink: 0, marginTop: 1 }}>&#10003;</span>
+                    <span style={{ fontSize: "var(--t-body-lg)", color: "var(--text)", lineHeight: 1.35 }}>{d}</span>
                   </div>
                 ))}
               </div>
@@ -163,38 +192,59 @@ export default function ServicesPage() {
       </div>
 
       {/* CTA */}
-      <div style={{ background: "var(--pub-ink)" }}>
-        <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
+      <div style={{ background: "var(--surface-ink)", borderTop: "1px solid var(--line-invert)" }}>
+        <div style={{ maxWidth: "var(--container)", margin: "0 auto", padding: "0 var(--gutter)" }}>
           <div style={{
-            padding: "80px 0", display: "flex",
+            padding: "var(--s-9) 0", display: "flex",
             alignItems: "center", justifyContent: "space-between",
-            gap: 32, flexWrap: "wrap",
+            gap: "var(--s-6)", flexWrap: "wrap",
           }}>
             <div>
-              <p style={{
-                fontFamily: "var(--pub-serif)", fontWeight: 400, fontSize: 30,
-                color: "var(--pub-stone)", lineHeight: 1.3, marginBottom: 10,
+              <h2 style={{
+                fontFamily: "var(--font-display)",
+                fontWeight: 400,
+                fontSize: "var(--t-h2)",
+                color: "var(--text-invert)",
+                lineHeight: 1.14,
+                letterSpacing: "-0.01em",
+                marginBottom: "var(--s-4)",
               }}>
                 Ready to start?
-              </p>
-              <p style={{ fontSize: 15, color: "rgba(241,238,231,0.65)", lineHeight: 1.7, maxWidth: "44ch", margin: 0 }}>
+              </h2>
+              <p style={{ fontSize: "var(--t-body-lg)", color: "var(--text-invert-muted)", lineHeight: 1.35, maxWidth: "44ch", margin: 0 }}>
                 Come into the showroom or request a visit. The first conversation is free and there is no obligation to proceed.
               </p>
             </div>
-            <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
+            <div style={{ display: "flex", gap: "var(--s-4)", flexWrap: "wrap" }}>
               <Link href="/request-a-visit" style={{
                 display: "inline-block",
-                background: "var(--pub-stone)", color: "var(--pub-forest)",
-                fontSize: 14, fontWeight: 500, padding: "14px 28px",
-                textDecoration: "none", borderRadius: 2, whiteSpace: "nowrap",
+                background: "var(--red)",
+                color: "var(--text-invert)",
+                fontSize: "var(--t-btn)",
+                fontFamily: "var(--font-body)",
+                fontWeight: 700,
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+                padding: "14px 28px",
+                textDecoration: "none",
+                borderRadius: "var(--radius)",
+                whiteSpace: "nowrap",
               }}>
                 Plan a visit
               </Link>
               <Link href="/shop" style={{
                 display: "inline-block",
-                border: "1px solid rgba(241,238,231,0.3)", color: "var(--pub-stone)",
-                fontSize: 14, padding: "14px 28px",
-                textDecoration: "none", borderRadius: 2, whiteSpace: "nowrap",
+                border: "1px solid var(--line-invert)",
+                color: "var(--text-invert)",
+                fontSize: "var(--t-btn)",
+                fontFamily: "var(--font-body)",
+                fontWeight: 700,
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+                padding: "14px 28px",
+                textDecoration: "none",
+                borderRadius: "var(--radius)",
+                whiteSpace: "nowrap",
               }}>
                 Browse materials
               </Link>

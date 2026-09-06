@@ -4,15 +4,15 @@ import { submitLeadAction, type SubmitLeadState } from "./actions";
 import Link from "next/link";
 
 const F = {
-  label: { fontSize: 13, fontWeight: 500, color: "var(--pub-ink)", display: "block", marginBottom: 6 },
+  label: { fontSize: 13, fontWeight: 500, color: "var(--text)", display: "block", marginBottom: 6 },
   input: {
-    display: "block", width: "100%", padding: "10px 12px", borderRadius: 2,
-    border: "1px solid var(--pub-line)", background: "#fff", fontSize: 14,
-    color: "var(--pub-ink)", outline: "none", boxSizing: "border-box" as const,
-    fontFamily: "var(--pub-sans)",
+    display: "block", width: "100%", padding: "10px 12px", borderRadius: 0,
+    border: "1px solid var(--line)", background: "#fff", fontSize: 14,
+    color: "var(--text)", outline: "none", boxSizing: "border-box" as const,
+    fontFamily: "var(--font-body)",
   },
   group: { display: "flex", flexDirection: "column" as const, gap: 4 },
-  required: { color: "var(--pub-brass)", marginLeft: 2 },
+  required: { color: "var(--text-muted)", marginLeft: 2 },
 } as const;
 
 const JOB_OPTIONS = [
@@ -25,8 +25,8 @@ const JOB_OPTIONS = [
 
 function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ borderBottom: "1px solid var(--pub-line)", paddingBottom: 12, marginBottom: 24 }}>
-      <h2 style={{ fontFamily: "var(--pub-serif)", fontWeight: 400, fontSize: 22, color: "var(--pub-ink)" }}>
+    <div style={{ borderBottom: "1px solid var(--line)", paddingBottom: 12, marginBottom: 24 }}>
+      <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 22, color: "var(--text)" }}>
         {children}
       </h2>
     </div>
@@ -50,22 +50,22 @@ export default function LeadForm() {
     return (
       <div style={{ maxWidth: 560, margin: "0 auto", textAlign: "center", padding: "80px 0" }}>
         <div style={{
-          width: 56, height: 56, borderRadius: "50%", background: "var(--pub-forest)",
+          width: 56, height: 56, borderRadius: "50%", background: "var(--red)",
           display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px",
         }}>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="20 6 9 17 4 12" />
           </svg>
         </div>
-        <h1 style={{ fontFamily: "var(--pub-serif)", fontWeight: 400, fontSize: 30, color: "var(--pub-ink)", marginBottom: 16 }}>
+        <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 30, color: "var(--text)", marginBottom: 16 }}>
           Thank you for choosing US Floor Design Center.
         </h1>
-        <p style={{ fontSize: 16, color: "var(--pub-muted)", lineHeight: 1.65, margin: "0 auto 32px", maxWidth: "40ch" }}>
+        <p style={{ fontSize: 16, color: "var(--text-muted)", lineHeight: 1.45, margin: "0 auto 32px", maxWidth: "40ch" }}>
           A representative will contact you shortly to schedule your showroom visit.
         </p>
         <Link href="/" style={{
-          display: "inline-block", background: "var(--pub-forest)", color: "var(--pub-stone)",
-          fontSize: 14, padding: "12px 24px", textDecoration: "none", borderRadius: 2,
+          display: "inline-block", background: "var(--red)", color: "var(--text-invert)",
+          fontSize: 14, padding: "12px 24px", textDecoration: "none", borderRadius: 0,
         }}>
           Back to home
         </Link>
@@ -80,7 +80,7 @@ export default function LeadForm() {
 
       {state.status === "error" && (
         <div style={{
-          background: "#fff1f2", border: "1px solid #fecdd3", borderRadius: 2,
+          background: "#fff1f2", border: "1px solid #fecdd3", borderRadius: 0,
           padding: "12px 16px", fontSize: 14, color: "#991b1b",
         }}>
           {state.message}
@@ -95,7 +95,7 @@ export default function LeadForm() {
           <label style={F.label}>
             What kind of project is this?<span style={F.required}>*</span>
           </label>
-          <p style={{ fontSize: 12, color: "var(--pub-muted)", marginBottom: 8 }}>
+          <p style={{ fontSize: 12, color: "var(--text-muted)", marginBottom: 8 }}>
             Select all that apply.
           </p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 10 }}>
@@ -104,9 +104,9 @@ export default function LeadForm() {
               return (
                 <label key={opt.value} style={{
                   display: "flex", alignItems: "center", gap: 8,
-                  border: `1px solid ${checked ? "var(--pub-forest)" : "var(--pub-line)"}`,
+                  border: `1px solid ${checked ? "var(--red)" : "var(--line)"}`,
                   background: checked ? "rgba(47,74,56,0.06)" : "transparent",
-                  borderRadius: 2, padding: "10px 14px",
+                  borderRadius: 0, padding: "10px 14px",
                   cursor: "pointer", fontSize: 14,
                   transition: "border-color .15s, background .15s",
                 }}>
@@ -114,7 +114,7 @@ export default function LeadForm() {
                     type="checkbox"
                     checked={checked}
                     onChange={() => toggleJob(opt.value)}
-                    style={{ accentColor: "var(--pub-forest)", width: 15, height: 15 }}
+                    style={{ accentColor: "var(--red)", width: 15, height: 15 }}
                   />
                   {opt.label}
                 </label>
@@ -139,13 +139,13 @@ export default function LeadForm() {
 
         <div style={F.group}>
           <label style={F.label}>Does the project involve structural changes?</label>
-          <p style={{ fontSize: 12, color: "var(--pub-muted)", marginBottom: 8 }}>
+          <p style={{ fontSize: 12, color: "var(--text-muted)", marginBottom: 8 }}>
             Moving walls, plumbing relocation, electrical work, etc.
           </p>
           <div style={{ display: "flex", gap: 16 }}>
             {[{ value: "no", label: "No" }, { value: "yes", label: "Yes" }].map((opt) => (
               <label key={opt.value} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 14, cursor: "pointer" }}>
-                <input type="radio" name="hasStructural" value={opt.value} defaultChecked={opt.value === "no"} style={{ accentColor: "var(--pub-forest)" }} />
+                <input type="radio" name="hasStructural" value={opt.value} defaultChecked={opt.value === "no"} style={{ accentColor: "var(--red)" }} />
                 {opt.label}
               </label>
             ))}
@@ -240,16 +240,16 @@ export default function LeadForm() {
           type="submit"
           disabled={pending}
           style={{
-            background: pending ? "#8CAA96" : "var(--pub-forest)",
-            color: "var(--pub-stone)", fontSize: 15, fontWeight: 500,
-            padding: "16px 32px", border: "none", borderRadius: 2,
+            background: pending ? "#8CAA96" : "var(--red)",
+            color: "var(--text-invert)", fontSize: 15, fontWeight: 500,
+            padding: "16px 32px", border: "none", borderRadius: 0,
             cursor: pending ? "not-allowed" : "pointer",
-            fontFamily: "var(--pub-sans)",
+            fontFamily: "var(--font-body)",
           }}
         >
           {pending ? "Sending..." : "Send my request"}
         </button>
-        <p style={{ marginTop: 12, fontSize: 12, color: "var(--pub-muted)" }}>
+        <p style={{ marginTop: 12, fontSize: 12, color: "var(--text-muted)" }}>
           We review every request personally and reply within one business day.
         </p>
       </div>

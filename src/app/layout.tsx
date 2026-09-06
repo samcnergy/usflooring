@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
-import { Inter, Newsreader } from "next/font/google";
+import { Domine, Source_Sans_3 } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-inter",
+const domine = Domine({
+  variable: "--font-domine",
   subsets: ["latin"],
+  weight: ["400", "700"],
 });
 
-const newsreader = Newsreader({
-  variable: "--font-newsreader",
+const sourceSans3 = Source_Sans_3({
+  variable: "--font-source-sans-3",
   subsets: ["latin"],
-  style: ["normal", "italic"],
-  weight: ["400", "500"],
+  weight: ["400", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -36,7 +36,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${newsreader.variable} h-full antialiased`}>
+    <html lang="en" className={`${domine.variable} ${sourceSans3.variable} h-full`}>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );

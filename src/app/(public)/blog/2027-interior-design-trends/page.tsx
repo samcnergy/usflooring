@@ -42,7 +42,7 @@ const TRENDS = [
   },
   {
     n: "02",
-    title: "The “Quiet Kitchen” Replaces Visual Clutter",
+    title: "The "Quiet Kitchen" Replaces Visual Clutter",
     body: "The so-called anti-kitchen does not eliminate the kitchen; it makes its hardworking parts less dominant. Integrated appliances, appliance garages, concealed charging, furniture-style cabinetry and disciplined storage help the main room read as calm architecture rather than a wall of equipment.\n\nWhere space allows, a scullery or back kitchen can hold small appliances, pantry goods and prep mess. In a smaller footprint, the same effect can come from full-height storage, fewer counter interruptions and cabinet interiors planned around specific tools. The best version is not empty minimalism. It is a warm, highly functional room whose visual order is supported by thoughtful storage.",
     takeaway: "A successful quiet kitchen begins with an inventory. Plan where the coffee maker, mixer, recycling, pet supplies and countertop devices will live before cabinet drawings are finalized.",
   },
@@ -118,54 +118,54 @@ export default function Trends2027Page() {
         />
         <div style={{
           position: "absolute", inset: 0,
-          background: "linear-gradient(to right, rgba(30,35,32,0.55) 0%, rgba(30,35,32,0.1) 60%, transparent 100%)",
+          background: "linear-gradient(to right, var(--surface-scrim) 0%, rgba(30,35,32,0.1) 60%, transparent 100%)",
         }} />
         <div style={{ position: "absolute", bottom: 48, left: 0, right: 0, maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
-          <div style={{ fontSize: 12, color: "rgba(241,238,231,0.7)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 12 }}>
+          <div style={{ fontSize: 12, color: "var(--text-invert-muted)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 12 }}>
             2027 Design Forecast · Orange County, California
           </div>
           <h1 style={{
-            fontFamily: "var(--pub-serif)", fontWeight: 400, fontSize: 52,
-            color: "#F1EEE7", lineHeight: 1.1, maxWidth: "14ch", margin: 0,
+            fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 52,
+            color: "var(--surface)", lineHeight: 1.1, maxWidth: "14ch", margin: 0,
           }}>
             2027 Interior Design Trends
           </h1>
-          <p style={{ color: "rgba(241,238,231,0.8)", fontSize: 16, marginTop: 12, fontStyle: "italic" }}>
+          <p style={{ color: "var(--text-invert-muted)", fontSize: 16, marginTop: 12, fontStyle: "italic" }}>
             A more personal, comfortable and enduring home
           </p>
         </div>
       </div>
 
       {/* Byline + intro */}
-      <div style={{ background: "#fff", borderBottom: "1px solid var(--pub-line)" }}>
+      <div style={{ background: "#fff", borderBottom: "1px solid var(--line)" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
           <div style={{ padding: "48px 0 0", display: "grid", gridTemplateColumns: "2fr 1fr", gap: 80, alignItems: "start" }}>
             <div>
-              <div style={{ display: "flex", gap: 24, alignItems: "center", marginBottom: 32, paddingBottom: 24, borderBottom: "1px solid var(--pub-line)" }}>
-                <span style={{ fontSize: 13, color: "var(--pub-muted)" }}>By US Floor Design Center</span>
-                <span style={{ color: "var(--pub-line)" }}>·</span>
-                <span style={{ fontSize: 13, color: "var(--pub-muted)" }}>2027 Design Forecast</span>
-                <span style={{ color: "var(--pub-line)" }}>·</span>
-                <span style={{ fontSize: 13, color: "var(--pub-muted)" }}>Orange County, CA</span>
+              <div style={{ display: "flex", gap: 24, alignItems: "center", marginBottom: 32, paddingBottom: 24, borderBottom: "1px solid var(--line)" }}>
+                <span style={{ fontSize: 13, color: "var(--text-muted)" }}>By US Floor Design Center</span>
+                <span style={{ color: "var(--line)" }}>·</span>
+                <span style={{ fontSize: 13, color: "var(--text-muted)" }}>2027 Design Forecast</span>
+                <span style={{ color: "var(--line)" }}>·</span>
+                <span style={{ fontSize: 13, color: "var(--text-muted)" }}>Orange County, CA</span>
               </div>
-              <p style={{ fontFamily: "var(--pub-serif)", fontSize: 20, color: "var(--pub-ink)", lineHeight: 1.75, marginBottom: 20 }}>
+              <p style={{ fontFamily: "var(--font-display)", fontSize: 20, color: "var(--text)", lineHeight: 1.45, marginBottom: 20 }}>
                 The defining design story of 2027 is not one color, material or furniture shape. It is a shift away from perfectly staged rooms and toward homes that feel restorative, expressive, adaptable and built for real life.
               </p>
-              <p style={{ fontSize: 16, color: "#4B4A45", lineHeight: 1.8, marginBottom: 48 }}>
+              <p style={{ fontSize: 16, color: "var(--text-muted)", lineHeight: 1.45, marginBottom: 48 }}>
                 This forecast synthesizes ideas appearing across four 2027 design reports and translates them into practical decisions for kitchens, bathrooms, flooring and whole-home renovations in Orange County. Trends are a source of direction - not a requirement to replace everything you already love.
               </p>
             </div>
             {/* Jump links */}
             <div style={{ paddingTop: 56 }}>
               <div style={{ position: "sticky", top: 24 }}>
-                <div style={{ fontSize: 11, color: "var(--pub-muted)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 14 }}>In this article</div>
+                <div style={{ fontSize: 11, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 14 }}>In this article</div>
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                   {TRENDS.map((t) => (
                     <a key={t.n} href={`#trend-${t.n}`} style={{
-                      fontSize: 13, color: "var(--pub-muted)", textDecoration: "none",
-                      lineHeight: 1.5, display: "flex", gap: 8,
+                      fontSize: 13, color: "var(--text-muted)", textDecoration: "none",
+                      lineHeight: 1.45, display: "flex", gap: 8,
                     }}>
-                      <span style={{ color: "var(--pub-brass)", flexShrink: 0 }}>{t.n}</span>
+                      <span style={{ color: "var(--text-muted)", flexShrink: 0 }}>{t.n}</span>
                       {t.title}
                     </a>
                   ))}
@@ -183,20 +183,20 @@ export default function Trends2027Page() {
             {TRENDS.map((trend, i) => (
               <div key={trend.n} id={`trend-${trend.n}`} style={{
                 padding: "64px 0",
-                borderBottom: i < TRENDS.length - 1 ? "1px solid var(--pub-line)" : "none",
+                borderBottom: i < TRENDS.length - 1 ? "1px solid var(--line)" : "none",
               }}>
-                <div style={{ fontSize: 13, color: "var(--pub-brass)", marginBottom: 10, letterSpacing: "0.06em" }}>
+                <div style={{ fontSize: 13, marginBottom: 10, letterSpacing: "0.06em" }}>
                   {trend.n}
                 </div>
                 <h2 style={{
-                  fontFamily: "var(--pub-serif)", fontWeight: 400, fontSize: 28,
-                  color: "var(--pub-ink)", lineHeight: 1.3, marginBottom: 24,
+                  fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 28,
+                  color: "var(--text)", lineHeight: 1.3, marginBottom: 24,
                 }}>
                   {trend.title}
                 </h2>
                 {trend.body.split("\n\n").map((para, j) => (
                   <p key={j} style={{
-                    fontSize: 16, color: "#4B4A45", lineHeight: 1.8,
+                    fontSize: 16, color: "var(--text-muted)", lineHeight: 1.45,
                     margin: 0, marginBottom: 18,
                   }}>
                     {para}
@@ -205,13 +205,13 @@ export default function Trends2027Page() {
                 {/* Takeaway callout */}
                 <div style={{
                   marginTop: 28, padding: "20px 24px",
-                  borderLeft: "3px solid var(--pub-brass)",
-                  background: "var(--pub-stone)",
+                  borderLeft: "3px solid var(--text-muted)",
+                  background: "var(--surface)",
                 }}>
-                  <div style={{ fontSize: 11, color: "var(--pub-brass)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>
+                  <div style={{ fontSize: 11, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>
                     Orange County takeaway
                   </div>
-                  <p style={{ fontSize: 15, color: "var(--pub-ink)", lineHeight: 1.7, margin: 0 }}>
+                  <p style={{ fontSize: 15, color: "var(--text)", lineHeight: 1.45, margin: 0 }}>
                     {trend.takeaway}
                   </p>
                 </div>
@@ -222,30 +222,30 @@ export default function Trends2027Page() {
       </div>
 
       {/* Closing section */}
-      <div style={{ background: "var(--pub-stone)", borderTop: "1px solid var(--pub-line)" }}>
+      <div style={{ background: "var(--surface)", borderTop: "1px solid var(--line)" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
           <div style={{ maxWidth: 760, padding: "64px 0" }}>
-            <h2 style={{ fontFamily: "var(--pub-serif)", fontWeight: 400, fontSize: 30, color: "var(--pub-ink)", lineHeight: 1.3, marginBottom: 20 }}>
+            <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 30, color: "var(--text)", lineHeight: 1.3, marginBottom: 20 }}>
               How to use 2027 trends without dating your remodel.
             </h2>
-            <p style={{ fontSize: 16, color: "#4B4A45", lineHeight: 1.8, marginBottom: 16 }}>
+            <p style={{ fontSize: 16, color: "var(--text-muted)", lineHeight: 1.45, marginBottom: 16 }}>
               A trend is most valuable when it helps you recognize a lasting preference. If you have always loved natural wood, tactile tile or rooms designed for conversation, 2027 offers new ways to express that preference. If a glossy finish or dramatic color only appeals because it is suddenly everywhere, test it in a smaller, reversible application first.
             </p>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, margin: "32px 0" }}>
-              <div style={{ padding: "24px", background: "#fff", border: "1px solid var(--pub-line)", borderRadius: 2 }}>
-                <div style={{ fontFamily: "var(--pub-serif)", fontSize: 17, color: "var(--pub-ink)", marginBottom: 10 }}>Invest for the long term</div>
-                <p style={{ fontSize: 14, color: "var(--pub-muted)", lineHeight: 1.7, margin: 0 }}>
+              <div style={{ padding: "24px", background: "#fff", border: "1px solid var(--line)", borderRadius: 0 }}>
+                <div style={{ fontFamily: "var(--font-display)", fontSize: 17, color: "var(--text)", marginBottom: 10 }}>Invest for the long term</div>
+                <p style={{ fontSize: 14, color: "var(--text-muted)", lineHeight: 1.45, margin: 0 }}>
                   Layout, cabinetry construction, waterproofing, flooring performance, lighting, ventilation, storage and well-selected natural materials. These decisions shape how the home works and are expensive to redo.
                 </p>
               </div>
-              <div style={{ padding: "24px", background: "#fff", border: "1px solid var(--pub-line)", borderRadius: 2 }}>
-                <div style={{ fontFamily: "var(--pub-serif)", fontSize: 17, color: "var(--pub-ink)", marginBottom: 10 }}>Experiment with confidence</div>
-                <p style={{ fontSize: 14, color: "var(--pub-muted)", lineHeight: 1.7, margin: 0 }}>
+              <div style={{ padding: "24px", background: "#fff", border: "1px solid var(--line)", borderRadius: 0 }}>
+                <div style={{ fontFamily: "var(--font-display)", fontSize: 17, color: "var(--text)", marginBottom: 10 }}>Experiment with confidence</div>
+                <p style={{ fontSize: 14, color: "var(--text-muted)", lineHeight: 1.45, margin: 0 }}>
                   Paint, hardware, decorative tile moments, lamps, textiles, movable furniture and artwork. These layers can evolve without dismantling the architecture of the room.
                 </p>
               </div>
             </div>
-            <p style={{ fontSize: 16, color: "#4B4A45", lineHeight: 1.8 }}>
+            <p style={{ fontSize: 16, color: "var(--text-muted)", lineHeight: 1.45 }}>
               The best forecast for 2027 is not that every home will look the same. It is that more homes will feel specific to the people who live in them: calmer where rest matters, more generous where people gather, more tactile where materials are touched, and more thoughtful about what deserves to last.
             </p>
           </div>
@@ -253,32 +253,32 @@ export default function Trends2027Page() {
       </div>
 
       {/* CTA */}
-      <div style={{ background: "var(--pub-ink)" }}>
+      <div style={{ background: "var(--surface-ink)" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
           <div style={{ padding: "64px 0", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 40, flexWrap: "wrap" }}>
             <div>
-              <p style={{ fontFamily: "var(--pub-serif)", fontSize: 28, color: "var(--pub-stone)", fontWeight: 400, lineHeight: 1.3, marginBottom: 12 }}>
+              <p style={{ fontFamily: "var(--font-display)", fontSize: 28, color: "var(--text-invert)", fontWeight: 400, lineHeight: 1.3, marginBottom: 12 }}>
                 Ready to plan your 2027 remodel?
               </p>
-              <p style={{ fontSize: 15, color: "rgba(241,238,231,0.65)", lineHeight: 1.7, maxWidth: "44ch" }}>
+              <p style={{ fontSize: 15, color: "var(--text-invert-muted)", lineHeight: 1.45, maxWidth: "44ch" }}>
                 Visit our showroom in Rancho Santa Margarita or schedule a design consultation to begin your kitchen, bathroom, flooring or whole-home project.
               </p>
             </div>
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
               <Link href="/request-a-visit" style={{
                 display: "inline-block",
-                background: "var(--pub-stone)", color: "var(--pub-forest)",
+                background: "var(--surface)", color: "var(--red)",
                 fontSize: 14, fontWeight: 500, padding: "14px 26px",
-                textDecoration: "none", borderRadius: 2,
+                textDecoration: "none", borderRadius: 0,
               }}>
                 Schedule a consultation
               </Link>
               <Link href="/showroom" style={{
                 display: "inline-block",
-                background: "transparent", color: "var(--pub-stone)",
+                background: "transparent", color: "var(--text-invert)",
                 border: "1px solid rgba(241,238,231,0.3)",
                 fontSize: 14, padding: "14px 26px",
-                textDecoration: "none", borderRadius: 2,
+                textDecoration: "none", borderRadius: 0,
               }}>
                 Visit the showroom
               </Link>
