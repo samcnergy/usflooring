@@ -40,13 +40,23 @@ const POSTS = [
 export default function BlogIndexPage() {
   return (
     <div>
+      <style>{`
+        .blog-wrap { max-width: 1160px; margin: 0 auto; padding: 0 40px; }
+        .blog-header-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: end; }
+        .blog-post-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; padding: 2px 0 80px; }
+        @media (max-width: 768px) {
+          .blog-wrap { padding: 0 20px; }
+          .blog-header-grid { grid-template-columns: 1fr; gap: 16px; }
+          .blog-post-grid { grid-template-columns: 1fr; }
+        }
+      `}</style>
 
       {/* Header */}
       <div style={{ borderBottom: "1px solid var(--line)", background: "var(--surface)" }}>
-        <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
+        <div className="blog-wrap">
           <div style={{ padding: "64px 0 48px" }}>
             <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 16 }}>From US Floor Design Center</div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "end" }}>
+            <div className="blog-header-grid">
               <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 44, lineHeight: 1.15, color: "var(--text)" }}>
                 Guides, trends, and care advice.
               </h1>
@@ -60,8 +70,8 @@ export default function BlogIndexPage() {
 
       {/* Post grid */}
       <div style={{ background: "#fff" }}>
-        <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 2, padding: "2px 0 80px" }}>
+        <div className="blog-wrap">
+          <div className="blog-post-grid">
             {POSTS.map((post, i) => (
               <Link key={post.href} href={post.href} style={{ textDecoration: "none", display: "block" }}>
                 <div style={{
@@ -100,7 +110,7 @@ export default function BlogIndexPage() {
 
       {/* CTA */}
       <div style={{ background: "var(--surface)", borderTop: "1px solid var(--line)" }}>
-        <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
+        <div className="blog-wrap">
           <div style={{ padding: "56px 0", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 40, flexWrap: "wrap" }}>
             <div>
               <p style={{ fontFamily: "var(--font-display)", fontSize: 26, color: "var(--text)", fontWeight: 400, lineHeight: 1.3, marginBottom: 10 }}>

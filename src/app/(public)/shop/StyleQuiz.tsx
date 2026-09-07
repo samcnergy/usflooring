@@ -9,8 +9,31 @@ export function StyleQuiz() {
 
   return (
     <div style={{ padding: "56px 0 0" }}>
+      <style>{`
+        .style-quiz-grid {
+          display: grid;
+          grid-template-columns: 1fr 1.8fr;
+          gap: 48px;
+          align-items: start;
+          margin-bottom: 48px;
+        }
+        .style-cards-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 16px;
+        }
+        @media (max-width: 768px) {
+          .style-quiz-grid {
+            grid-template-columns: 1fr;
+            gap: 24px;
+          }
+          .style-cards-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+      `}</style>
       <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 14 }}>Find your style</div>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1.8fr", gap: 48, alignItems: "start", marginBottom: 48 }}>
+      <div className="style-quiz-grid">
         <div>
           <h2 style={{
             fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 32,
@@ -30,7 +53,7 @@ export function StyleQuiz() {
             Skip - browse everything
           </a>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
+        <div className="style-cards-grid">
           {Object.entries(STYLE_PRESETS).map(([key, preset]) => (
             <button
               key={key}
