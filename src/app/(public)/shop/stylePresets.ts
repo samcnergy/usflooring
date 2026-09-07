@@ -50,7 +50,7 @@ export const STYLE_PRESETS: Record<string, {
     categories: ["tile", "ceramic", "stone", "counterTop"],
     keywords: ["terracotta", "zellige", "warm", "handcrafted", "mediterranean"],
     image: "/style-modern-mediterranean.png",
-    focusY: "35%",
+    focusY: "top",
   },
   "traditional": {
     label: "Traditional",
@@ -59,7 +59,7 @@ export const STYLE_PRESETS: Record<string, {
     categories: ["wood", "cabinet", "carpet", "counterTop"],
     keywords: ["traditional", "raised panel", "cherry", "marble", "formal"],
     image: "/style-traditional.png",
-    focusY: "30%",
+    focusY: "top",
   },
   "minimalist": {
     label: "Minimalist",
@@ -68,7 +68,7 @@ export const STYLE_PRESETS: Record<string, {
     categories: ["ceramic", "tile", "vinyl", "stone"],
     keywords: ["concrete", "gray", "large format", "minimal", "clean"],
     image: "/style-minimalist.png",
-    focusY: "36%",
+    focusY: "top",
   },
   "california-casual": {
     label: "California Casual",
@@ -77,6 +77,6 @@ export const STYLE_PRESETS: Record<string, {
     categories: ["vinyl", "wood", "tile", "stone"],
     keywords: ["california", "outdoor", "LVP", "wood look", "casual", "indoor outdoor"],
     image: "/style-california-casual.png",
-    focusY: "26%",
+    focusY: "top",
   },
 };
