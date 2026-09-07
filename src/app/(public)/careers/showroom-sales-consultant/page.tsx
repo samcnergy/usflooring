@@ -34,6 +34,15 @@ const JOB_POSTING_LD = {
       addressCountry: "US",
     },
   },
+  baseSalary: {
+    "@type": "MonetaryAmount",
+    currency: "USD",
+    value: {
+      "@type": "QuantitativeValue",
+      value: 24000,
+      unitText: "YEAR",
+    },
+  },
   experienceRequirements: {
     "@type": "OccupationalExperienceRequirements",
     monthsOfExperience: 0,
@@ -45,9 +54,8 @@ const JOB_POSTING_LD = {
 const FACT_ROWS = [
   {
     label: "Pay",
-    /* TODO [CONFIRM]: add pay range before publishing (CA Labor Code 432.3) */
-    value: "TODO: confirm pay range before publishing",
-    todo: true,
+    value: "$24,000 base salary + commission. Expected first-year total: $75,000 to $150,000.",
+    todo: false,
   },
   {
     label: "Schedule",
@@ -513,21 +521,40 @@ export default function ShowroomSalesConsultantPage() {
             >
               Compensation
             </h2>
-            {/* TODO [CONFIRM]: write compensation section before publishing — see Section 7 of CAREERS-PAGE.md for CA requirements */}
             <p
               style={{
                 fontSize: "var(--t-body)",
-                color: "var(--red)",
-                fontStyle: "italic",
-                lineHeight: 1.6,
-                border: "1px dashed var(--red)",
-                padding: "var(--s-4)",
+                color: "var(--text)",
+                lineHeight: 1.7,
+                marginBottom: "var(--s-4)",
+              }}
+            >
+              Base salary of $24,000 annually, plus commission on every job you close.
+              First-year total compensation typically runs between $75,000 and $150,000,
+              depending on your sales volume.
+            </p>
+            <p
+              style={{
+                fontSize: "var(--t-body)",
+                color: "var(--text)",
+                lineHeight: 1.7,
+                marginBottom: "var(--s-4)",
+              }}
+            >
+              The base is there from day one, while you are learning. The commission
+              structure is in writing before any offer is made and a copy goes to you.
+            </p>
+            <p
+              style={{
+                fontSize: "var(--t-body)",
+                color: "var(--text-muted)",
+                lineHeight: 1.7,
                 margin: 0,
               }}
             >
-              TODO: Confirm pay range and structure before publishing. California Labor Code
-              432.3 requires a pay scale in any job posting (15+ employees; disclose on
-              request below that). See Section 7 of the careers page spec.
+              This is a non-exempt (hourly-equivalent) position. Overtime is paid after
+              eight hours in a day and forty hours in a week. Meal and rest breaks are
+              provided per California law.
             </p>
           </div>
 
