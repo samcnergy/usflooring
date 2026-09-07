@@ -298,7 +298,7 @@ export default function CareersIndexPage() {
           borderTop: "1px solid var(--line)",
         }}
       >
-        <div style={{ maxWidth: "var(--container)", margin: "0 auto", maxWidth: "720px" }}>
+        <div style={{ maxWidth: "720px", margin: "0 auto" }}>
           <p
             style={{
               fontSize: "var(--t-label)",

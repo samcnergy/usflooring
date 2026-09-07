@@ -198,9 +198,8 @@ export default function ShowroomSalesConsultantPage() {
       <section style={{ background: "var(--surface)", padding: "var(--s-9) var(--gutter)" }}>
         <div
           style={{
-            maxWidth: "var(--container)",
-            margin: "0 auto",
             maxWidth: "720px",
+            margin: "0 auto",
             display: "flex",
             flexDirection: "column",
             gap: "var(--s-8)",
@@ -656,7 +655,7 @@ export default function ShowroomSalesConsultantPage() {
           borderTop: "1px solid var(--line)",
         }}
       >
-        <div style={{ maxWidth: "var(--container)", margin: "0 auto", maxWidth: "720px" }}>
+        <div style={{ maxWidth: "720px", margin: "0 auto" }}>
           <p
             style={{
               fontSize: "var(--t-label)",
@@ -693,7 +692,7 @@ export default function ShowroomSalesConsultantPage() {
           borderTop: "1px solid var(--line)",
         }}
       >
-        <div style={{ maxWidth: "var(--container)", margin: "0 auto", maxWidth: "720px" }}>
+        <div style={{ maxWidth: "720px", margin: "0 auto" }}>
           <p
             style={{
               fontSize: "var(--t-small)",
