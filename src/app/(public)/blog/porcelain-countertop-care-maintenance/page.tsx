@@ -36,10 +36,23 @@ const ARTICLE_SCHEMA = {
 export default function PorcelainMaintenancePage() {
   return (
     <div>
+      <style>{`
+        .bp-hero { position: relative; height: 480px; overflow: hidden; }
+        .bp-wrap { max-width: 1160px; margin: 0 auto; padding: 0 40px; }
+        .bp-grid { display: grid; grid-template-columns: 1fr 260px; gap: 80px; padding: 64px 0 96px; align-items: start; }
+        .bp-aside { position: sticky; top: 80px; }
+        @media (max-width: 768px) {
+          .bp-hero { height: 56vw; min-height: 180px; max-height: 320px; }
+          .bp-wrap { padding: 0 20px; }
+          .bp-grid { grid-template-columns: 1fr; gap: 32px; padding: 32px 0 56px; }
+          .bp-aside { position: static; top: auto; }
+          .bp-h1 { font-size: 26px !important; }
+        }
+      `}</style>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ARTICLE_SCHEMA) }} />
 
       {/* Hero */}
-      <div style={{ position: "relative", height: 480, overflow: "hidden" }}>
+      <div className="bp-hero">
         <Image
           src="/blog-porcelain-cover.png"
           alt="Porcelain Countertop Care and Maintenance by US Floor Design Center"
@@ -51,7 +64,7 @@ export default function PorcelainMaintenancePage() {
 
       {/* Breadcrumb */}
       <div style={{ background: "var(--surface)", borderBottom: "1px solid var(--line)" }}>
-        <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
+        <div className="bp-wrap">
           <div style={{ padding: "14px 0", fontSize: 13, color: "var(--text-muted)", display: "flex", gap: 8, alignItems: "center" }}>
             <Link href="/blog" style={{ color: "inherit", textDecoration: "none" }}>Blog</Link>
             <span>/</span>
@@ -62,15 +75,15 @@ export default function PorcelainMaintenancePage() {
 
       {/* Body */}
       <div style={{ background: "#fff" }}>
-        <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 260px", gap: 80, padding: "64px 0 96px", alignItems: "start" }}>
+        <div className="bp-wrap">
+          <div className="bp-grid">
 
             {/* Article */}
             <article style={{ maxWidth: 680 }}>
               <div style={{ fontSize: 12, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 16 }}>
                 Homeowner care guide - Orange County, California
               </div>
-              <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 38, lineHeight: 1.2, color: "var(--text)", marginBottom: 16 }}>
+              <h1 className="bp-h1" style={{ fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 38, lineHeight: 1.2, color: "var(--text)", marginBottom: 16 }}>
                 Porcelain Countertop Care and Maintenance
               </h1>
               <p style={{ fontSize: 16, color: "var(--text-muted)", lineHeight: 1.45, marginBottom: 40 }}>
@@ -187,7 +200,7 @@ export default function PorcelainMaintenancePage() {
             </article>
 
             {/* Sidebar */}
-            <aside style={{ position: "sticky", top: 80 }}>
+            <aside className="bp-aside">
               <div style={{ fontSize: 11, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 16 }}>In this guide</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
                 {[
@@ -238,7 +251,7 @@ export default function PorcelainMaintenancePage() {
 
       {/* CTA */}
       <div style={{ background: "var(--surface-ink)" }}>
-        <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
+        <div className="bp-wrap">
           <div style={{ padding: "56px 0", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 40, flexWrap: "wrap" }}>
             <div>
               <p style={{ fontFamily: "var(--font-display)", fontSize: 26, color: "var(--text-invert)", fontWeight: 400, lineHeight: 1.3, marginBottom: 10 }}>

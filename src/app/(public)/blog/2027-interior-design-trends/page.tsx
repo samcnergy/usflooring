@@ -105,6 +105,22 @@ const TRENDS = [
 export default function Trends2027Page() {
   return (
     <div>
+      <style>{`
+        .bp27-wrap { max-width: 1160px; margin: 0 auto; padding: 0 40px; }
+        .bp27-hero-inner { position: absolute; bottom: 48px; left: 0; right: 0; max-width: 1160px; margin: 0 auto; padding: 0 40px; }
+        .bp27-hero-h1 { font-family: var(--font-display); font-weight: 400; font-size: 52px; color: var(--surface); line-height: 1.1; max-width: 14ch; margin: 0; }
+        .bp27-intro-grid { padding: 48px 0 0; display: grid; grid-template-columns: 2fr 1fr; gap: 80px; align-items: start; }
+        .bp27-jump-sticky { position: sticky; top: 24px; }
+        .bp27-closing-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 32px 0; }
+        @media (max-width: 768px) {
+          .bp27-wrap { padding: 0 20px; }
+          .bp27-hero-inner { bottom: 16px; padding: 0 20px; }
+          .bp27-hero-h1 { font-size: 28px; }
+          .bp27-intro-grid { grid-template-columns: 1fr; gap: 24px; padding-top: 32px; }
+          .bp27-jump-sticky { position: static; }
+          .bp27-closing-cards { grid-template-columns: 1fr; }
+        }
+      `}</style>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ARTICLE_SCHEMA) }} />
 
       {/* Full-width hero image */}
@@ -120,14 +136,11 @@ export default function Trends2027Page() {
           position: "absolute", inset: 0,
           background: "linear-gradient(to right, var(--surface-scrim) 0%, rgba(30,35,32,0.1) 60%, transparent 100%)",
         }} />
-        <div style={{ position: "absolute", bottom: 48, left: 0, right: 0, maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
+        <div className="bp27-hero-inner">
           <div style={{ fontSize: 12, color: "var(--text-invert-muted)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 12 }}>
             2027 Design Forecast · Orange County, California
           </div>
-          <h1 style={{
-            fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 52,
-            color: "var(--surface)", lineHeight: 1.1, maxWidth: "14ch", margin: 0,
-          }}>
+          <h1 className="bp27-hero-h1">
             2027 Interior Design Trends
           </h1>
           <p style={{ color: "var(--text-invert-muted)", fontSize: 16, marginTop: 12, fontStyle: "italic" }}>
@@ -138,8 +151,8 @@ export default function Trends2027Page() {
 
       {/* Byline + intro */}
       <div style={{ background: "#fff", borderBottom: "1px solid var(--line)" }}>
-        <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
-          <div style={{ padding: "48px 0 0", display: "grid", gridTemplateColumns: "2fr 1fr", gap: 80, alignItems: "start" }}>
+        <div className="bp27-wrap">
+          <div className="bp27-intro-grid">
             <div>
               <div style={{ display: "flex", gap: 24, alignItems: "center", marginBottom: 32, paddingBottom: 24, borderBottom: "1px solid var(--line)" }}>
                 <span style={{ fontSize: 13, color: "var(--text-muted)" }}>By US Floor Design Center</span>
@@ -157,7 +170,7 @@ export default function Trends2027Page() {
             </div>
             {/* Jump links */}
             <div style={{ paddingTop: 56 }}>
-              <div style={{ position: "sticky", top: 24 }}>
+              <div className="bp27-jump-sticky">
                 <div style={{ fontSize: 11, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 14 }}>In this article</div>
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                   {TRENDS.map((t) => (
@@ -178,7 +191,7 @@ export default function Trends2027Page() {
 
       {/* Trend articles */}
       <div style={{ background: "#fff" }}>
-        <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
+        <div className="bp27-wrap">
           <div style={{ maxWidth: 760 }}>
             {TRENDS.map((trend, i) => (
               <div key={trend.n} id={`trend-${trend.n}`} style={{
@@ -223,7 +236,7 @@ export default function Trends2027Page() {
 
       {/* Closing section */}
       <div style={{ background: "var(--surface)", borderTop: "1px solid var(--line)" }}>
-        <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
+        <div className="bp27-wrap">
           <div style={{ maxWidth: 760, padding: "64px 0" }}>
             <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 30, color: "var(--text)", lineHeight: 1.3, marginBottom: 20 }}>
               How to use 2027 trends without dating your remodel.
@@ -231,7 +244,7 @@ export default function Trends2027Page() {
             <p style={{ fontSize: 16, color: "var(--text-muted)", lineHeight: 1.45, marginBottom: 16 }}>
               A trend is most valuable when it helps you recognize a lasting preference. If you have always loved natural wood, tactile tile or rooms designed for conversation, 2027 offers new ways to express that preference. If a glossy finish or dramatic color only appeals because it is suddenly everywhere, test it in a smaller, reversible application first.
             </p>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, margin: "32px 0" }}>
+            <div className="bp27-closing-cards">
               <div style={{ padding: "24px", background: "#fff", border: "1px solid var(--line)", borderRadius: 0 }}>
                 <div style={{ fontFamily: "var(--font-display)", fontSize: 17, color: "var(--text)", marginBottom: 10 }}>Invest for the long term</div>
                 <p style={{ fontSize: 14, color: "var(--text-muted)", lineHeight: 1.45, margin: 0 }}>
@@ -254,7 +267,7 @@ export default function Trends2027Page() {
 
       {/* CTA */}
       <div style={{ background: "var(--surface-ink)" }}>
-        <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
+        <div className="bp27-wrap">
           <div style={{ padding: "64px 0", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 40, flexWrap: "wrap" }}>
             <div>
               <p style={{ fontFamily: "var(--font-display)", fontSize: 28, color: "var(--text-invert)", fontWeight: 400, lineHeight: 1.3, marginBottom: 12 }}>
