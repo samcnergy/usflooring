@@ -65,7 +65,7 @@ const FOOTER_COLS = [
       { href: "/press", label: "Press" },
       { href: "/faq", label: "FAQ" },
       { href: "/trade", label: "Trade program" },
-      { href: "/about#careers", label: "Careers" },
+      { href: "/careers", label: "Careers" },
     ],
   },
   {
