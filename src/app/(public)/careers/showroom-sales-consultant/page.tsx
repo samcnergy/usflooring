@@ -4,7 +4,7 @@ import ApplicationForm from "../ApplicationForm";
 export const metadata: Metadata = {
   title: "Showroom Sales Consultant | US Floor Design Center",
   description:
-    "Full-time showroom sales role in Rancho Santa Margarita, California. No flooring experience needed, we train. Saturdays on rotation.",
+    "Full-time sales and account management role in Rancho Santa Margarita. You own the client from first visit through project completion. No flooring experience needed, we train.",
 };
 
 const JOB_POSTING_LD = {
@@ -12,7 +12,7 @@ const JOB_POSTING_LD = {
   "@type": "JobPosting",
   title: "Showroom Sales Consultant",
   description:
-    "Someone walks into the showroom with a photo on their phone and a kitchen they are tired of. Your job is to figure out what they actually want, show them the material, get them a number, and stay with them until the job is booked or they tell you no. That is most of it. You are the first person a customer meets and usually the one they keep calling.\n\nWhat you will do:\n- Greet everyone who comes through the door, including the ones who say they are just looking\n- Ask enough questions to understand the room, the budget and the timeline\n- Walk customers through the samples and help them narrow it down\n- Measure, or arrange the measure, and put together the quote\n- Follow up. Call the people who came in last week and never heard back.\n- Keep your quotes and your customers current in our order system\n- Hand the job cleanly to the install team and stay reachable while it runs\n- Keep the showroom floor and the sample displays in order\n\nWhat we are looking for: We are not looking for a flooring background. We are looking for two things. You like people, and it shows. You follow up.\n\nWhat you do not need: No experience with flooring, tile, stone or cabinetry. We will teach you the products, the installation basics, the measuring, and the pricing. If you have sold anything to anyone and you are willing to learn a trade, you can do this job. No degree. No design background. No contractor license.\n\nWhat we will teach you: Materials, how to read a room and estimate square footage, how installation works, our pricing, and our order system from quote to invoice to install schedule.",
+    "This is a sales and account management role. You own the client from their first contact through the final walkthrough. That means building your own pipeline through networking, trade shows, and direct outreach alongside the leads we bring in, visiting homes to measure and take notes, helping clients choose materials, coordinating with designers, tracking deposits and collecting final payment, and making sure the handoff to the project manager is clean and the job lands the way the client expected.\n\nWhat you will do:\n- Follow up on every lead we give you and build your own pipeline through networking events, trade shows, and direct outreach\n- Greet everyone who walks into the showroom, including the ones who say they are just looking\n- Visit client homes to measure, photograph, and understand the space\n- Help clients select materials and work alongside the client's designer or our in-house designer\n- Put together accurate quotes and present them clearly\n- Ask for the sale and keep following up until you get a yes or a no\n- Track deposits, approvals, and final payments - and collect them\n- Hand the project cleanly to the project manager so nothing is lost in the transfer\n- Stay reachable while the job runs and make sure it finishes the way the client expected\n- Keep your pipeline, open quotes, and active jobs current in our order system\n- Keep the showroom floor and sample displays in order\n\nWhat we are looking for: We are not looking for a flooring background. We are looking for someone who likes people, follows up without being asked, and takes ownership of a job from the first conversation to the last payment.\n\nWhat you do not need: No experience with flooring, tile, stone or cabinetry. We will teach you the products, the installation basics, the measuring, and the pricing. If you have managed a client relationship from start to finish and you are willing to learn a trade, you can do this job. No degree. No design background. No contractor license.\n\nWhat we will teach you: Materials, how to read a room and estimate square footage, how installation works, our pricing, and our order system from quote to invoice to install schedule.",
   identifier: {
     "@type": "PropertyValue",
     name: "US Floor Design Center",
@@ -217,14 +217,19 @@ export default function ShowroomSalesConsultantPage() {
                 margin: 0,
               }}
             >
-              Someone walks into the showroom with a photo on their phone and a kitchen
-              they are tired of. Your job is to figure out what they actually want, show
-              them the material, get them a number, and stay with them until the job is
-              booked or they tell you no.
+              This is a sales and account management role. You own the client from their
+              first contact through the final walkthrough.
               <br />
               <br />
-              That is most of it. You are the first person a customer meets and usually
-              the one they keep calling.
+              That means building your own pipeline alongside the leads we bring in,
+              visiting homes to measure and understand the space, helping clients choose
+              materials, working with designers, tracking and collecting payment, and making
+              sure the handoff to the project manager is clean and the job lands the way
+              the client expected.
+              <br />
+              <br />
+              You are not just closing a sale. You are managing the relationship from the
+              first conversation to the last payment.
             </p>
           </div>
 
@@ -252,14 +257,17 @@ export default function ShowroomSalesConsultantPage() {
               }}
             >
               {[
-                "Greet everyone who comes through the door, including the ones who say they are just looking",
-                "Ask enough questions to understand the room, the budget and the timeline",
-                "Walk customers through the samples and help them narrow it down",
-                "Measure, or arrange the measure, and put together the quote",
-                "Follow up. Call the people who came in last week and never heard back.",
-                "Keep your quotes and your customers current in our order system",
-                "Hand the job cleanly to the install team and stay reachable while it runs",
-                "Keep the showroom floor and the sample displays in order",
+                "Follow up on every lead we give you and build your own pipeline through networking events, trade shows, and direct outreach",
+                "Greet everyone who walks into the showroom, including the ones who say they are just looking",
+                "Visit client homes to measure, photograph, and understand the space",
+                "Help clients select materials and work alongside their designer or our in-house designer to move the project forward",
+                "Put together accurate quotes and present them clearly",
+                "Ask for the sale and keep following up until you get a yes or a no",
+                "Track deposits, approvals, and final payments, and collect them",
+                "Hand the project cleanly to the project manager so nothing is lost in the transfer",
+                "Stay reachable while the job runs and make sure it finishes the way the client expected",
+                "Keep your pipeline, open quotes, and active jobs current in our order system",
+                "Keep the showroom floor and sample displays in order",
               ].map((item) => (
                 <li
                   key={item}
@@ -309,7 +317,7 @@ export default function ShowroomSalesConsultantPage() {
                 fontStyle: "italic",
               }}
             >
-              We are not looking for a flooring background. We are looking for two things.
+              We are not looking for a flooring background. We are looking for three things.
             </p>
 
             <div
@@ -322,7 +330,11 @@ export default function ShowroomSalesConsultantPage() {
                 },
                 {
                   heading: "You follow up.",
-                  body: "This is the one that separates people in this job. Most customers do not buy on the first visit. They take a sample home, they talk to a spouse, they get busy. The consultants who do well here are the ones who call back on Tuesday like they said they would, and again the following week, without being a nuisance about it. If you have ever been told you are hard to shake, that is the trait.",
+                  body: "Most customers do not buy on the first visit. They take a sample home, they talk to a spouse, they get busy. The consultants who do well here call back on Tuesday like they said they would, and again the following week, without being a nuisance about it. They also pick up the phone and call people who have never heard of us. Cold outreach, trade events, referral partners -- they treat every channel as a source.",
+                },
+                {
+                  heading: "You take ownership.",
+                  body: "This role does not end when the contract is signed. You track the job, stay in contact with the client, make sure the project manager has everything they need, and check that the work landed the way the client expected. If something goes sideways, you are the one who finds out first and helps fix it. The consultants who build a real book of business here are the ones clients call back on the next project.",
                 },
               ].map((block) => (
                 <div key={block.heading}>
@@ -373,11 +385,12 @@ export default function ShowroomSalesConsultantPage() {
               }}
             >
               {[
-                "Comfortable talking about money and asking for the sale",
-                "Organized enough to keep twenty open quotes straight",
+                "Comfortable talking about money, asking for the sale, and collecting payment",
+                "Organized enough to manage open quotes and active jobs at the same time",
+                "Willing to pick up the phone and make outbound calls to people who do not know you yet",
                 "Can use a computer and learn a new system",
                 "Available Saturdays on a rotation. Saturday is our busiest day.",
-                "Valid California driver's license",
+                "Valid California driver's license (client visits are part of this role)",
                 "Legally authorized to work in the United States",
               ].map((item) => (
                 <li
@@ -431,8 +444,8 @@ export default function ShowroomSalesConsultantPage() {
             >
               <strong>No experience with flooring, tile, stone or cabinetry.</strong> None.
               We will teach you the products, the installation basics, the measuring, and
-              the pricing. If you have sold anything to anyone and you are willing to learn
-              a trade, you can do this job.
+              the pricing. If you have managed a client relationship from first contact
+              through completion and you are willing to learn a trade, you can do this job.
               <br />
               <br />
               No degree. No design background. No contractor license.
