@@ -59,7 +59,6 @@ const FACT_ROWS = [
   },
   {
     label: "Schedule",
-    /* TODO [CONFIRM]: confirm Saturday rotation (every week or alternating) */
     value: "Monday to Friday, 9:00 am to 5:30 pm. Saturdays 10:00 am to 4:00 pm on a rotation.",
     todo: false,
   },
