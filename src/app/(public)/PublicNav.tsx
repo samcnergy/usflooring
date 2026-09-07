@@ -19,6 +19,7 @@ export default function PublicNav() {
   const pathname = usePathname();
   const isHome = pathname === "/";
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 80);
@@ -26,7 +27,16 @@ export default function PublicNav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const transparent = isHome && !scrolled;
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [menuOpen]);
+
+  const transparent = isHome && !scrolled && !menuOpen;
 
   return (
     <>
@@ -76,14 +86,71 @@ export default function PublicNav() {
         .pub-nav-btn:hover {
           background: var(--red-deep);
         }
-        .pub-nav-btn.outline {
-          background: transparent;
-          border: 1px solid currentColor;
+        .pub-nav-hamburger {
+          display: none;
+          flex-direction: column;
+          justify-content: center;
+          gap: 5px;
+          width: 40px;
+          height: 40px;
+          padding: 6px;
+          background: none;
+          border: none;
+          cursor: pointer;
+          flex-shrink: 0;
         }
-        .pub-nav-btn.outline:hover {
-          background: var(--red);
-          color: var(--text-invert);
-          border-color: var(--red);
+        .pub-nav-hamburger span {
+          display: block;
+          height: 2px;
+          background: var(--text);
+          border-radius: 1px;
+          transition: transform 0.22s ease, opacity 0.22s ease;
+        }
+        .pub-nav-hamburger.open span:nth-child(1) {
+          transform: translateY(7px) rotate(45deg);
+        }
+        .pub-nav-hamburger.open span:nth-child(2) {
+          opacity: 0;
+          transform: scaleX(0);
+        }
+        .pub-nav-hamburger.open span:nth-child(3) {
+          transform: translateY(-7px) rotate(-45deg);
+        }
+        .pub-nav-drawer {
+          position: fixed;
+          top: 80px;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: var(--surface);
+          z-index: 99;
+          padding: var(--s-6) var(--gutter) var(--s-8);
+          overflow-y: auto;
+          display: flex;
+          flex-direction: column;
+          transform: translateX(100%);
+          transition: transform 0.25s ease;
+        }
+        .pub-nav-drawer.open {
+          transform: translateX(0);
+        }
+        .pub-nav-drawer-link {
+          font-size: var(--t-h4);
+          font-family: var(--font-display);
+          font-weight: 400;
+          text-decoration: none;
+          color: var(--text);
+          padding: var(--s-4) 0;
+          border-bottom: 1px solid var(--line);
+          display: block;
+        }
+        @media (max-width: 860px) {
+          .pub-nav-desktop { display: none !important; }
+          .pub-nav-cta { display: none !important; }
+          .pub-nav-hamburger { display: flex; }
+        }
+        @media (min-width: 861px) {
+          .pub-nav-drawer { display: none !important; }
         }
       `}</style>
 
@@ -108,22 +175,16 @@ export default function PublicNav() {
             height: 80,
           }}
         >
-          {/* Logo */}
-          <Link href="/" style={{ textDecoration: "none", display: "block" }}>
+          <Link href="/" style={{ textDecoration: "none", display: "block", flexShrink: 0 }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/logo.png"
               alt="US Floor Design Center"
-              style={{
-                height: 48,
-                width: "auto",
-                display: "block",
-              }}
+              style={{ height: 48, width: "auto", display: "block" }}
             />
           </Link>
 
-          {/* Nav links */}
-          <nav style={{ display: "flex", alignItems: "center", gap: "var(--s-6)" }}>
+          <nav className="pub-nav-desktop" style={{ display: "flex", alignItems: "center", gap: "var(--s-6)" }}>
             {NAV_LINKS.map(({ href, label }) => {
               const active = pathname === href || pathname.startsWith(href + "/");
               return (
@@ -139,12 +200,43 @@ export default function PublicNav() {
             })}
           </nav>
 
-          {/* CTA */}
+          <Link href="/request-a-visit" className="pub-nav-btn pub-nav-cta">
+            Plan a visit
+          </Link>
+
+          <button
+            className={`pub-nav-hamburger${menuOpen ? " open" : ""}`}
+            onClick={() => setMenuOpen((o) => !o)}
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+          >
+            <span />
+            <span />
+            <span />
+          </button>
+        </div>
+      </header>
+
+      <div className={`pub-nav-drawer${menuOpen ? " open" : ""}`} aria-hidden={!menuOpen}>
+        {NAV_LINKS.map(({ href, label }) => {
+          const active = pathname === href || pathname.startsWith(href + "/");
+          return (
+            <Link
+              key={href}
+              href={href}
+              className="pub-nav-drawer-link"
+              style={{ color: active ? "var(--red)" : "var(--text)" }}
+            >
+              {label}
+            </Link>
+          );
+        })}
+        <div style={{ marginTop: "var(--s-7)" }}>
           <Link href="/request-a-visit" className="pub-nav-btn">
             Plan a visit
           </Link>
         </div>
-      </header>
+      </div>
     </>
   );
 }

@@ -46,6 +46,75 @@ const PROJECT_TILES = [
 export default function HomePage() {
   return (
     <div>
+      <style>{`
+        .hero-panel {
+          width: 42%;
+          background: var(--surface-scrim);
+          padding: var(--s-7);
+          border-bottom: 1px solid var(--gold);
+        }
+        .spec-bar-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+        }
+        .article-grid {
+          display: grid;
+          grid-template-columns: 1fr 1.2fr;
+          gap: var(--s-8);
+          align-items: center;
+          text-decoration: none;
+        }
+        .project-tiles-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: var(--s-4);
+        }
+        .process-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 0;
+          border-top: 1px solid var(--line);
+          border-left: 1px solid var(--line);
+        }
+        .consultation-row {
+          padding: var(--s-5) 0;
+          border-bottom: 1px solid var(--line-invert);
+          display: grid;
+          grid-template-columns: 1.5fr 1fr 1fr;
+          gap: var(--s-7);
+          align-items: start;
+        }
+        @media (max-width: 768px) {
+          .hero-panel {
+            width: 100%;
+          }
+          .spec-bar-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+          .spec-bar-grid > div:nth-child(2n+1) {
+            border-left: none;
+          }
+          .spec-bar-grid > div:nth-child(n+3) {
+            border-top: 1px solid var(--line);
+          }
+          .article-grid {
+            grid-template-columns: 1fr;
+          }
+          .article-grid > div:last-child {
+            display: none;
+          }
+          .project-tiles-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+          .process-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+          .consultation-row {
+            grid-template-columns: 1fr;
+            gap: var(--s-3);
+          }
+        }
+      `}</style>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(HOME_SCHEMA) }} />
 
       {/* ── Hero ── */}
@@ -60,12 +129,7 @@ export default function HomePage() {
         <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 140, background: "linear-gradient(to bottom, rgba(10,10,10,0.60) 0%, transparent 100%)", pointerEvents: "none" }} />
         <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center" }}>
           <div style={{ maxWidth: "var(--container)", width: "100%", margin: "0 auto", padding: "0 var(--gutter)" }}>
-            <div style={{
-              width: "42%",
-              background: "var(--surface-scrim)",
-              padding: "var(--s-7)",
-              borderBottom: "1px solid var(--gold)",
-            }}>
+            <div className="hero-panel">
               <div style={{ width: 48, height: 2, background: "var(--red)", marginBottom: "var(--s-5)" }} />
               <h1 style={{
                 fontFamily: "var(--font-display)",
@@ -120,7 +184,7 @@ export default function HomePage() {
       {/* ── Spec bar ── */}
       <div style={{ borderTop: "1px solid var(--gold)", borderBottom: "1px solid var(--line)" }}>
         <div style={{ maxWidth: "var(--container)", margin: "0 auto", padding: "0 var(--gutter)" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)" }}>
+          <div className="spec-bar-grid">
             {[
               { n: "30", label: "Years in Orange County" },
               { n: "800+", label: "Projects completed" },
@@ -174,7 +238,7 @@ export default function HomePage() {
               Design forecast
             </span>
           </div>
-          <Link href="/blog/2027-interior-design-trends" style={{ textDecoration: "none", display: "grid", gridTemplateColumns: "1fr 1.2fr", gap: "var(--s-8)", alignItems: "center" }}>
+          <Link href="/blog/2027-interior-design-trends" className="article-grid">
             <div>
               <h2 style={{
                 fontFamily: "var(--font-display)",
@@ -262,7 +326,7 @@ export default function HomePage() {
               Browse all materials
             </Link>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "var(--s-4)" }}>
+          <div className="project-tiles-grid">
             {PROJECT_TILES.map((p) => (
               <Link key={p.label} href={p.href} style={{ textDecoration: "none" }}>
                 <div style={{
@@ -325,7 +389,7 @@ export default function HomePage() {
             The same people who help you choose materials in the showroom are accountable for the finished room.
           </p>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 0, borderTop: "1px solid var(--line)", borderLeft: "1px solid var(--line)" }}>
+          <div className="process-grid">
             {PROCESS.map((phase) => (
               <div key={phase.name} style={{
                 padding: "var(--s-6)",
@@ -414,14 +478,7 @@ export default function HomePage() {
 
           <div style={{ borderTop: "1px solid var(--line-invert)" }}>
             {CONSULTATIONS.map((c, i) => (
-              <div key={c.name} style={{
-                padding: "var(--s-5) 0",
-                borderBottom: "1px solid var(--line-invert)",
-                display: "grid",
-                gridTemplateColumns: "1.5fr 1fr 1fr",
-                gap: "var(--s-7)",
-                alignItems: "start",
-              }}>
+              <div key={c.name} className="consultation-row">
                 <div style={{
                   fontFamily: "var(--font-display)",
                   fontSize: "var(--t-h3)",
