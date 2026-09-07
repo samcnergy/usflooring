@@ -14,7 +14,7 @@ export const STYLE_PRESETS: Record<string, {
     categories: ["wood", "counterTop", "stone"],
     keywords: ["walnut", "oak", "warm", "matte", "natural"],
     image: "/style-warm-modern.png",
-    focusY: "38%",
+    focusY: "top",
   },
   "coastal-contemporary": {
     label: "Coastal Contemporary",
@@ -23,7 +23,7 @@ export const STYLE_PRESETS: Record<string, {
     categories: ["tile", "ceramic", "vinyl", "stone"],
     keywords: ["white", "light", "sand", "soft", "coastal"],
     image: "/style-coastal-contemporary.png",
-    focusY: "52%",
+    focusY: "top",
   },
   "organic-modern": {
     label: "Organic Modern",
@@ -32,7 +32,7 @@ export const STYLE_PRESETS: Record<string, {
     categories: ["wood", "stone", "tile", "counterTop"],
     keywords: ["earthy", "raw", "linen", "terracotta", "natural stone"],
     image: "/style-organic-modern.png",
-    focusY: "35%",
+    focusY: "top",
   },
   "transitional": {
     label: "Transitional",
@@ -41,7 +41,7 @@ export const STYLE_PRESETS: Record<string, {
     categories: ["wood", "tile", "carpet", "counterTop"],
     keywords: ["transitional", "classic", "balanced", "neutral"],
     image: "/style-transitional.png",
-    focusY: "40%",
+    focusY: "top",
   },
   "modern-mediterranean": {
     label: "Modern Mediterranean",
@@ -50,7 +50,7 @@ export const STYLE_PRESETS: Record<string, {
     categories: ["tile", "ceramic", "stone", "counterTop"],
     keywords: ["terracotta", "zellige", "warm", "handcrafted", "mediterranean"],
     image: "/style-modern-mediterranean.png",
-    focusY: "32%",
+    focusY: "top",
   },
   "traditional": {
     label: "Traditional",
@@ -59,7 +59,7 @@ export const STYLE_PRESETS: Record<string, {
     categories: ["wood", "cabinet", "carpet", "counterTop"],
     keywords: ["traditional", "raised panel", "cherry", "marble", "formal"],
     image: "/style-traditional.png",
-    focusY: "45%",
+    focusY: "top",
   },
   "minimalist": {
     label: "Minimalist",
@@ -68,7 +68,7 @@ export const STYLE_PRESETS: Record<string, {
     categories: ["ceramic", "tile", "vinyl", "stone"],
     keywords: ["concrete", "gray", "large format", "minimal", "clean"],
     image: "/style-minimalist.png",
-    focusY: "28%",
+    focusY: "top",
   },
   "california-casual": {
     label: "California Casual",
@@ -77,6 +77,6 @@ export const STYLE_PRESETS: Record<string, {
     categories: ["vinyl", "wood", "tile", "stone"],
     keywords: ["california", "outdoor", "LVP", "wood look", "casual", "indoor outdoor"],
     image: "/style-california-casual.png",
-    focusY: "38%",
+    focusY: "top",
   },
 };
