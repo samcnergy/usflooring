@@ -89,15 +89,27 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
       <main>{children}</main>
 
       <footer style={{ background: "var(--surface-ink)", borderTop: "1px solid var(--gold)" }}>
+        <style>{`
+          .footer-grid {
+            max-width: var(--container);
+            margin: 0 auto;
+            padding: var(--s-9) var(--gutter);
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            gap: var(--s-8);
+          }
+          @media (max-width: 768px) {
+            .footer-grid {
+              grid-template-columns: 1fr 1fr;
+              gap: var(--s-7);
+            }
+            .footer-grid > div:first-child {
+              grid-column: 1 / -1;
+            }
+          }
+        `}</style>
         {/* Four-column link grid */}
-        <div style={{
-          maxWidth: "var(--container)",
-          margin: "0 auto",
-          padding: `var(--s-9) var(--gutter)`,
-          display: "grid",
-          gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr",
-          gap: "var(--s-8)",
-        }}>
+        <div className="footer-grid">
           {/* Brand column */}
           <div>
             {/* eslint-disable-next-line @next/next/no-img-element */}

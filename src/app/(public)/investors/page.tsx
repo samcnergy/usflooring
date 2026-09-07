@@ -206,10 +206,68 @@ export default function InvestorsPage() {
           object-fit: cover;
           object-position: center 20%;
         }
+        .investor-steps {
+          display: flex;
+          flex-direction: row;
+          gap: 0;
+          position: relative;
+          z-index: 1;
+        }
+        .investor-spec-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr 1fr;
+        }
+        .investor-deliverable-grid {
+          display: grid;
+          grid-template-columns: 5fr 7fr;
+          gap: var(--s-9);
+          align-items: start;
+        }
+        .investor-cards-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr;
+          gap: var(--s-5);
+        }
+        .investor-division-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+        }
+        .investor-agents-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: var(--s-9);
+          align-items: center;
+        }
+        .investor-closing-grid {
+          display: grid;
+          grid-template-columns: 1fr auto;
+          gap: var(--s-8);
+          align-items: center;
+        }
+        .investor-closing-btns {
+          display: flex;
+          flex-direction: row;
+          gap: var(--s-4);
+          align-items: center;
+          flex-shrink: 0;
+        }
         @media (max-width: 768px) {
           .investor-hero { flex-direction: column; }
           .investor-hero-panel { width: 100%; padding: var(--s-6); }
           .investor-hero-image { min-height: 280px; flex: none; }
+          .investor-steps { flex-direction: column; gap: var(--s-6); }
+          .investor-spec-grid { grid-template-columns: 1fr 1fr; }
+          .investor-spec-grid > div:nth-child(2n+1) { border-left: none !important; }
+          .investor-spec-grid > div:nth-child(n+3) { border-top: 1px solid var(--line); }
+          .investor-deliverable-grid { grid-template-columns: 1fr; }
+          .investor-cards-grid { grid-template-columns: 1fr; }
+          .investor-division-grid { grid-template-columns: 1fr; }
+          .investor-division-grid > div:first-child { border-right: none !important; padding-right: 0 !important; border-bottom: 1px solid var(--line-invert); padding-bottom: var(--s-7); }
+          .investor-division-grid > div:last-child { padding-left: 0 !important; padding-top: var(--s-7); }
+          .investor-agents-grid { grid-template-columns: 1fr; }
+          .investor-agents-grid > div:last-child { justify-content: flex-start !important; }
+          .investor-closing-grid { grid-template-columns: 1fr; }
+          .investor-closing-btns { flex-direction: column; align-items: flex-start; }
         }
       `}</style>
       <section className="investor-hero">
@@ -395,15 +453,7 @@ export default function InvestorsPage() {
               }}
             />
 
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                gap: 0,
-                position: "relative",
-                zIndex: 1,
-              }}
-            >
+            <div className="investor-steps">
               {STEPS.map((step) => (
                 <div
                   key={step.num}
@@ -500,14 +550,7 @@ export default function InvestorsPage() {
             padding: "0 var(--gutter)",
           }}
         >
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "5fr 7fr",
-              gap: "var(--s-9)",
-              alignItems: "start",
-            }}
-          >
+          <div className="investor-deliverable-grid">
             {/* Left column */}
             <div>
               <Eyebrow label="THE DELIVERABLE" />
@@ -613,7 +656,7 @@ export default function InvestorsPage() {
             padding: "0 var(--gutter)",
           }}
         >
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr" }}>
+          <div className="investor-spec-grid">
             {[
               {
                 numeral: "30+",
@@ -697,13 +740,7 @@ export default function InvestorsPage() {
             Three kinds of investor.
           </h2>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr 1fr",
-              gap: "var(--s-5)",
-            }}
-          >
+          <div className="investor-cards-grid">
             {INVESTOR_CARDS.map((card) => (
               <div
                 key={card.h3}
@@ -773,12 +810,7 @@ export default function InvestorsPage() {
             You make the decisions. We do the rest.
           </h2>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-            }}
-          >
+          <div className="investor-division-grid">
             {/* Left: We handle */}
             <div
               style={{
@@ -907,14 +939,7 @@ export default function InvestorsPage() {
             padding: "0 var(--gutter)",
           }}
         >
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "var(--s-9)",
-              alignItems: "center",
-            }}
-          >
+          <div className="investor-agents-grid">
             {/* Left */}
             <div>
               <Eyebrow label="FOR REAL ESTATE AGENTS" />
@@ -1063,14 +1088,11 @@ export default function InvestorsPage() {
         }}
       >
         <div
+          className="investor-closing-grid"
           style={{
             maxWidth: "var(--container)",
             margin: "0 auto",
             padding: "0 var(--gutter)",
-            display: "grid",
-            gridTemplateColumns: "1fr auto",
-            gap: "var(--s-8)",
-            alignItems: "center",
           }}
         >
           {/* Left */}
@@ -1089,15 +1111,7 @@ export default function InvestorsPage() {
           </h2>
 
           {/* Right: two buttons */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              gap: "var(--s-4)",
-              alignItems: "center",
-              flexShrink: 0,
-            }}
-          >
+          <div className="investor-closing-btns">
             <Link
               href="#inquiry"
               style={{

@@ -63,6 +63,21 @@ const SERVICES = [
 export default function ServicesPage() {
   return (
     <div>
+      <style>{`
+        .svc-section {
+          display: grid;
+          grid-template-columns: 1fr 1.8fr;
+          gap: var(--s-10);
+          padding: var(--s-9) 0;
+          align-items: start;
+        }
+        @media (max-width: 768px) {
+          .svc-section {
+            grid-template-columns: 1fr;
+            gap: var(--s-6);
+          }
+        }
+      `}</style>
 
       {/* Header */}
       <div style={{ borderBottom: "1px solid var(--line)", background: "var(--surface-alt)" }}>
@@ -139,11 +154,9 @@ export default function ServicesPage() {
             <div
               key={s.label}
               id={s.id}
+              className="svc-section"
               style={{
-                display: "grid", gridTemplateColumns: "1fr 1.8fr", gap: "var(--s-10)",
-                padding: "var(--s-9) 0",
                 borderBottom: i < SERVICES.length - 1 ? "1px solid var(--line)" : "none",
-                alignItems: "start",
               }}
             >
               {/* Left */}

@@ -78,13 +78,45 @@ const VIDEOS = {
 export default function AcademyPage() {
   return (
     <div>
+      <style>{`
+        .academy-header-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 64px;
+          align-items: end;
+        }
+        .academy-course-row {
+          padding: 48px 0;
+          display: grid;
+          grid-template-columns: 1fr 1.8fr;
+          gap: 64px;
+          align-items: start;
+        }
+        .academy-topics-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 10px;
+        }
+        .academy-video-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 48px;
+          align-items: start;
+        }
+        @media (max-width: 768px) {
+          .academy-header-grid { grid-template-columns: 1fr; gap: 24px; }
+          .academy-course-row { grid-template-columns: 1fr; gap: 32px; }
+          .academy-topics-grid { grid-template-columns: 1fr; }
+          .academy-video-grid { grid-template-columns: 1fr; gap: 48px; }
+        }
+      `}</style>
 
       {/* Header */}
       <div style={{ borderBottom: "1px solid var(--line)", background: "var(--surface)" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
           <div style={{ padding: "64px 0 56px" }}>
             <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 16 }}>US Floor Academy</div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "end" }}>
+            <div className="academy-header-grid">
               <h1 style={{
                 fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 48,
                 lineHeight: 1.15, color: "var(--text)", maxWidth: "15ch",
@@ -120,10 +152,8 @@ export default function AcademyPage() {
             <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 16 }}>Course catalog</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
               {COURSES.map((course, i) => (
-                <div key={course.slug} style={{
-                  padding: "48px 0",
+                <div key={course.slug} className="academy-course-row" style={{
                   borderBottom: i < COURSES.length - 1 ? "1px solid var(--line)" : "none",
-                  display: "grid", gridTemplateColumns: "1fr 1.8fr", gap: 64, alignItems: "start",
                 }}>
                   {/* Left */}
                   <div>
@@ -173,7 +203,7 @@ export default function AcademyPage() {
                     <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 14, textTransform: "uppercase", letterSpacing: "0.06em" }}>
                       What this course covers
                     </div>
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                    <div className="academy-topics-grid">
                       {course.topics.map((t) => (
                         <div key={t} style={{
                           padding: "14px 16px", border: "1px solid var(--line)", borderRadius: 0,
@@ -203,7 +233,7 @@ export default function AcademyPage() {
         <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
           <div style={{ padding: "72px 0" }}>
             <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 16 }}>Video library</div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "start" }}>
+            <div className="academy-video-grid">
 
               {/* DIY videos */}
               <div>
