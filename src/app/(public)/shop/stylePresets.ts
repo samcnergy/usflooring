@@ -59,7 +59,7 @@ export const STYLE_PRESETS: Record<string, {
     categories: ["wood", "cabinet", "carpet", "counterTop"],
     keywords: ["traditional", "raised panel", "cherry", "marble", "formal"],
     image: "/style-traditional.png",
-    focusY: "top",
+    focusY: "25%",
   },
   "minimalist": {
     label: "Minimalist",
@@ -77,6 +77,6 @@ export const STYLE_PRESETS: Record<string, {
     categories: ["vinyl", "wood", "tile", "stone"],
     keywords: ["california", "outdoor", "LVP", "wood look", "casual", "indoor outdoor"],
     image: "/style-california-casual.png",
-    focusY: "top",
+    focusY: "20%",
   },
 };
