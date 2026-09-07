@@ -49,7 +49,7 @@ export default function BlogIndexPage() {
           .blog-wrap { padding: 0 20px; }
           .blog-header-grid { grid-template-columns: 1fr; gap: 16px; }
           .blog-post-grid { grid-template-columns: 1fr; }
-          .blog-cover-img { object-position: left top !important; }
+          .blog-cover-img { object-position: right center !important; }
         }
       `}</style>
 
