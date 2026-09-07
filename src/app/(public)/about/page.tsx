@@ -41,6 +41,18 @@ export default function AboutPage() {
   return (
     <div>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SCHEMA) }} />
+      <style>{`
+        .about-stats-grid { grid-template-columns: repeat(4, 1fr); }
+        .about-story-grid { grid-template-columns: 1fr 1fr; gap: var(--s-10); }
+        .about-people-grid { grid-template-columns: 1fr 1fr; gap: var(--s-8); }
+        .about-contact-grid { grid-template-columns: 1fr 1fr; gap: var(--s-10); }
+        @media (max-width: 768px) {
+          .about-stats-grid { grid-template-columns: repeat(2, 1fr); }
+          .about-story-grid { grid-template-columns: 1fr; gap: var(--s-6); }
+          .about-people-grid { grid-template-columns: 1fr; gap: var(--s-6); }
+          .about-contact-grid { grid-template-columns: 1fr; gap: var(--s-6); }
+        }
+      `}</style>
 
       {/* Header */}
       <div style={{ borderBottom: "1px solid var(--line)", background: "var(--surface-alt)" }}>
@@ -81,7 +93,7 @@ export default function AboutPage() {
       {/* Spec table replacing dark stats band */}
       <div style={{ borderTop: "1px solid var(--gold)", borderBottom: "1px solid var(--line)" }}>
         <div style={{ maxWidth: "var(--container)", margin: "0 auto", padding: "0 var(--gutter)" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)" }}>
+          <div className="about-stats-grid" style={{ display: "grid" }}>
             {[
               { n: "30+", label: "Years in Orange County" },
               { n: "800+", label: "Projects completed" },
@@ -122,7 +134,7 @@ export default function AboutPage() {
       {/* The story */}
       <div style={{ background: "var(--surface)" }}>
         <div style={{ maxWidth: "var(--container)", margin: "0 auto", padding: "0 var(--gutter)" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--s-10)", padding: "var(--s-9) 0" }}>
+          <div className="about-story-grid" style={{ display: "grid", padding: "var(--s-9) 0" }}>
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: "var(--s-3)", marginBottom: "var(--s-4)" }}>
                 <div style={{ width: 32, height: 2, background: "var(--red)", flexShrink: 0 }} />
@@ -175,7 +187,7 @@ export default function AboutPage() {
             <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 400, fontSize: "var(--t-h2)", color: "var(--text)", lineHeight: 1.14, letterSpacing: "-0.01em", marginBottom: "var(--s-8)" }}>
               Who runs the business
             </h2>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--s-8)" }}>
+            <div className="about-people-grid" style={{ display: "grid" }}>
 
               {/* Parham */}
               <div>
@@ -285,7 +297,7 @@ export default function AboutPage() {
       {/* Showroom + contact */}
       <div style={{ background: "var(--surface-ink)", borderTop: "1px solid var(--line-invert)" }}>
         <div style={{ maxWidth: "var(--container)", margin: "0 auto", padding: "0 var(--gutter)" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--s-10)", padding: "var(--s-9) 0" }}>
+          <div className="about-contact-grid" style={{ display: "grid", padding: "var(--s-9) 0" }}>
 
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: "var(--s-3)", marginBottom: "var(--s-4)" }}>

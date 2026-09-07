@@ -83,7 +83,15 @@ export default async function ShopPage({
   ]);
 
   return (
-    <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
+    <div className="shop-container">
+      <style>{`
+        .shop-container { max-width: 1160px; margin: 0 auto; padding: 0 40px; }
+        .shop-header-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+        @media (max-width: 768px) {
+          .shop-container { padding: 0 20px; }
+          .shop-header-row { flex-direction: column; align-items: flex-start; gap: 16px; }
+        }
+      `}</style>
 
       {/* Style Quiz - shown when no style is selected yet */}
       {!activeStyle && !cat && !q && (
@@ -137,7 +145,7 @@ export default async function ShopPage({
       {/* Header */}
       <div style={{ padding: "48px 0 32px", borderBottom: "1px solid var(--line)", marginBottom: 32, marginTop: activeStyle ? 32 : 0 }}>
         <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 14 }}>Materials</div>
-        <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 24, flexWrap: "wrap" }}>
+        <div className="shop-header-row">
           <h1 style={{
             fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 38,
             color: "var(--text)", lineHeight: 1.15,

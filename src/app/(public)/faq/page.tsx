@@ -559,13 +559,21 @@ export default function FAQPage() {
   return (
     <div>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <style>{`
+        .faq-container { max-width: 1160px; margin: 0 auto; padding: 0 40px; }
+        .faq-header-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: end; }
+        @media (max-width: 768px) {
+          .faq-container { padding: 0 20px; }
+          .faq-header-grid { grid-template-columns: 1fr; gap: 24px; }
+        }
+      `}</style>
 
       {/* Header */}
       <div style={{ borderBottom: "1px solid var(--line)", background: "var(--surface)" }}>
-        <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
+        <div className="faq-container">
           <div style={{ padding: "64px 0 48px" }}>
             <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 16 }}>Frequently asked questions</div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "end" }}>
+            <div className="faq-header-grid">
               <h1 style={{
                 fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 44,
                 lineHeight: 1.15, color: "var(--text)", maxWidth: "18ch",
@@ -582,7 +590,7 @@ export default function FAQPage() {
 
       {/* Search + filter */}
       <div style={{ background: "#fff", borderBottom: "1px solid var(--line)", position: "sticky", top: 0, zIndex: 10 }}>
-        <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
+        <div className="faq-container">
           <div style={{ padding: "16px 0", display: "flex", gap: 16, alignItems: "center", flexWrap: "wrap" }}>
             <input
               type="text"
@@ -619,7 +627,7 @@ export default function FAQPage() {
 
       {/* FAQ list */}
       <div style={{ background: "#fff" }}>
-        <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
+        <div className="faq-container">
           <div style={{ maxWidth: 840, padding: "16px 0 80px" }}>
 
             {filtered.length === 0 && (
@@ -682,7 +690,7 @@ export default function FAQPage() {
 
       {/* CTA */}
       <div style={{ background: "var(--surface)", borderTop: "1px solid var(--line)" }}>
-        <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
+        <div className="faq-container">
           <div style={{ padding: "56px 0", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 40, flexWrap: "wrap" }}>
             <div>
               <p style={{ fontFamily: "var(--font-display)", fontSize: 26, color: "var(--text)", fontWeight: 400, lineHeight: 1.3, marginBottom: 10 }}>

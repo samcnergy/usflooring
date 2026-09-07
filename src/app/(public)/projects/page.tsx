@@ -56,13 +56,29 @@ const CASE_STUDIES = [
 export default function ProjectsPage() {
   return (
     <div>
+      <style>{`
+        .projects-container { max-width: 1160px; margin: 0 auto; padding: 0 40px; }
+        .projects-header-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: end; }
+        .projects-cs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+        .projects-mat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+        .projects-discovery-grid { display: grid; grid-template-columns: 1fr 1.8fr; gap: 72px; align-items: start; }
+        .projects-item-row { grid-template-columns: 1.1fr 1.6fr; gap: 24px; }
+        @media (max-width: 768px) {
+          .projects-container { padding: 0 20px; }
+          .projects-header-grid { grid-template-columns: 1fr; gap: 24px; }
+          .projects-cs-grid { grid-template-columns: 1fr; gap: 32px; }
+          .projects-mat-grid { grid-template-columns: 1fr; gap: 24px; }
+          .projects-discovery-grid { grid-template-columns: 1fr; gap: 40px; }
+          .projects-item-row { grid-template-columns: 1fr; gap: 8px; }
+        }
+      `}</style>
 
       {/* Page header */}
       <div style={{ borderBottom: "1px solid var(--line)", background: "var(--surface)" }}>
-        <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
+        <div className="projects-container">
           <div style={{ padding: "64px 0 56px" }}>
             <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 16 }}>Projects</div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "end" }}>
+            <div className="projects-header-grid">
               <h1 style={{
                 fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 48,
                 lineHeight: 1.15, color: "var(--text)", maxWidth: "14ch",
@@ -79,7 +95,7 @@ export default function ProjectsPage() {
 
       {/* Case studies */}
       <div style={{ background: "#fff" }}>
-        <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
+        <div className="projects-container">
           {CASE_STUDIES.map((cs, i) => (
             <div key={cs.id} style={{
               padding: "72px 0",
@@ -111,7 +127,7 @@ export default function ProjectsPage() {
                 {cs.title}
               </h2>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48 }}>
+              <div className="projects-cs-grid">
 
                 {/* Before / after placeholder */}
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
@@ -182,7 +198,7 @@ export default function ProjectsPage() {
               </div>
 
               {/* Materials and testimonial */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, marginTop: 36 }}>
+              <div className="projects-mat-grid" style={{ marginTop: 36 }}>
                 <div>
                   <div style={{ fontSize: 12, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 12 }}>
                     Materials selected
@@ -215,9 +231,9 @@ export default function ProjectsPage() {
 
       {/* Design Discovery Package */}
       <div style={{ background: "var(--surface-ink)" }}>
-        <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
+        <div className="projects-container">
           <div style={{ padding: "80px 0" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1.8fr", gap: 72, alignItems: "start" }}>
+            <div className="projects-discovery-grid">
 
               {/* Left - pitch */}
               <div>
@@ -253,10 +269,10 @@ export default function ProjectsPage() {
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
                   {DISCOVERY_PACKAGE.map((d, i) => (
-                    <div key={d.item} style={{
+                    <div key={d.item} className="projects-item-row" style={{
                       padding: "20px 0",
                       borderBottom: i < DISCOVERY_PACKAGE.length - 1 ? "1px solid rgba(241,238,231,0.1)" : "none",
-                      display: "grid", gridTemplateColumns: "1.1fr 1.6fr", gap: 24,
+                      display: "grid",
                     }}>
                       <div style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
                         <span style={{ color: "var(--text-muted)", flexShrink: 0, marginTop: 1 }}>&#10003;</span>

@@ -7,8 +7,16 @@ export const metadata = {
 
 export default function RequestAVisitPage() {
   return (
-    <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px" }}>
-      <div style={{ display: "grid", gridTemplateColumns: "0.6fr 1.4fr", gap: 80, padding: "72px 0 0" }}>
+    <div className="visit-container" style={{ maxWidth: 1160, margin: "0 auto" }}>
+      <style>{`
+        .visit-container { padding: 0 40px; }
+        .visit-grid { grid-template-columns: 0.6fr 1.4fr; gap: 80px; padding: 72px 0 0; }
+        @media (max-width: 768px) {
+          .visit-container { padding: 0 20px; }
+          .visit-grid { grid-template-columns: 1fr; gap: 40px; padding: 40px 0 0; }
+        }
+      `}</style>
+      <div className="visit-grid" style={{ display: "grid" }}>
         {/* Left: intro */}
         <div style={{ paddingTop: 8 }}>
           <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 16 }}>
