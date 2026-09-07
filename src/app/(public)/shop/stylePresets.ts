@@ -50,7 +50,7 @@ export const STYLE_PRESETS: Record<string, {
     categories: ["tile", "ceramic", "stone", "counterTop"],
     keywords: ["terracotta", "zellige", "warm", "handcrafted", "mediterranean"],
     image: "/style-modern-mediterranean.png",
-    focusY: "top",
+    focusY: "45%",
   },
   "traditional": {
     label: "Traditional",
@@ -68,7 +68,7 @@ export const STYLE_PRESETS: Record<string, {
     categories: ["ceramic", "tile", "vinyl", "stone"],
     keywords: ["concrete", "gray", "large format", "minimal", "clean"],
     image: "/style-minimalist.png",
-    focusY: "top",
+    focusY: "52%",
   },
   "california-casual": {
     label: "California Casual",
