@@ -378,6 +378,7 @@ export default function ShowroomSalesConsultantPage() {
                 "Organized enough to keep twenty open quotes straight",
                 "Can use a computer and learn a new system",
                 "Available Saturdays on a rotation. Saturday is our busiest day.",
+                "Valid California driver's license",
                 "Legally authorized to work in the United States",
               ].map((item) => (
                 <li
