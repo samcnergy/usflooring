@@ -44,10 +44,12 @@ export default function BlogIndexPage() {
         .blog-wrap { max-width: 1160px; margin: 0 auto; padding: 0 40px; }
         .blog-header-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: end; }
         .blog-post-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; padding: 2px 0 80px; }
+        .blog-cover-img { object-position: center center; }
         @media (max-width: 768px) {
           .blog-wrap { padding: 0 20px; }
           .blog-header-grid { grid-template-columns: 1fr; gap: 16px; }
           .blog-post-grid { grid-template-columns: 1fr; }
+          .blog-cover-img { object-position: left top !important; }
         }
       `}</style>
 
@@ -84,7 +86,8 @@ export default function BlogIndexPage() {
                       src={post.cover}
                       alt={post.title}
                       fill
-                      style={{ objectFit: "cover", objectPosition: "center", transition: "transform 0.3s ease" }}
+                      className="blog-cover-img"
+                      style={{ objectFit: "cover", transition: "transform 0.3s ease" }}
                     />
                   </div>
                   <div style={{ padding: "0 32px" }}>
