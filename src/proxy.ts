@@ -34,6 +34,8 @@ export async function proxy(req: NextRequest) {
     path === "/login" ||
     path === "/forgot-password" ||
     path === "/reset-password" ||
+    path === "/sitemap.xml" ||
+    path === "/robots.txt" ||
     path.startsWith("/request-a-visit") ||
     path.startsWith("/shop") ||
     path.startsWith("/services") ||
@@ -41,7 +43,6 @@ export async function proxy(req: NextRequest) {
     path.startsWith("/showroom") ||
     path.startsWith("/trade") ||
     path.startsWith("/warranty") ||
-    path.startsWith("/showroom") ||
     path.startsWith("/academy") ||
     path.startsWith("/blog") ||
     path.startsWith("/faq") ||
@@ -49,10 +50,17 @@ export async function proxy(req: NextRequest) {
     path.startsWith("/investors") ||
     path.startsWith("/press") ||
     path.startsWith("/careers") ||
+    path.startsWith("/leadership") ||
+    path.startsWith("/our-brand") ||
+    path.startsWith("/podcast") ||
+    path.startsWith("/social-responsibility") ||
+    path.startsWith("/digital-innovations") ||
+    path.startsWith("/auth/callback") ||
     path.startsWith("/_next") ||
     path.startsWith("/api/auth") ||
     path.startsWith("/api/investors") ||
-    path.startsWith("/api/careers");
+    path.startsWith("/api/careers") ||
+    path.startsWith("/api/trade-application");
 
   if (isPublic) return res;
 
