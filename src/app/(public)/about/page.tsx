@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export const metadata = {
   title: "About",
-  description: "US Floor Design Center is a 30-year-old design-build studio in Rancho Santa Margarita, Orange County. Kitchen remodeling, bathroom remodeling, flooring, tile, cabinets, and countertops.",
+  description: "US Floor Design Center is a design-build firm in Rancho Santa Margarita with 30 years in Orange County, serving homeowners, medical practices, retailers, and real estate investors across South Orange County.",
 };
 
 const SCHEMA = {
@@ -12,7 +12,7 @@ const SCHEMA = {
       "@type": "AboutPage",
       "url": "https://usfloordesign.com/about",
       "name": "About US Floor Design Center",
-      "description": "US Floor Design Center is a 30-year design-build studio in Rancho Santa Margarita, Orange County. Kitchen remodeling, bathroom remodeling, flooring, tile, cabinets, and countertops.",
+      "description": "US Floor Design Center is a design-build firm in Rancho Santa Margarita with 30 years in Orange County, serving homeowners, medical practices, retailers, and real estate investors across South Orange County.",
       "about": { "@id": "https://usfloordesign.com/#organization" },
     },
     {
@@ -81,10 +81,10 @@ export default function AboutPage() {
               maxWidth: "24ch",
               marginBottom: "var(--s-5)",
             }}>
-              A 30-year Orange County showroom, with the crews and relationships that built it, and the systems it never had.
+              A 30-year Orange County design-build firm for homes, medical offices, retail spaces, and investment properties.
             </h1>
             <p style={{ fontSize: "var(--t-body-lg)", color: "var(--text-muted)", lineHeight: 1.35, maxWidth: "56ch" }}>
-              US Floor Design Center has been remodeling kitchens, bathrooms, and floors in Orange County for three decades. The experienced crews, the supplier relationships, the showroom - all intact. The infrastructure around it, rebuilt from scratch.
+              US Floor Design Center has been designing and building in Orange County for three decades. The experienced crews, the supplier relationships, and the design center are all intact, and the systems around them have been rebuilt from scratch. Today the same team takes on residential and commercial projects across South Orange County.
             </p>
           </div>
         </div>
@@ -95,10 +95,10 @@ export default function AboutPage() {
         <div style={{ maxWidth: "var(--container)", margin: "0 auto", padding: "0 var(--gutter)" }}>
           <div className="about-stats-grid" style={{ display: "grid" }}>
             {[
-              { n: "30+", label: "Years in Orange County" },
+              { n: "30", label: "Years in Orange County" },
               { n: "800+", label: "Projects completed" },
               { n: "1", label: "Showroom, Orange County" },
-              { n: "Design + build", label: "One team, start to finish" },
+              { n: "13", label: "South Orange County markets" },
             ].map((item, i) => (
               <div key={item.n} style={{
                 padding: "var(--s-6) var(--s-5)",
@@ -144,7 +144,7 @@ export default function AboutPage() {
                 What was here before we arrived
               </h2>
               <p style={{ fontSize: "var(--t-body-lg)", color: "var(--text-muted)", lineHeight: 1.35, marginBottom: "var(--s-4)" }}>
-                The original US Floor, Kitchen and Bath opened in Rancho Santa Margarita in the early 1990s and operated out of the same showroom at Arroyo Crossroads for thirty years. The owner, Mr. Hedayati, built it the way most successful small businesses are built: good crews, strong word of mouth, supplier relationships that took years to develop, and real knowledge of how to run a remodeling job.
+                The original US Floor, Kitchen and Bath opened in Rancho Santa Margarita in the early 1990s and operated out of the same showroom at Arroyo Crossroads for thirty years. The owner, Mr. Hedayati, built it the way most successful small businesses are built: good crews, strong word of mouth, supplier relationships that took years to develop, and real knowledge of how to run a construction job.
               </p>
               <p style={{ fontSize: "var(--t-body-lg)", color: "var(--text-muted)", lineHeight: 1.35, marginBottom: "var(--s-4)" }}>
                 The business had one significant gap. Every quote, every invoice, every job order was on paper. There was no CRM, no digital record of 30 years of customers, no online presence worth mentioning, and no way to measure where business was coming from. The operation was strong. The infrastructure around it was not.
@@ -282,7 +282,7 @@ export default function AboutPage() {
               Design and build under one roof
             </h2>
             <p style={{ fontSize: "var(--t-body-lg)", color: "var(--text-muted)", lineHeight: 1.35, marginBottom: "var(--s-4)", maxWidth: "68ch" }}>
-              Most remodeling problems start with handoffs - between the designer who specified something and the contractor who has to build it, between the person who sold the job and the crew that shows up on site. When design and construction are managed separately, each side blames the other when something does not fit.
+              Most construction problems start with handoffs - between the designer who specified something and the contractor who has to build it, between the person who sold the job and the crew that shows up on site. When design and construction are managed separately, each side blames the other when something does not fit.
             </p>
             <p style={{ fontSize: "var(--t-body-lg)", color: "var(--text-muted)", lineHeight: 1.35, marginBottom: "var(--s-4)", maxWidth: "68ch" }}>
               We handle the full scope. Material selection, design drawings, permits, demolition, construction, installation, and final inspection happen through one team with one point of contact. If something changes mid-project - because it always does - there is no gap between who knew and who did the work.

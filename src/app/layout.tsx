@@ -16,10 +16,10 @@ const sourceSans3 = Source_Sans_3({
 
 export const metadata: Metadata = {
   title: {
-    default: "US Floor Design Center | Kitchen, Bathroom and Flooring | Rancho Santa Margarita",
+    default: "US Floor Design Center | Residential and Commercial Design-Build | South Orange County",
     template: "%s | US Floor Design Center",
   },
-  description: "Design-build studio in Rancho Santa Margarita, Orange County. Kitchen remodeling, bathroom remodeling, flooring, tile, cabinets, and countertops. Visit our showroom.",
+  description: "Design-build firm in Rancho Santa Margarita with 30 years in Orange County, serving homeowners, medical practices, retailers, and real estate investors across South Orange County.",
   metadataBase: new URL("https://usfloordesign.com"),
   openGraph: {
     type: "website",

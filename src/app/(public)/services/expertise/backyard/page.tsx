@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export const metadata = {
   title: "Backyard",
-  description: "Outdoor flooring and surface solutions for Southern California backyards.",
+  description: "Outdoor surfaces and living areas for homes across South Orange County, designed and built by one team.",
 };
 
 export default function BackyardPage() {
@@ -16,14 +16,14 @@ export default function BackyardPage() {
               <span style={{ fontSize: "var(--t-label)", fontFamily: "var(--font-body)", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--text-muted)" }}>Services · Expertise</span>
             </div>
             <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 400, fontSize: "var(--t-h1)", lineHeight: 1.10, letterSpacing: "-0.01em", color: "var(--text)", marginBottom: "var(--s-4)" }}>Backyard</h1>
-            <p style={{ fontSize: "var(--t-body-lg)", color: "var(--text-muted)", lineHeight: 1.35, maxWidth: "52ch", margin: 0 }}>Outdoor surfaces built for Southern California living.</p>
+            <p style={{ fontSize: "var(--t-body-lg)", color: "var(--text-muted)", lineHeight: 1.35, maxWidth: "52ch", margin: 0 }}>Outdoor surfaces and living areas for Southern California homes.</p>
           </div>
         </div>
       </div>
       <div style={{ background: "var(--surface)" }}>
         <div style={{ maxWidth: "var(--container)", margin: "0 auto", padding: "0 var(--gutter)" }}>
           <div style={{ maxWidth: "68ch", padding: "var(--s-8) 0" }}>
-            <p style={{ fontSize: "var(--t-body-lg)", color: "var(--text-muted)", lineHeight: 1.6, marginBottom: "var(--s-7)" }}>Content coming soon.</p>
+            <p style={{ fontSize: "var(--t-body-lg)", color: "var(--text-muted)", lineHeight: 1.6, marginBottom: "var(--s-7)" }}>We design and build outdoor surfaces and living areas, and organize the project information an HOA review may require before work starts.</p>
             <Link href="/request-a-visit" style={{ display: "inline-block", background: "var(--red)", color: "var(--text-invert)", fontSize: "var(--t-btn)", fontFamily: "var(--font-body)", fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", padding: "14px 28px", textDecoration: "none", borderRadius: "var(--radius)" }}>Plan a visit</Link>
           </div>
         </div>

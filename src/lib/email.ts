@@ -59,6 +59,8 @@ function personalize(template: string, firstName: string): string {
 
 const JOB_TYPE_LABELS: Record<string, string> = {
   flooring: "Flooring", kitchen: "Kitchen", bathroom: "Bathroom",
+  medicalOffice: "Medical office", retail: "Retail buildout", investment: "Investment property",
+  backyard: "Backyard", windowsDoors: "Windows and doors",
   wholeHome: "Whole-home", other: "Other",
 };
 

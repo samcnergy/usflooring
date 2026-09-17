@@ -37,7 +37,7 @@ export default async function LoginPage({
       <div className="bg-marble-100 border border-marble-200 rounded-lg p-6">
         <h1 className="text-xl font-semibold text-brand-700 mb-1">Sign in</h1>
         <p className="text-sm text-marble-700 mb-4">
-          U.S. Floor, Kitchen &amp; Bath order management.
+          US Floor Design Center invoicing and CRM.
         </p>
 
         {justReset ? (

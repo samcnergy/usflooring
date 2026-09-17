@@ -2,11 +2,11 @@ import Link from "next/link";
 
 export const metadata = {
   title: "Projects",
-  description: "Real kitchens and bathrooms designed and built by our team in Orange County. See the before, the process, and the finished result.",
+  description: "Projects designed and built by our team across South Orange County. See the original problem, the process, and the finished result.",
 };
 
 const DISCOVERY_PACKAGE = [
-  { item: "In-home measurement", detail: "We measure the space, document what's there, and identify any structural constraints before any product is specified." },
+  { item: "On-site measurement", detail: "We measure the space, document what's there, and identify any structural constraints before any product is specified." },
   { item: "Needs and lifestyle assessment", detail: "A structured conversation about how the room is actually used, who uses it, and what's not working about the current layout." },
   { item: "Preliminary layout", detail: "A scaled drawing of the proposed floor plan showing cabinet runs, appliance placement, and traffic flow." },
   { item: "Product direction", detail: "Specific material and finish recommendations from our showroom - not a general style board but actual products at real price points." },

@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export const metadata = {
   title: "Investor Services",
-  description: "Flooring and finish services for real estate investors in Orange County.",
+  description: "Renovation planning, pricing, and delivery for real estate investors across South Orange County.",
 };
 
 export default function InvestorServicesApproachPage() {
@@ -16,7 +16,7 @@ export default function InvestorServicesApproachPage() {
               <span style={{ fontSize: "var(--t-label)", fontFamily: "var(--font-body)", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--text-muted)" }}>Services · Approach</span>
             </div>
             <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 400, fontSize: "var(--t-h1)", lineHeight: 1.10, letterSpacing: "-0.01em", color: "var(--text)", marginBottom: "var(--s-4)" }}>Investor Services</h1>
-            <p style={{ fontSize: "var(--t-body-lg)", color: "var(--text-muted)", lineHeight: 1.35, maxWidth: "52ch", margin: 0 }}>Flooring and Finish Services for Real Estate Investors</p>
+            <p style={{ fontSize: "var(--t-body-lg)", color: "var(--text-muted)", lineHeight: 1.35, maxWidth: "52ch", margin: 0 }}>Planning and delivery for real estate investors</p>
           </div>
         </div>
       </div>
@@ -25,7 +25,7 @@ export default function InvestorServicesApproachPage() {
         <div style={{ maxWidth: "var(--container)", margin: "0 auto", padding: "0 var(--gutter)" }}>
           <div style={{ maxWidth: "68ch", padding: "var(--s-8) 0", borderBottom: "1px solid var(--line)" }}>
             <p style={{ fontSize: "var(--t-body-lg)", color: "var(--text)", lineHeight: 1.55, marginBottom: "var(--s-4)" }}>
-              Content coming soon.
+              Investors get a defined scope, a budget range, and a schedule before work begins, with one point of contact from pre-construction through delivery. The same approach applies whether the property is a single rental or part of a larger portfolio.
             </p>
           </div>
         </div>

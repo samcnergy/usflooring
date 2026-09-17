@@ -659,7 +659,7 @@ export default function InvestorsPage() {
           <div className="investor-spec-grid">
             {[
               {
-                numeral: "30+",
+                numeral: "30",
                 label: "Years in Orange County",
                 gold: true,
               },

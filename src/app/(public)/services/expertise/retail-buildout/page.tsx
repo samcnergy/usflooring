@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export const metadata = {
   title: "Retail Buildout",
-  description: "Flooring and finish services for retail spaces and commercial buildouts.",
+  description: "Retail and commercial interior buildouts across South Orange County, planned, designed, and built by one team.",
 };
 
 export default function RetailBuildoutPage() {
@@ -16,14 +16,14 @@ export default function RetailBuildoutPage() {
               <span style={{ fontSize: "var(--t-label)", fontFamily: "var(--font-body)", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--text-muted)" }}>Services · Expertise</span>
             </div>
             <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 400, fontSize: "var(--t-h1)", lineHeight: 1.10, letterSpacing: "-0.01em", color: "var(--text)", marginBottom: "var(--s-4)" }}>Retail Buildout</h1>
-            <p style={{ fontSize: "var(--t-body-lg)", color: "var(--text-muted)", lineHeight: 1.35, maxWidth: "52ch", margin: 0 }}>Flooring and finishes that make your retail environment work harder.</p>
+            <p style={{ fontSize: "var(--t-body-lg)", color: "var(--text-muted)", lineHeight: 1.35, maxWidth: "52ch", margin: 0 }}>Interior buildouts and finishes for storefronts and commercial tenants.</p>
           </div>
         </div>
       </div>
       <div style={{ background: "var(--surface)" }}>
         <div style={{ maxWidth: "var(--container)", margin: "0 auto", padding: "0 var(--gutter)" }}>
           <div style={{ maxWidth: "68ch", padding: "var(--s-8) 0" }}>
-            <p style={{ fontSize: "var(--t-body-lg)", color: "var(--text-muted)", lineHeight: 1.6, marginBottom: "var(--s-7)" }}>Content coming soon.</p>
+            <p style={{ fontSize: "var(--t-body-lg)", color: "var(--text-muted)", lineHeight: 1.6, marginBottom: "var(--s-7)" }}>One team plans, designs, and builds retail interiors, coordinating materials, trades, and schedule from the first site visit to the final walkthrough. Landlord and association requirements are identified during pre-construction, before the space is priced.</p>
             <Link href="/request-a-visit" style={{ display: "inline-block", background: "var(--red)", color: "var(--text-invert)", fontSize: "var(--t-btn)", fontFamily: "var(--font-body)", fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", padding: "14px 28px", textDecoration: "none", borderRadius: "var(--radius)" }}>Plan a visit</Link>
           </div>
         </div>

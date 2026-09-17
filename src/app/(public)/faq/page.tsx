@@ -544,7 +544,7 @@ export default function FAQPage() {
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "name": "Frequently Asked Questions - US Floor Design Center",
-    "description": "100 questions about home remodeling, kitchen, bathroom, flooring, permits, and design trends answered by Parham Shariat, owner of US Floor Design Center in Rancho Santa Margarita, Orange County.",
+    "description": "100 questions about remodeling and construction, kitchens, bathrooms, flooring, permits, and design trends answered by Parham Shariat, owner of US Floor Design Center in Rancho Santa Margarita, Orange County.",
     "url": "https://usfloordesign.com/faq",
     "mainEntity": FAQS.map((f) => ({
       "@type": "Question",

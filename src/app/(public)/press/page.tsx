@@ -4,7 +4,7 @@ import BoilerplatePanels from "./BoilerplatePanels";
 export const metadata = {
   title: "Press and Media",
   description:
-    "Logos, company facts, approved photography and press contact for US Floor Design Center, a design and build showroom in Rancho Santa Margarita, California.",
+    "Logos, company facts, approved photography and press contact for US Floor Design Center, a design-build firm in Rancho Santa Margarita, California, serving homeowners, medical practices, retailers, and real estate investors across South Orange County.",
 };
 
 const localBusinessJsonLd = {
@@ -16,7 +16,7 @@ const localBusinessJsonLd = {
   url: "https://usfloordesign.com",
   logo: "https://usfloordesign.com/US_FLOOR_Logo_Primary.svg",
   description:
-    "Design and build showroom in Rancho Santa Margarita, California, handling kitchen, bath and flooring renovations for homeowners and investors across Orange County.",
+    "Design-build firm in Rancho Santa Margarita, California, serving homeowners, medical practices, retailers, and real estate investors across South Orange County.",
   telephone: "+1-619-626-7545",
   email: "info@usfloordesign.com",
   foundingDate: "1993",
@@ -48,9 +48,14 @@ const localBusinessJsonLd = {
     },
   ],
   makesOffer: [
+    { "@type": "Offer", itemOffered: { "@type": "Service", name: "Medical office buildouts" } },
+    { "@type": "Offer", itemOffered: { "@type": "Service", name: "Retail buildouts" } },
+    { "@type": "Offer", itemOffered: { "@type": "Service", name: "Investment property renovation" } },
     { "@type": "Offer", itemOffered: { "@type": "Service", name: "Kitchen remodeling" } },
     { "@type": "Offer", itemOffered: { "@type": "Service", name: "Bathroom remodeling" } },
     { "@type": "Offer", itemOffered: { "@type": "Service", name: "Flooring supply and installation" } },
+    { "@type": "Offer", itemOffered: { "@type": "Service", name: "Backyard and outdoor living" } },
+    { "@type": "Offer", itemOffered: { "@type": "Service", name: "Window and door replacement" } },
     { "@type": "Offer", itemOffered: { "@type": "Service", name: "Renovation feasibility studies for property investors" } },
   ],
   sameAs: [],
@@ -68,12 +73,11 @@ const FACTS: [string, string][] = [
   ["Email", "info@usfloordesign.com"],
   ["Website", "usfloordesign.com"],
   ["Hours", "Mon to Fri 9:00 am to 5:30 pm · Sat 10:00 am to 4:00 pm · Sun closed"],
-  ["Service area", "Orange County, California"],
-  ["Services", "Kitchen, bath and flooring design and remodeling; material supply; investor feasibility studies"],
+  ["Service area", "13 communities in South Orange County, California"],
+  ["Services", "Residential and commercial design-build: medical offices, retail buildouts, investment properties, kitchens, bathrooms, backyards, windows and doors; material supply; investor feasibility studies"],
   ["Projects completed", "800+"],
-  ["Years in Orange County", "30+"],
+  ["Years in Orange County", "30"],
   ["Locations", "One showroom"],
-  ["CSLB license", "TODO [CONFIRM] — Add license number before publishing"],
 ];
 
 const LOGOS = [
@@ -566,8 +570,7 @@ export default function PressPage() {
             }}
           >
             <p style={{ fontSize: "var(--t-body)", color: "var(--text-muted)", textAlign: "center", margin: 0 }}>
-              TODO: Photography grid coming once the showroom and project shoot is complete.<br />
-              Per spec, only genuine project and showroom photography appears here.
+              Project and showroom photography is coming soon.
             </p>
           </div>
         </div>
@@ -606,21 +609,6 @@ export default function PressPage() {
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--s-5)", maxWidth: 900 }}>
             {/* Parham */}
             <div style={{ background: "var(--surface)", border: "1px solid var(--line)", padding: "var(--s-6)" }}>
-              {/* TODO: Add headshot once available */}
-              <div
-                style={{
-                  width: "100%",
-                  height: 200,
-                  background: "var(--surface-alt)",
-                  border: "1px solid var(--line)",
-                  marginBottom: "var(--s-5)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <span style={{ fontSize: "var(--t-small)", color: "var(--text-muted)" }}>TODO: Headshot</span>
-              </div>
               <div
                 style={{
                   fontSize: "var(--t-label)",
@@ -654,20 +642,6 @@ export default function PressPage() {
             <div style={{ background: "var(--surface)", border: "1px solid var(--line)", padding: "var(--s-6)" }}>
               <div
                 style={{
-                  width: "100%",
-                  height: 200,
-                  background: "var(--surface-alt)",
-                  border: "1px solid var(--line)",
-                  marginBottom: "var(--s-5)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <span style={{ fontSize: "var(--t-small)", color: "var(--text-muted)" }}>TODO: Headshot</span>
-              </div>
-              <div
-                style={{
                   fontSize: "var(--t-label)",
                   fontFamily: "var(--font-body)",
                   fontWeight: 700,
@@ -691,9 +665,8 @@ export default function PressPage() {
               >
                 Shirin Salamat
               </h3>
-              {/* TODO [CONFIRM]: Add Shirin's bio — 2-3 sentences, same length as Parham's */}
               <p style={{ fontSize: "var(--t-body)", lineHeight: 1.55, color: "var(--text-muted)", margin: 0 }}>
-                TODO [CONFIRM]: Add two or three sentences covering Shirin&apos;s role in the business and relevant background.
+                Shirin Salamat is co-owner of US Floor Design Center and an attorney with 22 years of legal experience. She is responsible for vendor agreements, supplier negotiations, and the legal and contractual framework that protects the business and its customers.
               </p>
             </div>
           </div>
@@ -763,9 +736,7 @@ export default function PressPage() {
               Response within one business day.
             </p>
             <p style={{ margin: "var(--s-5) 0 0", fontSize: "var(--t-small)", color: "var(--text-invert-muted)", lineHeight: 1.55 }}>
-              US Floor Design Center · 30092 Santa Margarita Pkwy, Suite G, Rancho Santa Margarita, CA 92688<br />
-              {/* TODO [CONFIRM]: Add CSLB license number */}
-              CSLB License #[TODO — confirm before publishing]
+              US Floor Design Center · 30092 Santa Margarita Pkwy, Suite G, Rancho Santa Margarita, CA 92688
             </p>
           </div>
         </div>

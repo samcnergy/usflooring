@@ -16,9 +16,14 @@ const F = {
 } as const;
 
 const JOB_OPTIONS = [
-  { value: "flooring", label: "Flooring" },
+  { value: "medicalOffice", label: "Medical office" },
+  { value: "retail", label: "Retail buildout" },
+  { value: "investment", label: "Investment property" },
   { value: "kitchen", label: "Kitchen" },
   { value: "bathroom", label: "Bathroom" },
+  { value: "backyard", label: "Backyard" },
+  { value: "windowsDoors", label: "Windows and doors" },
+  { value: "flooring", label: "Flooring" },
   { value: "wholeHome", label: "Whole-home" },
   { value: "other", label: "Other" },
 ];
@@ -125,10 +130,10 @@ export default function LeadForm() {
 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
           <div style={F.group}>
-            <label style={F.label}>Do you own or rent?<span style={F.required}>*</span></label>
+            <label style={F.label}>Do you own or lease the property?<span style={F.required}>*</span></label>
             <select name="propertyType" style={F.input} defaultValue="own">
               <option value="own">I own the property</option>
-              <option value="rent">I rent (have landlord approval)</option>
+              <option value="rent">I rent or lease (have owner or landlord approval)</option>
             </select>
           </div>
           <div style={F.group}>

@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "US Floor Academy | Free Training and Certificates",
+  title: { absolute: "US Floor Academy | Free Training and Certificates | US Floor Design Center" },
   description: "Free installation training courses for tile, cabinets, and flooring. Earn a certificate and build your skills. A skills program from US Floor Design Center.",
 };
 
@@ -63,7 +63,7 @@ const VIDEOS = {
     { title: "Adjusting cabinet door hinges for alignment", duration: "5 min" },
     { title: "Removing and replacing grout in a shower", duration: "14 min" },
     { title: "Cleaning luxury vinyl plank: what works and what damages it", duration: "7 min" },
-    { title: "Resealing a quartz countertop", duration: "6 min" },
+    { title: "Daily care for a quartz countertop", duration: "6 min" },
   ],
   process: [
     { title: "Our full kitchen tile installation: from demo to final grout", duration: "22 min" },

@@ -4,7 +4,7 @@ import ApplicationForm from "../ApplicationForm";
 export const metadata: Metadata = {
   title: "Showroom Sales Consultant",
   description:
-    "Full-time sales role in Rancho Santa Margarita. First point of contact for every client, from initial visit through project completion. No flooring experience needed, we train.",
+    "Full-time sales role in Rancho Santa Margarita. First point of contact for every client, from initial visit through project completion. No industry experience needed, we train.",
 };
 
 const JOB_POSTING_LD = {
@@ -12,7 +12,7 @@ const JOB_POSTING_LD = {
   "@type": "JobPosting",
   title: "Showroom Sales Consultant",
   description:
-    "You are the first point of contact for every US Floor client. That means building your own pipeline through networking, trade shows, and direct outreach alongside the leads we bring in, visiting homes to measure and take notes, helping clients choose materials, coordinating with designers, tracking deposits and collecting payment, and making sure the handoff to the project manager is clean so the job lands the way the client expected.\n\nWhat you will do:\n- Follow up on every lead we give you and build your own pipeline through networking events, trade shows, and direct outreach\n- Greet everyone who walks into the showroom, including the ones who say they are just looking\n- Visit client homes to measure, photograph, and understand the space\n- Help clients select materials and work alongside their designer or our in-house designer\n- Put together accurate quotes and present them clearly\n- Ask for the sale and keep following up until you get a yes or a no\n- Track deposits, approvals, and final payments, and collect them\n- Hand the project cleanly to the project manager so nothing is lost in the transfer\n- Stay reachable while the job runs and make sure it finishes the way the client expected\n- Keep your pipeline, open quotes, and active jobs current in our order system\n- Keep the showroom floor and sample displays in order\n\nWhat we are looking for: We are not looking for a flooring background. We are looking for someone who likes people, follows up without being asked, and takes responsibility for their part of the process from first contact through a clean handoff.\n\nWhat you do not need: No experience with flooring, tile, stone or cabinetry. We will teach you the products, the installation basics, the measuring, and the pricing. If you have managed a client relationship from first contact through completion and you are willing to learn a trade, you can do this job. No degree. No design background. No contractor license.\n\nWhat we will teach you: Materials, how to read a room and estimate square footage, how installation works, our pricing, and our order system from quote to invoice to install schedule.",
+    "You are the first point of contact for every US Floor client. That means building your own pipeline through networking, trade shows, and direct outreach alongside the leads we bring in, visiting client properties to measure and take notes, helping clients choose materials, coordinating with designers, tracking deposits and collecting payment, and making sure the handoff to the project manager is clean so the job lands the way the client expected.\n\nWhat you will do:\n- Follow up on every lead we give you and build your own pipeline through networking events, trade shows, and direct outreach\n- Greet everyone who walks into the showroom, including the ones who say they are just looking\n- Visit client homes to measure, photograph, and understand the space\n- Help clients select materials and work alongside their designer or our in-house designer\n- Put together accurate quotes and present them clearly\n- Ask for the sale and keep following up until you get a yes or a no\n- Track deposits, approvals, and final payments, and collect them\n- Hand the project cleanly to the project manager so nothing is lost in the transfer\n- Stay reachable while the job runs and make sure it finishes the way the client expected\n- Keep your pipeline, open quotes, and active jobs current in our order system\n- Keep the showroom floor and sample displays in order\n\nWhat we are looking for: We are not looking for an industry background. We are looking for someone who likes people, follows up without being asked, and takes responsibility for their part of the process from first contact through a clean handoff.\n\nWhat you do not need: No experience with flooring, tile, stone or cabinetry. We will teach you the products, the installation basics, the measuring, and the pricing. If you have managed a client relationship from first contact through completion and you are willing to learn a trade, you can do this job. No degree. No design background. No contractor license.\n\nWhat we will teach you: Materials, how to read a room and estimate square footage, how installation works, our pricing, and our order system from quote to invoice to install schedule.",
   identifier: {
     "@type": "PropertyValue",
     name: "US Floor Design Center",
@@ -221,7 +221,7 @@ export default function ShowroomSalesConsultantPage() {
               <br />
               <br />
               That means building your own pipeline alongside the leads we bring in,
-              visiting client homes to measure and understand the space, helping them choose
+              visiting client properties to measure and understand the space, helping them choose
               materials, working with their designer or ours, tracking and collecting
               payment, and making sure the handoff to the project manager is clean so the
               job lands the way the client expected.
@@ -258,7 +258,7 @@ export default function ShowroomSalesConsultantPage() {
               {[
                 "Follow up on every lead we give you and build your own pipeline through networking events, trade shows, and direct outreach",
                 "Greet everyone who walks into the showroom, including the ones who say they are just looking",
-                "Visit client homes to measure, photograph, and understand the space",
+                "Visit client homes and businesses to measure, photograph, and understand the space",
                 "Help clients select materials and work alongside their designer or our in-house designer to move the project forward",
                 "Put together accurate quotes and present them clearly",
                 "Ask for the sale and keep following up until you get a yes or a no",
@@ -316,7 +316,7 @@ export default function ShowroomSalesConsultantPage() {
                 fontStyle: "italic",
               }}
             >
-              We are not looking for a flooring background. We are looking for three things.
+              We are not looking for an industry background. We are looking for three things.
             </p>
 
             <div

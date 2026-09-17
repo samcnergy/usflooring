@@ -5,13 +5,13 @@ import ApplicationForm from "./ApplicationForm";
 export const metadata: Metadata = {
   title: "Careers",
   description:
-    "Open roles at a design and build showroom in Rancho Santa Margarita. No flooring experience required. We train.",
+    "Open roles at a design-build firm in Rancho Santa Margarita. No construction or design experience required. We train.",
 };
 
 const WHY_BLOCKS = [
   {
     heading: "You will be trained",
-    body: "We hire for how you deal with people, not for what you already know about tile. Product knowledge is teachable and we teach it. Most of our team started knowing nothing about flooring.",
+    body: "We hire for how you deal with people, not for what you already know about construction. Product and project knowledge is teachable and we teach it.",
   },
   {
     heading: "One location",
@@ -19,7 +19,7 @@ const WHY_BLOCKS = [
   },
   {
     heading: "Small company, visible work",
-    body: "Twelve people, not twelve hundred. What you do lands on a real house in this county, and you will meet the customer who lives in it.",
+    body: "Twelve people, not twelve hundred. What you do shows up in real homes, offices, and storefronts in this county, and you will meet the clients who use them.",
   },
   {
     heading: "The owners are here",
@@ -83,7 +83,7 @@ export default function CareersIndexPage() {
               maxWidth: "52ch",
             }}
           >
-            The showroom has been here since the early 1990s. The ownership is new, the
+            The business has been in Orange County for 30 years. The ownership is new, the
             systems are new, and we are hiring the people who will run the next stretch of
             it.
           </p>

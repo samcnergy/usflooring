@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export const metadata = {
   title: "Services",
-  description: "Design, remodel, delivery, and warranty - one team from first conversation to finished project. Orange County kitchen and bath specialists.",
+  description: "Design, build, delivery, and warranty from one team, for homes, medical offices, retail spaces, and investment properties across South Orange County.",
 };
 
 const SERVICES = [
@@ -21,14 +21,15 @@ const SERVICES = [
   },
   {
     id: "remodel",
-    label: "Remodel",
-    headline: "Our crew does the work. No handoffs to subcontractors you have never met.",
-    body: "We handle kitchens, bathrooms, and every surface in between - flooring, tile, countertops, cabinets, vanities, and backsplashes. Whether the layout is staying the same or changing completely, the same team that designed it is the one installing it. That is the only way to hold both accountable.",
+    label: "Build",
+    headline: "The team that plans the project is accountable for building it.",
+    body: "We build residential and commercial projects: medical offices, retail buildouts, investment properties, kitchens, bathrooms, backyards, and window and door replacements. Whether the layout is staying the same or changing completely, the same team that designed the project manages its construction. That is the only way to hold both accountable.",
     details: [
-      "Complete kitchen and bathroom remodeling",
-      "Flooring installation",
-      "Tile and backsplash",
-      "Cabinets and countertops",
+      "Medical office and retail buildouts",
+      "Investment property renovation",
+      "Kitchen and bathroom remodeling",
+      "Backyards, windows, and doors",
+      "Flooring, tile, cabinets, and countertops",
       "Structural layout changes when needed",
     ],
   },
@@ -55,7 +56,7 @@ const SERVICES = [
       "Manufacturer warranty coordination",
       "Post-project inspection walkthrough",
       "Direct contact - no third-party service routing",
-      "Optional annual home-care inspection",
+      "Optional annual inspection",
     ],
   },
 ];
@@ -105,10 +106,10 @@ export default function ServicesPage() {
               color: "var(--text)",
               marginBottom: "var(--s-5)",
             }}>
-              We handle every phase of a renovation, from the first showroom conversation to the written warranty when the job is done.
+              We handle every phase of a project, from pre-construction to the written warranty when the job is done.
             </h1>
             <p style={{ fontSize: "var(--t-body-lg)", color: "var(--text-muted)", lineHeight: 1.35, maxWidth: "56ch" }}>
-              One team. One point of contact. Design, materials, installation, and post-project support - all under one roof in Orange County.
+              One team and one point of contact for homes, medical offices, retail spaces, and investment properties across South Orange County.
             </p>
           </div>
         </div>

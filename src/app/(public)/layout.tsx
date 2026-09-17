@@ -11,7 +11,7 @@ const ORG_SCHEMA = {
       "url": "https://usfloordesign.com",
       "telephone": "+16196267545",
       "email": "info@usfloordesign.com",
-      "description": "Design-build studio specializing in kitchen, bathroom, and flooring remodeling in Rancho Santa Margarita, Orange County, California. Full design-build, countertops, cabinetry, tile, flooring, and installation.",
+      "description": "Design-build firm in Rancho Santa Margarita, California, with 30 years in Orange County. Residential and commercial projects for homeowners, medical practices, retailers, and real estate investors across South Orange County, from pre-construction and HOA approval through design, delivery, and warranty.",
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "30092 Santa Margarita Pkwy, Suite G",
@@ -24,8 +24,8 @@ const ORG_SCHEMA = {
         { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "09:00", "closes": "17:30" },
         { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "10:00", "closes": "16:00" }
       ],
-      "areaServed": { "@type": "Place", "name": "Orange County, California" },
-      "knowsAbout": ["kitchen remodeling","bathroom remodeling","flooring installation","tile installation","cabinet installation","countertop fabrication","design-build","home remodeling"],
+      "areaServed": [{ "@type": "Place", "name": "Rancho Santa Margarita, CA" }, { "@type": "Place", "name": "Coto de Caza, CA" }, { "@type": "Place", "name": "San Juan Capistrano, CA" }, { "@type": "Place", "name": "San Clemente, CA" }, { "@type": "Place", "name": "Lake Forest, CA" }, { "@type": "Place", "name": "Laguna Niguel, CA" }, { "@type": "Place", "name": "Laguna Hills, CA" }, { "@type": "Place", "name": "Laguna Beach, CA" }, { "@type": "Place", "name": "Aliso Viejo, CA" }, { "@type": "Place", "name": "Mission Viejo, CA" }, { "@type": "Place", "name": "Dana Point, CA" }, { "@type": "Place", "name": "Ladera Ranch, CA" }, { "@type": "Place", "name": "Rancho Mission Viejo, CA" }],
+      "knowsAbout": ["design-build","pre-construction","project management","HOA approval","medical office buildouts","retail buildouts","investment property renovation","kitchen remodeling","bathroom remodeling","backyard and outdoor living","window and door replacement","flooring installation","tile installation","cabinet installation","countertop fabrication"],
       "founder": {
         "@type": "Person",
         "name": "Parham Shariat",
@@ -42,9 +42,8 @@ const FOOTER_COLS = [
     heading: "Services",
     links: [
       { href: "/services", label: "Overview" },
-      { href: "/services#design", label: "Design" },
-      { href: "/services#remodel", label: "Remodel" },
-      { href: "/services#delivery", label: "Delivery" },
+      { href: "/services/approach", label: "Approach" },
+      { href: "/services/expertise", label: "Expertise" },
       { href: "/services/markets", label: "Markets" },
       { href: "/warranty", label: "Warranty" },
     ],
