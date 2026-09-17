@@ -337,7 +337,7 @@ export default function InvestorsPage() {
           </div>
         </div>
 
-        {/* Photo — right half */}
+        {/* Photo: right half */}
         <div className="investor-hero-image">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/investor-hero.png" alt="Completed renovation by US Floor Design Center" />

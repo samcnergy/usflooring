@@ -68,7 +68,7 @@ export function StyleQuiz() {
                 overflow: "hidden", padding: 0,
               }}
             >
-              {/* Style photo — fixed height so every card is identical */}
+              {/* Style photo: fixed height so every card is identical */}
               <div style={{ width: "100%", height: 200, overflow: "hidden", flexShrink: 0 }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img

@@ -190,7 +190,7 @@ export default function PressPage() {
           </a>
           <p style={{ fontSize: "var(--t-small)", color: "var(--text-invert-muted)", marginTop: "var(--s-3)" }}>
             {/* TODO: replace with direct ZIP link once assembled */}
-            Media kit ZIP (logos + boilerplate) — currently request by email; ZIP coming shortly.
+            Media kit ZIP (logos + boilerplate): currently available by email request; ZIP coming shortly.
           </p>
         </div>
       </section>
