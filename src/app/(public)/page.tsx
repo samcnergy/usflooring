@@ -31,7 +31,6 @@ const APPROACH = [
 const EXPERTISE = [
   { name: "Medical Offices", href: "/services/expertise/medical-offices", body: "Finish work for clinics, dental suites, and healthcare offices." },
   { name: "Retail Buildout", href: "/services/expertise/retail-buildout", body: "Interior buildouts and finishes for storefronts and commercial tenants." },
-  { name: "Investor Services", href: "/services/expertise/investor-services", body: "Renovation and turnover work for rental and investment properties." },
   { name: "Kitchen Remodel", href: "/services/expertise/kitchen-remodel", body: "Cabinetry, countertops, flooring, and layout changes." },
   { name: "Bathroom Remodel", href: "/services/expertise/bathroom-remodel", body: "Tile, stone, vanities, and fixtures, from powder rooms to primary suites." },
   { name: "Backyard", href: "/services/expertise/backyard", body: "Outdoor surfaces and living areas for Southern California homes." },

@@ -7,6 +7,9 @@ const nextConfig: NextConfig = {
     return [
       { source: "/projects/markets", destination: "/services/markets", permanent: true },
       { source: "/projects/markets/:slug", destination: "/services/markets/:slug", permanent: true },
+      // Investor Services pages were removed from Approach and Expertise.
+      { source: "/services/approach/investor-services", destination: "/investors", permanent: true },
+      { source: "/services/expertise/investor-services", destination: "/investors", permanent: true },
     ];
   },
   experimental: {

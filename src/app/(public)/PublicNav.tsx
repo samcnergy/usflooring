@@ -35,7 +35,6 @@ const WORK_COLS: NavColumn[] = [
       { label: "Project Management", href: "/services/approach/project-management" },
       { label: "Delivery",           href: "/services/approach/delivery" },
       { label: "Warranty",           href: "/services/approach/warranty" },
-      { label: "Investor Services",  href: "/services/approach/investor-services" },
       { label: "HOA Approval",       href: "/services/approach/hoa-approval" },
     ],
     viewAll: { label: "View all Approach", href: "/services/approach" },
@@ -46,7 +45,6 @@ const WORK_COLS: NavColumn[] = [
     links: [
       { label: "Medical Offices",   href: "/services/expertise/medical-offices" },
       { label: "Retail Buildout",   href: "/services/expertise/retail-buildout" },
-      { label: "Investor Services", href: "/services/expertise/investor-services" },
       { label: "Kitchen Remodel",   href: "/services/expertise/kitchen-remodel" },
       { label: "Bathroom Remodel",  href: "/services/expertise/bathroom-remodel" },
       { label: "Backyard",          href: "/services/expertise/backyard" },

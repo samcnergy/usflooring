@@ -8,7 +8,6 @@ export const metadata = {
 const ITEMS = [
   { label: "Medical Offices", href: "/services/expertise/medical-offices", desc: "Design-build for clinics, dental suites, and healthcare offices." },
   { label: "Retail Buildout", href: "/services/expertise/retail-buildout", desc: "Interior buildouts and finishes for storefronts and commercial tenants." },
-  { label: "Investor Services", href: "/services/expertise/investor-services", desc: "Renovation and turnover work for rental and investment properties." },
   { label: "Kitchen Remodel", href: "/services/expertise/kitchen-remodel", desc: "Cabinetry, countertops, flooring, and layout changes, designed and built by one team." },
   { label: "Bathroom Remodel", href: "/services/expertise/bathroom-remodel", desc: "Tile, stone, vanities, and fixtures, from powder rooms to primary suites." },
   { label: "Backyard", href: "/services/expertise/backyard", desc: "Outdoor surfaces and living areas for Southern California homes." },
