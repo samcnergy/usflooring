@@ -5,26 +5,28 @@ import { usePathname } from "next/navigation";
 import { useState, useEffect, useRef, useCallback } from "react";
 
 // ── Navigation data ────────────────────────────────────────────────────────
+// Main menu: About Us ▾ · Our Work ▾ · Insight ▾ · Investors · Login
 
-const SERVICES_COLS = [
+type NavLink = { label: string; href: string };
+type NavColumn = { key: string; heading: string; links: NavLink[]; viewAll?: NavLink; columns?: number };
+type MenuKey = "about" | "work" | "insight";
+
+const ABOUT_COLS: NavColumn[] = [
   {
-    key: "approach",
-    heading: "Approach",
-    viewAllHref: "/services/approach",
+    key: "about",
+    heading: "About Us",
     links: [
-      { label: "Pre-construction",  href: "/services/approach/pre-construction" },
-      { label: "Design",            href: "/services/approach/design" },
-      { label: "Project Management",href: "/services/approach/project-management" },
-      { label: "Delivery",          href: "/services/approach/delivery" },
-      { label: "Warranty",          href: "/services/approach/warranty" },
-      { label: "Investor Services", href: "/services/approach/investor-services" },
-      { label: "HOA Approval",      href: "/services/approach/hoa-approval" },
+      { label: "Leadership",            href: "/leadership" },
+      { label: "Our Brand",             href: "/our-brand" },
+      { label: "Social Responsibility", href: "/social-responsibility" },
     ],
   },
+];
+
+const WORK_COLS: NavColumn[] = [
   {
-    key: "expertise",
-    heading: "Expertise",
-    viewAllHref: "/services/expertise",
+    key: "services",
+    heading: "Services",
     links: [
       { label: "Medical Offices",   href: "/services/expertise/medical-offices" },
       { label: "Retail Buildout",   href: "/services/expertise/retail-buildout" },
@@ -34,11 +36,12 @@ const SERVICES_COLS = [
       { label: "Backyard",          href: "/services/expertise/backyard" },
       { label: "Windows and Doors", href: "/services/expertise/windows-and-doors" },
     ],
+    viewAll: { label: "View all services", href: "/services" },
   },
   {
     key: "markets",
     heading: "Markets",
-    viewAllHref: "/services/markets",
+    columns: 2,
     links: [
       { label: "Rancho Santa Margarita", href: "/services/markets/rancho-santa-margarita" },
       { label: "Coto de Caza",           href: "/services/markets/coto-de-caza" },
@@ -54,30 +57,81 @@ const SERVICES_COLS = [
       { label: "Ladera Ranch",           href: "/services/markets/ladera-ranch" },
       { label: "Rancho Mission Viejo",   href: "/services/markets/rancho-mission-viejo" },
     ],
+    viewAll: { label: "View all markets", href: "/services/markets" },
+  },
+  {
+    key: "projects",
+    heading: "Projects",
+    links: [
+      { label: "Rancho Santa Margarita kitchen", href: "/projects#rsm-kitchen-2024" },
+      { label: "Mission Viejo primary bath",     href: "/projects#mv-primary-bath-2024" },
+    ],
+    viewAll: { label: "View all projects", href: "/projects" },
   },
 ];
 
-const INSIGHT_TILES = [
-  { label: "Blog",                href: "/blog",                desc: "Design trends, care guides, and homeowner resources." },
-  { label: "Podcast",             href: "/podcast",             desc: "Conversations on design, remodeling, and living well." },
-  { label: "Academy",             href: "/academy",             desc: "Practical education for homeowners and trade professionals." },
-  { label: "Digital Innovations", href: "/digital-innovations", desc: "How we use technology to improve the project experience." },
+const INSIGHT_COLS: NavColumn[] = [
+  {
+    key: "insight",
+    heading: "Insight",
+    links: [
+      { label: "Blog",                href: "/blog" },
+      { label: "Podcast",             href: "/podcast" },
+      { label: "Academy",             href: "/academy" },
+      { label: "Digital Innovations", href: "/digital-innovations" },
+    ],
+  },
 ];
 
-const ABOUT_TILES = [
-  { label: "Investors",            href: "/investors",             desc: "Ownership structure, financials, and the investment case." },
-  { label: "Leadership",           href: "/leadership",            desc: "The team behind US Floor Design Center." },
-  { label: "Our Brand",            href: "/our-brand",             desc: "Our identity, values, and design principles." },
-  { label: "Social Responsibility",href: "/social-responsibility", desc: "How we give back to Orange County." },
+const MENUS: { key: MenuKey; label: string; cols: NavColumn[]; paths: string[] }[] = [
+  { key: "about",   label: "About Us", cols: ABOUT_COLS,   paths: ["/about", "/leadership", "/our-brand", "/social-responsibility"] },
+  { key: "work",    label: "Our Work", cols: WORK_COLS,    paths: ["/projects", "/services"] },
+  { key: "insight", label: "Insight",  cols: INSIGHT_COLS, paths: ["/blog", "/podcast", "/academy", "/digital-innovations"] },
 ];
 
-type MenuKey = "services" | "insight" | "about";
-
-const TRIGGER_ITEMS: { label: string; key: MenuKey }[] = [
-  { label: "Services",  key: "services" },
-  { label: "Insight",   key: "insight" },
-  { label: "About Us",  key: "about" },
+const PLAIN_LINKS: NavLink[] = [
+  { label: "Investors", href: "/investors" },
+  { label: "Login",     href: "/login" },
 ];
+
+function matches(pathname: string, p: string) {
+  return pathname === p || pathname.startsWith(p + "/");
+}
+
+// ── Dropdown panel (shared by every menu) ──────────────────────────────────
+
+function MenuPanel({ cols }: { cols: NavColumn[] }) {
+  return (
+    <div
+      style={{
+        maxWidth: "var(--container)",
+        margin: "0 auto",
+        padding: "var(--s-6) var(--gutter) var(--s-7)",
+        display: "flex",
+        gap: "var(--s-9)",
+        alignItems: "flex-start",
+      }}
+    >
+      {cols.map((col) => (
+        <div key={col.key} style={{ minWidth: 200 }}>
+          <p className="mega-heading">{col.heading}</p>
+          <div style={{ columns: col.columns ?? 1, columnGap: "var(--s-7)" }}>
+            {col.links.map((link) => (
+              <Link key={link.href} href={link.href} className="mega-link">
+                {link.label}
+              </Link>
+            ))}
+          </div>
+          {col.viewAll && (
+            <Link href={col.viewAll.href} className="mega-view-all">
+              {col.viewAll.label} &rarr;
+            </Link>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
 
 // ── Component ──────────────────────────────────────────────────────────────
 
@@ -89,6 +143,15 @@ export default function PublicNav() {
   const [menuOpen, setMenuOpen]           = useState(false);  // mobile drawer
   const [openMenu, setOpenMenu]           = useState<MenuKey | null>(null);
   const [mobileSection, setMobileSection] = useState<MenuKey | null>(null);
+  const [lastPath, setLastPath]           = useState(pathname);
+
+  // Close menus on navigation
+  if (pathname !== lastPath) {
+    setLastPath(pathname);
+    setMenuOpen(false);
+    setOpenMenu(null);
+    setMobileSection(null);
+  }
 
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const triggerRefs = useRef<Partial<Record<MenuKey, HTMLButtonElement>>>({});
@@ -119,12 +182,6 @@ export default function PublicNav() {
   }, []);
 
   useEffect(() => {
-    setMenuOpen(false);
-    setOpenMenu(null);
-    setMobileSection(null);
-  }, [pathname]);
-
-  useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [menuOpen]);
@@ -143,203 +200,13 @@ export default function PublicNav() {
   }, [openMenu]);
 
   const transparent = isHome && !scrolled && !menuOpen && !openMenu;
-
-  // Active-state helpers
-  const isServicesActive  = pathname.startsWith("/services");
-  const isInsightActive   = ["/blog", "/podcast", "/academy", "/digital-innovations"].some(p => pathname === p || pathname.startsWith(p + "/"));
-  const isAboutActive     = ["/investors", "/leadership", "/our-brand", "/social-responsibility", "/about"].some(p => pathname === p || pathname.startsWith(p + "/"));
-
-  function activeFor(key: MenuKey) {
-    if (key === "services") return isServicesActive;
-    if (key === "insight")  return isInsightActive;
-    if (key === "about")    return isAboutActive;
-    return false;
-  }
-
-  // ── Panels ────────────────────────────────────────────────────────────
-
-  function ServicesPanel() {
-    return (
-      <div
-        style={{
-          maxWidth: "var(--container)",
-          margin: "0 auto",
-          padding: "var(--s-6) var(--gutter) var(--s-7)",
-          display: "grid",
-          gridTemplateColumns: `240px repeat(${SERVICES_COLS.length}, 1fr)`,
-          gap: "var(--s-7)",
-          alignItems: "start",
-        }}
-      >
-        {/* Intro */}
-        <div style={{ paddingRight: "var(--s-6)", borderRight: "1px solid var(--line)" }}>
-          <p style={{
-            fontSize: "var(--t-label)",
-            fontFamily: "var(--font-body)",
-            fontWeight: 700,
-            letterSpacing: "0.08em",
-            textTransform: "uppercase",
-            color: "var(--text-muted)",
-            marginBottom: "var(--s-3)",
-          }}>
-            Services
-          </p>
-          <p style={{
-            fontSize: "var(--t-small)",
-            color: "var(--text-muted)",
-            lineHeight: 1.5,
-            marginBottom: "var(--s-5)",
-          }}>
-            Design, coordination, and delivery for homes, medical offices, retail spaces, and investment properties.
-          </p>
-          <Link href="/services" className="pub-nav-btn" style={{ fontSize: "var(--t-label)", padding: "10px 18px" }}>
-            All Services
-          </Link>
-        </div>
-
-        {/* Columns */}
-        {SERVICES_COLS.map((col) => (
-          <div key={col.key}>
-            <p style={{
-              fontSize: "var(--t-label)",
-              fontFamily: "var(--font-body)",
-              fontWeight: 700,
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
-              color: "var(--text-muted)",
-              marginBottom: "var(--s-3)",
-              paddingBottom: "var(--s-3)",
-              borderBottom: "1px solid var(--line)",
-            }}>
-              {col.heading}
-            </p>
-            <div style={{ display: "flex", flexDirection: "column", gap: "var(--s-1)" }}>
-              {col.links.map((link) => (
-                <Link key={link.href} href={link.href} className="mega-link">
-                  {link.label}
-                </Link>
-              ))}
-            </div>
-            <Link href={col.viewAllHref} className="mega-view-all" style={{ marginTop: "var(--s-4)", display: "inline-block" }}>
-              View all {col.heading}
-            </Link>
-          </div>
-        ))}
-      </div>
-    );
-  }
-
-  function TilePanel({
-    tiles,
-    label,
-    introText,
-    ctaHref,
-    ctaLabel,
-  }: {
-    tiles: typeof INSIGHT_TILES;
-    label: string;
-    introText: string;
-    ctaHref: string;
-    ctaLabel: string;
-  }) {
-    return (
-      <div
-        style={{
-          maxWidth: "var(--container)",
-          margin: "0 auto",
-          padding: "var(--s-6) var(--gutter) var(--s-7)",
-          display: "grid",
-          gridTemplateColumns: "240px 1fr",
-          gap: "var(--s-7)",
-          alignItems: "start",
-        }}
-      >
-        {/* Intro */}
-        <div style={{ paddingRight: "var(--s-6)", borderRight: "1px solid var(--line)" }}>
-          <p style={{
-            fontSize: "var(--t-label)",
-            fontFamily: "var(--font-body)",
-            fontWeight: 700,
-            letterSpacing: "0.08em",
-            textTransform: "uppercase",
-            color: "var(--text-muted)",
-            marginBottom: "var(--s-3)",
-          }}>
-            {label}
-          </p>
-          <p style={{
-            fontSize: "var(--t-small)",
-            color: "var(--text-muted)",
-            lineHeight: 1.5,
-            marginBottom: "var(--s-5)",
-          }}>
-            {introText}
-          </p>
-          <Link href={ctaHref} className="pub-nav-btn" style={{ fontSize: "var(--t-label)", padding: "10px 18px" }}>
-            {ctaLabel}
-          </Link>
-        </div>
-
-        {/* 2×2 tile grid */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--s-3)" }}>
-          {tiles.map((tile) => (
-            <Link key={tile.href} href={tile.href} className="mega-tile">
-              <span style={{
-                display: "block",
-                fontSize: "var(--t-body)",
-                fontFamily: "var(--font-display)",
-                fontWeight: 400,
-                color: "var(--text)",
-                marginBottom: "var(--s-2)",
-              }}>
-                {tile.label}
-              </span>
-              <span style={{
-                display: "block",
-                fontSize: "var(--t-small)",
-                color: "var(--text-muted)",
-                lineHeight: 1.45,
-              }}>
-                {tile.desc}
-              </span>
-            </Link>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  // ── Render ─────────────────────────────────────────────────────────────
+  const activeMenu = MENUS.find((m) => m.key === openMenu);
 
   return (
     <>
       <style>{`
-        /* ── Existing desktop link/button styles (unchanged) ── */
-        .pub-nav-link {
-          position: relative;
-          font-size: var(--t-label);
-          font-family: var(--font-body);
-          font-weight: 700;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          text-decoration: none;
-          padding-bottom: 4px;
-          transition: color var(--dur) var(--ease);
-        }
-        .pub-nav-link::after {
-          content: '';
-          position: absolute;
-          left: 0; bottom: -8px;
-          width: 100%; height: 2px;
-          background: var(--red);
-          transform: scaleX(0);
-          transform-origin: left center;
-          transition: transform var(--dur) var(--ease);
-        }
-        .pub-nav-link:hover::after,
-        .pub-nav-link.active::after { transform: scaleX(1); }
-
-        /* ── Trigger button (mega-menu opener) — styled like a nav link ── */
+        /* ── Desktop link/button styles ── */
+        .pub-nav-link,
         .pub-nav-trigger {
           position: relative;
           font-size: var(--t-label);
@@ -347,13 +214,15 @@ export default function PublicNav() {
           font-weight: 700;
           letter-spacing: 0.08em;
           text-transform: uppercase;
+          text-decoration: none;
           padding: 0 0 4px;
           background: none;
           border: none;
           cursor: pointer;
-          transition: color var(--dur) var(--ease);
           color: var(--text);
+          transition: color var(--dur) var(--ease);
         }
+        .pub-nav-link::after,
         .pub-nav-trigger::after {
           content: '';
           position: absolute;
@@ -364,11 +233,13 @@ export default function PublicNav() {
           transform-origin: left center;
           transition: transform var(--dur) var(--ease);
         }
+        .pub-nav-link:hover::after,
+        .pub-nav-link.active::after,
         .pub-nav-trigger:hover::after,
         .pub-nav-trigger.active::after,
         .pub-nav-trigger[aria-expanded="true"]::after { transform: scaleX(1); }
 
-        /* ── CTA button (unchanged) ── */
+        /* ── CTA button ── */
         .pub-nav-btn {
           font-size: var(--t-btn);
           font-family: var(--font-body);
@@ -387,7 +258,7 @@ export default function PublicNav() {
         }
         .pub-nav-btn:hover { background: var(--red-deep); }
 
-        /* ── Hamburger (unchanged) ── */
+        /* ── Hamburger ── */
         .pub-nav-hamburger {
           display: none;
           flex-direction: column;
@@ -407,7 +278,7 @@ export default function PublicNav() {
         .pub-nav-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
         .pub-nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-        /* ── Mobile drawer (base unchanged) ── */
+        /* ── Mobile drawer ── */
         .pub-nav-drawer {
           position: fixed;
           top: 80px; left: 0; right: 0; bottom: 0;
@@ -501,42 +372,39 @@ export default function PublicNav() {
           z-index: 98;
           pointer-events: none;
         }
-        .mega-link {
-          display: block;
-          font-size: var(--t-small);
-          font-family: var(--font-body);
-          color: var(--text-muted);
-          text-decoration: none;
-          line-height: 1.45;
-          padding: 5px 0;
-          transition: color var(--dur) var(--ease);
-        }
-        .mega-link:hover { color: var(--text); }
-        .mega-view-all {
-          display: inline-block;
+        .mega-heading {
           font-size: var(--t-label);
           font-family: var(--font-body);
           font-weight: 700;
-          letter-spacing: 0.06em;
+          letter-spacing: 0.08em;
           text-transform: uppercase;
-          text-decoration: none;
           color: var(--text-muted);
-          border: 1px solid var(--line);
-          padding: 6px 14px;
-          transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+          margin-bottom: var(--s-3);
+          padding-bottom: var(--s-3);
+          border-bottom: 1px solid var(--line);
         }
-        .mega-view-all:hover { color: var(--text); border-color: var(--text); }
-        .mega-tile {
+        .mega-link {
           display: block;
+          font-size: var(--t-body);
+          font-family: var(--font-body);
+          color: var(--text);
           text-decoration: none;
-          padding: var(--s-4);
-          border: 1px solid var(--line);
-          transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
+          line-height: 1.45;
+          padding: 5px 0;
+          break-inside: avoid;
+          transition: color var(--dur) var(--ease);
         }
-        .mega-tile:hover {
-          border-color: var(--text);
-          background: var(--surface-alt);
+        .mega-link:hover { color: var(--red); }
+        .mega-view-all {
+          display: inline-block;
+          margin-top: var(--s-4);
+          font-size: var(--t-small);
+          font-family: var(--font-body);
+          font-weight: 700;
+          text-decoration: none;
+          color: var(--red);
         }
+        .mega-view-all:hover { color: var(--red-deep); }
 
         /* ── Breakpoints ── */
         @media (max-width: 860px) {
@@ -586,30 +454,11 @@ export default function PublicNav() {
             className="pub-nav-desktop"
             style={{ display: "flex", alignItems: "center", gap: "var(--s-6)" }}
           >
-            {/* Plain link: Home */}
-            <Link
-              href="/"
-              className={`pub-nav-link${pathname === "/" ? " active" : ""}`}
-              style={{ color: "var(--text)" }}
-            >
-              Home
-            </Link>
-
-            {/* Plain link: Our Work */}
-            <Link
-              href="/projects"
-              className={`pub-nav-link${pathname.startsWith("/projects") ? " active" : ""}`}
-              style={{ color: "var(--text)" }}
-            >
-              Our Work
-            </Link>
-
-            {/* Mega-menu triggers */}
-            {TRIGGER_ITEMS.map(({ label, key }) => (
+            {MENUS.map(({ label, key, paths }) => (
               <button
                 key={key}
                 ref={(el) => { if (el) triggerRefs.current[key] = el; }}
-                className={`pub-nav-trigger${activeFor(key) || openMenu === key ? " active" : ""}`}
+                className={`pub-nav-trigger${paths.some((p) => matches(pathname, p)) || openMenu === key ? " active" : ""}`}
                 aria-expanded={openMenu === key}
                 aria-controls={`mega-panel-${key}`}
                 onMouseEnter={() => openNamed(key)}
@@ -617,6 +466,16 @@ export default function PublicNav() {
               >
                 {label}
               </button>
+            ))}
+            {PLAIN_LINKS.map(({ label, href }) => (
+              <Link
+                key={href}
+                href={href}
+                className={`pub-nav-link${matches(pathname, href) ? " active" : ""}`}
+                onMouseEnter={startClose}
+              >
+                {label}
+              </Link>
             ))}
           </nav>
 
@@ -636,36 +495,18 @@ export default function PublicNav() {
       </header>
 
       {/* ── Mega-menu panel (desktop) ── */}
-      {openMenu && (
+      {activeMenu && (
         <>
           <div className="mega-overlay" aria-hidden="true" />
           <div
-            id={`mega-panel-${openMenu}`}
+            id={`mega-panel-${activeMenu.key}`}
             className="mega-panel"
             role="region"
-            aria-label={`${openMenu} menu`}
+            aria-label={`${activeMenu.label} menu`}
             onMouseEnter={cancelClose}
             onMouseLeave={startClose}
           >
-            {openMenu === "services" && <ServicesPanel />}
-            {openMenu === "insight" && (
-              <TilePanel
-                tiles={INSIGHT_TILES}
-                label="Insight"
-                introText="Perspectives on design, materials, and the remodeling process from the US Floor team."
-                ctaHref="/blog"
-                ctaLabel="Browse Insight"
-              />
-            )}
-            {openMenu === "about" && (
-              <TilePanel
-                tiles={ABOUT_TILES}
-                label="About Us"
-                introText="The story, people, and values behind US Floor Design Center in Rancho Santa Margarita."
-                ctaHref="/about"
-                ctaLabel="Our Story"
-              />
-            )}
+            <MenuPanel cols={activeMenu.cols} />
           </div>
         </>
       )}
@@ -675,91 +516,52 @@ export default function PublicNav() {
         className={`pub-nav-drawer${menuOpen ? " open" : ""}`}
         aria-hidden={!menuOpen}
       >
-        {/* Plain links */}
-        <Link
-          href="/"
-          className="pub-nav-drawer-link"
-          style={{ color: pathname === "/" ? "var(--red)" : "var(--text)" }}
-        >
-          Home
-        </Link>
-
-        <Link
-          href="/projects"
-          className="pub-nav-drawer-link"
-          style={{ color: pathname.startsWith("/projects") ? "var(--red)" : "var(--text)" }}
-        >
-          Our Work
-        </Link>
-
-        {/* Accordion: Services */}
-        <button
-          className={`pub-mob-section-btn${mobileSection === "services" ? " open" : ""}`}
-          onClick={() => setMobileSection((s) => (s === "services" ? null : "services"))}
-          aria-expanded={mobileSection === "services"}
-        >
-          Services
-          <span className="pub-mob-section-chevron">›</span>
-        </button>
-        {mobileSection === "services" && (
-          <div className="pub-mob-section-body">
-            {SERVICES_COLS.map((col) => (
-              <div key={col.key}>
-                <p className="pub-mob-col-heading">{col.heading}</p>
-                {col.links.map((link) => (
-                  <Link key={link.href} href={link.href} className="pub-mob-sublink">
-                    {link.label}
-                  </Link>
+        {MENUS.map(({ key, label, cols }) => (
+          <div key={key}>
+            <button
+              className={`pub-mob-section-btn${mobileSection === key ? " open" : ""}`}
+              onClick={() => setMobileSection((s) => (s === key ? null : key))}
+              aria-expanded={mobileSection === key}
+            >
+              {label}
+              <span className="pub-mob-section-chevron">›</span>
+            </button>
+            {mobileSection === key && (
+              <div className="pub-mob-section-body">
+                {cols.map((col) => (
+                  <div key={col.key}>
+                    {cols.length > 1 && <p className="pub-mob-col-heading">{col.heading}</p>}
+                    {col.links.map((link) => (
+                      <Link key={link.href} href={link.href} className="pub-mob-sublink">
+                        {link.label}
+                      </Link>
+                    ))}
+                    {col.viewAll && (
+                      <Link
+                        href={col.viewAll.href}
+                        className="pub-mob-sublink"
+                        style={{ color: "var(--red)", fontWeight: 600, marginTop: "var(--s-1)" }}
+                      >
+                        {col.viewAll.label}
+                      </Link>
+                    )}
+                  </div>
                 ))}
-                <Link
-                  href={col.viewAllHref}
-                  className="pub-mob-sublink"
-                  style={{ color: "var(--red)", fontWeight: 600, marginTop: "var(--s-1)" }}
-                >
-                  View all {col.heading}
-                </Link>
               </div>
-            ))}
+            )}
           </div>
-        )}
+        ))}
 
-        {/* Accordion: Insight */}
-        <button
-          className={`pub-mob-section-btn${mobileSection === "insight" ? " open" : ""}`}
-          onClick={() => setMobileSection((s) => (s === "insight" ? null : "insight"))}
-          aria-expanded={mobileSection === "insight"}
-        >
-          Insight
-          <span className="pub-mob-section-chevron">›</span>
-        </button>
-        {mobileSection === "insight" && (
-          <div className="pub-mob-section-body">
-            {INSIGHT_TILES.map((tile) => (
-              <Link key={tile.href} href={tile.href} className="pub-mob-sublink">
-                {tile.label}
-              </Link>
-            ))}
-          </div>
-        )}
-
-        {/* Accordion: About Us */}
-        <button
-          className={`pub-mob-section-btn${mobileSection === "about" ? " open" : ""}`}
-          onClick={() => setMobileSection((s) => (s === "about" ? null : "about"))}
-          aria-expanded={mobileSection === "about"}
-        >
-          About Us
-          <span className="pub-mob-section-chevron">›</span>
-        </button>
-        {mobileSection === "about" && (
-          <div className="pub-mob-section-body">
-            {ABOUT_TILES.map((tile) => (
-              <Link key={tile.href} href={tile.href} className="pub-mob-sublink">
-                {tile.label}
-              </Link>
-            ))}
-          </div>
-        )}
+        {PLAIN_LINKS.map(({ label, href }) => (
+          <Link
+            key={href}
+            href={href}
+            className="pub-nav-drawer-link"
+            style={{ color: matches(pathname, href) ? "var(--red)" : "var(--text)" }}
+          >
+            {label}
+          </Link>
+        ))}
 
         <div style={{ marginTop: "var(--s-7)" }}>
           <Link href="/request-a-visit" className="pub-nav-btn">
