@@ -40,3 +40,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# private working files — never publish (SBA deck, internal briefs, screenshots)
+/public/Claude outputs/
+/public/Screenshot*
+*.pptx
