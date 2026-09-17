@@ -53,6 +53,17 @@ const WORK_MARKETS = [
   { label: "Rancho Mission Viejo",   href: "/projects/markets/rancho-mission-viejo" },
 ];
 
+const WORK_PROJECTS = [
+  { label: "Rancho Santa Margarita kitchen", href: "/projects#rsm-kitchen-2024" },
+  { label: "Mission Viejo primary bath",     href: "/projects#mv-primary-bath-2024" },
+];
+
+const WORK_COLS = [
+  { key: "markets",  heading: "Markets",  links: WORK_MARKETS, viewAllHref: "/projects/markets", viewAllLabel: "View all markets", columns: 2 },
+  { key: "services", heading: "Services", links: SERVICES_COLS.find((c) => c.key === "expertise")?.links ?? [], viewAllHref: "/services", viewAllLabel: "View all services", columns: 1 },
+  { key: "projects", heading: "Projects", links: WORK_PROJECTS, viewAllHref: "/projects", viewAllLabel: "View all projects", columns: 1 },
+];
+
 const INSIGHT_TILES = [
   { label: "Blog",                href: "/blog",                desc: "Design trends, care guides, and homeowner resources." },
   { label: "Podcast",             href: "/podcast",             desc: "Conversations on design, remodeling, and living well." },
@@ -86,7 +97,7 @@ function WorkPanel() {
         margin: "0 auto",
         padding: "var(--s-6) var(--gutter) var(--s-7)",
         display: "grid",
-        gridTemplateColumns: "240px 1fr",
+        gridTemplateColumns: "240px 1.6fr 1fr 1fr",
         gap: "var(--s-7)",
         alignItems: "start",
       }}
@@ -105,44 +116,54 @@ function WorkPanel() {
           Our Work
         </p>
         <p style={{
+          fontFamily: "var(--font-display)",
+          fontSize: "var(--t-body-lg)",
+          color: "var(--text)",
+          lineHeight: 1.35,
+          marginBottom: "var(--s-3)",
+        }}>
+          Design-build across South Orange County.
+        </p>
+        <p style={{
           fontSize: "var(--t-small)",
           color: "var(--text-muted)",
           lineHeight: 1.5,
           marginBottom: "var(--s-5)",
         }}>
-          Project case studies, plus local planning notes for the South Orange County communities around our showroom.
+          Where we work, what we do, and the projects that show how we do it.
         </p>
         <Link href="/projects" className="pub-nav-btn" style={{ fontSize: "var(--t-label)", padding: "10px 18px" }}>
-          View Projects
+          Our Projects
         </Link>
       </div>
 
-      {/* Markets */}
-      <div>
-        <p style={{
-          fontSize: "var(--t-label)",
-          fontFamily: "var(--font-body)",
-          fontWeight: 700,
-          letterSpacing: "0.08em",
-          textTransform: "uppercase",
-          color: "var(--text-muted)",
-          marginBottom: "var(--s-3)",
-          paddingBottom: "var(--s-3)",
-          borderBottom: "1px solid var(--line)",
-        }}>
-          Markets
-        </p>
-        <div style={{ columns: 3, columnGap: "var(--s-7)" }}>
-          {WORK_MARKETS.map((link) => (
-            <Link key={link.href} href={link.href} className="mega-link">
-              {link.label}
-            </Link>
-          ))}
+      {WORK_COLS.map((col) => (
+        <div key={col.key}>
+          <p style={{
+            fontSize: "var(--t-label)",
+            fontFamily: "var(--font-body)",
+            fontWeight: 700,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            color: "var(--text-muted)",
+            marginBottom: "var(--s-3)",
+            paddingBottom: "var(--s-3)",
+            borderBottom: "1px solid var(--line)",
+          }}>
+            {col.heading}
+          </p>
+          <div style={{ columns: col.columns, columnGap: "var(--s-6)" }}>
+            {col.links.map((link) => (
+              <Link key={link.href} href={link.href} className="mega-link">
+                {link.label}
+              </Link>
+            ))}
+          </div>
+          <Link href={col.viewAllHref} className="mega-view-all" style={{ marginTop: "var(--s-4)", display: "inline-block" }}>
+            {col.viewAllLabel}
+          </Link>
         </div>
-        <Link href="/projects/markets" className="mega-view-all" style={{ marginTop: "var(--s-4)", display: "inline-block" }}>
-          View all Markets
-        </Link>
-      </div>
+      ))}
     </div>
   );
 }
@@ -757,22 +778,23 @@ export default function PublicNav() {
         </button>
         {mobileSection === "work" && (
           <div className="pub-mob-section-body">
-            <Link href="/projects" className="pub-mob-sublink" style={{ paddingTop: "var(--s-4)" }}>
-              Projects
-            </Link>
-            <p className="pub-mob-col-heading">Markets</p>
-            {WORK_MARKETS.map((link) => (
-              <Link key={link.href} href={link.href} className="pub-mob-sublink">
-                {link.label}
-              </Link>
+            {WORK_COLS.map((col) => (
+              <div key={col.key}>
+                <p className="pub-mob-col-heading">{col.heading}</p>
+                {col.links.map((link) => (
+                  <Link key={link.href} href={link.href} className="pub-mob-sublink">
+                    {link.label}
+                  </Link>
+                ))}
+                <Link
+                  href={col.viewAllHref}
+                  className="pub-mob-sublink"
+                  style={{ color: "var(--red)", fontWeight: 600, marginTop: "var(--s-1)" }}
+                >
+                  {col.viewAllLabel}
+                </Link>
+              </div>
             ))}
-            <Link
-              href="/projects/markets"
-              className="pub-mob-sublink"
-              style={{ color: "var(--red)", fontWeight: 600, marginTop: "var(--s-1)" }}
-            >
-              View all Markets
-            </Link>
           </div>
         )}
 

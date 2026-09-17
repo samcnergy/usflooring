@@ -97,7 +97,8 @@ export default function ProjectsPage() {
       <div style={{ background: "#fff" }}>
         <div className="projects-container">
           {CASE_STUDIES.map((cs, i) => (
-            <div key={cs.id} style={{
+            <div key={cs.id} id={cs.id} style={{
+              scrollMarginTop: 96,
               padding: "72px 0",
               borderBottom: "1px solid var(--line)",
             }}>

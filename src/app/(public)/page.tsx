@@ -2,8 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 
 export const metadata = {
-  title: "Kitchen, Bathroom and Flooring Remodeling | US Floor Design Center",
-  description: "Design-build studio in Rancho Santa Margarita, Orange County. Kitchens, bathrooms, flooring, tile, cabinets, and countertops. Visit our showroom or schedule a consultation.",
+  title: { absolute: "US Floor Design Center | Residential and Commercial Design-Build in South Orange County" },
+  description: "Design-build for homes, medical offices, retail spaces, and investment properties across South Orange County, from pre-construction and HOA approval to delivery and warranty.",
 };
 
 const HOME_SCHEMA = {
@@ -11,7 +11,7 @@ const HOME_SCHEMA = {
   "@type": "WebSite",
   "name": "US Floor Design Center",
   "url": "https://usfloordesign.com",
-  "description": "Design-build studio in Rancho Santa Margarita, Orange County specializing in kitchen remodeling, bathroom remodeling, flooring, tile, cabinets, and countertops.",
+  "description": "Design-build firm in Rancho Santa Margarita, Orange County, serving homeowners, medical practices, retailers, and real estate investors across South Orange County.",
   "potentialAction": {
     "@type": "SearchAction",
     "target": { "@type": "EntryPoint", "urlTemplate": "https://usfloordesign.com/shop?q={search_term_string}" },
@@ -19,16 +19,36 @@ const HOME_SCHEMA = {
   }
 };
 
-const PROCESS = [
-  { name: "Design", body: "Every project starts with a design conversation in our showroom - how the space should feel, which materials fit, what the finished room looks like before a single tile is set." },
-  { name: "Select", body: "Cabinets, countertops, flooring, tile, and fixtures - all in one place. You see the real materials, our designers help you build a finish schedule that fits the space and budget." },
-  { name: "Build", body: "Our own installation crews handle the work. No handoff to an outside contractor, no coordination gap, no second company - the same team accountable from design through final walkthrough." },
-  { name: "Care", body: "We stand behind the work with a clear warranty and a direct line back to us - not a call center - if anything ever needs attention after the job is done." },
+const APPROACH = [
+  { name: "Pre-construction", href: "/services/approach/pre-construction", body: "Scope, budget, and schedule are worked out before work begins, so the project can be priced and planned with fewer surprises." },
+  { name: "Design", href: "/services/approach/design", body: "In-house designers turn how the space needs to work into layouts, material selections, and a finish schedule." },
+  { name: "HOA Approval", href: "/services/approach/hoa-approval", body: "We organize the project information an association asks for and coordinate responses to project-related questions." },
+  { name: "Project Management", href: "/services/approach/project-management", body: "One point of contact keeps materials, trades, and timelines connected while the work is underway." },
+  { name: "Delivery", href: "/services/approach/delivery", body: "From approved plan to finished space: material coordination, installation, and a final walkthrough before handoff." },
+  { name: "Warranty", href: "/services/approach/warranty", body: "A written warranty and a direct line back to our team if anything needs attention after completion." },
+];
+
+const EXPERTISE = [
+  { name: "Medical Offices", href: "/services/expertise/medical-offices", body: "Finish work for clinics, dental suites, and healthcare offices." },
+  { name: "Retail Buildout", href: "/services/expertise/retail-buildout", body: "Interior buildouts and finishes for storefronts and commercial tenants." },
+  { name: "Investor Services", href: "/services/expertise/investor-services", body: "Renovation and turnover work for rental and investment properties." },
+  { name: "Kitchen Remodel", href: "/services/expertise/kitchen-remodel", body: "Cabinetry, countertops, flooring, and layout changes." },
+  { name: "Bathroom Remodel", href: "/services/expertise/bathroom-remodel", body: "Tile, stone, vanities, and fixtures, from powder rooms to primary suites." },
+  { name: "Backyard", href: "/services/expertise/backyard", body: "Outdoor surfaces and living areas for Southern California homes." },
+  { name: "Windows and Doors", href: "/services/expertise/windows-and-doors", body: "Replacement windows and doors." },
+];
+
+const MARKETS = [
+  ["Rancho Santa Margarita", "rancho-santa-margarita"], ["Coto de Caza", "coto-de-caza"],
+  ["San Juan Capistrano", "san-juan-capistrano"], ["San Clemente", "san-clemente"],
+  ["Lake Forest", "lake-forest"], ["Laguna Niguel", "laguna-niguel"], ["Laguna Hills", "laguna-hills"],
+  ["Laguna Beach", "laguna-beach"], ["Aliso Viejo", "aliso-viejo"], ["Mission Viejo", "mission-viejo"],
+  ["Dana Point", "dana-point"], ["Ladera Ranch", "ladera-ranch"], ["Rancho Mission Viejo", "rancho-mission-viejo"],
 ];
 
 const CONSULTATIONS = [
   { name: "Showroom discovery", format: "In-store", deliverable: "Product direction and initial budget range" },
-  { name: "In-home measurement", format: "At the property", deliverable: "Measurements and full project assessment" },
+  { name: "Site measurement", format: "At the property", deliverable: "Measurements and full project assessment" },
   { name: "Complete design package", format: "Showroom + property", deliverable: "Layout, visualization, finish schedule and project proposal" },
 ];
 
@@ -71,11 +91,39 @@ export default function HomePage() {
         }
         .process-grid {
           display: grid;
-          grid-template-columns: repeat(4, 1fr);
+          grid-template-columns: repeat(3, 1fr);
           gap: 0;
           border-top: 1px solid var(--line);
           border-left: 1px solid var(--line);
         }
+        .expertise-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          border-top: 1px solid var(--line);
+          border-left: 1px solid var(--line);
+        }
+        .expertise-card {
+          display: block;
+          padding: var(--s-6) var(--s-5);
+          border-right: 1px solid var(--line);
+          border-bottom: 1px solid var(--line);
+          text-decoration: none;
+          transition: background var(--dur) var(--ease);
+        }
+        .expertise-card:hover { background: var(--surface-alt); }
+        .expertise-card:hover .card-arrow { color: var(--red); }
+        .process-card { display: block; text-decoration: none; transition: background var(--dur) var(--ease); }
+        .process-card:hover { background: var(--surface); }
+        .markets-list { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-3); }
+        .markets-list a {
+          font-size: var(--t-small);
+          color: var(--text-invert);
+          text-decoration: none;
+          border: 1px solid var(--line-invert);
+          padding: 8px 14px;
+          transition: border-color var(--dur) var(--ease);
+        }
+        .markets-list a:hover { border-color: var(--text-invert); }
         .consultation-row {
           padding: var(--s-5) 0;
           border-bottom: 1px solid var(--line-invert);
@@ -83,6 +131,11 @@ export default function HomePage() {
           grid-template-columns: 1.5fr 1fr 1fr;
           gap: var(--s-7);
           align-items: start;
+        }
+        @media (max-width: 1100px) {
+          .hero-panel { width: 60%; }
+          .expertise-grid { grid-template-columns: repeat(2, 1fr); }
+          .process-grid { grid-template-columns: repeat(2, 1fr); }
         }
         @media (max-width: 768px) {
           .hero-panel {
@@ -107,7 +160,10 @@ export default function HomePage() {
             grid-template-columns: repeat(2, 1fr);
           }
           .process-grid {
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: 1fr;
+          }
+          .expertise-grid {
+            grid-template-columns: 1fr;
           }
           .consultation-row {
             grid-template-columns: 1fr;
@@ -122,7 +178,7 @@ export default function HomePage() {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/project-modern-kitchen.png"
-          alt="Modern kitchen remodel by US Floor Design Center"
+          alt="Modern kitchen interior by US Floor Design Center"
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 40%" }}
         />
         {/* Nav legibility gradient — darkens the top of the hero behind the sticky nav */}
@@ -140,9 +196,9 @@ export default function HomePage() {
                 color: "var(--text-invert)",
                 marginBottom: "var(--s-4)",
               }}>
-                Design, select, and build your kitchen or bath in one place.
+                Design-build across South Orange County.
               </h1>
-              <p style={{
+              <h2 style={{
                 fontFamily: "var(--font-display)",
                 fontSize: "var(--t-h3)",
                 fontWeight: 400,
@@ -150,8 +206,8 @@ export default function HomePage() {
                 color: "var(--text-invert)",
                 marginBottom: "var(--s-5)",
               }}>
-                Orange County showroom. One team, start to finish.
-              </p>
+                Homes, medical offices, retail spaces, and investment properties, planned and built by one team.
+              </h2>
               <p style={{
                 fontSize: "var(--t-body-lg)",
                 lineHeight: 1.35,
@@ -159,7 +215,7 @@ export default function HomePage() {
                 maxWidth: "60ch",
                 marginBottom: "var(--s-6)",
               }}>
-                Visit our Rancho Santa Margarita showroom to compare cabinets, countertops, flooring, tile, and finishes with professional design guidance and installation by our own crew.
+                From pre-construction and HOA approval to delivery and warranty, one team runs every phase from our Rancho Santa Margarita design center.
               </p>
               <Link href="/request-a-visit" style={{
                 display: "inline-block",
@@ -174,7 +230,7 @@ export default function HomePage() {
                 textDecoration: "none",
                 borderRadius: "var(--radius)",
               }}>
-                Start my project
+                Start a project
               </Link>
             </div>
           </div>
@@ -188,7 +244,7 @@ export default function HomePage() {
             {[
               { n: "30", label: "Years in Orange County" },
               { n: "800+", label: "Projects completed" },
-              { n: "Design + build", label: "One team, start to finish" },
+              { n: "13", label: "South Orange County markets" },
               { n: "Licensed", label: "and insured" },
             ].map((item, i) => (
               <div key={item.n} style={{
@@ -221,6 +277,146 @@ export default function HomePage() {
           </div>
         </div>
       </div>
+
+      {/* ── Expertise ── */}
+      <section style={{ background: "var(--surface)", borderBottom: "1px solid var(--line)" }}>
+        <div style={{ maxWidth: "var(--container)", margin: "0 auto", padding: "var(--s-9) var(--gutter)" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "var(--s-3)", marginBottom: "var(--s-5)" }}>
+            <div style={{ width: 32, height: 2, background: "var(--red)", flexShrink: 0 }} />
+            <span style={{
+              fontSize: "var(--t-label)",
+              fontFamily: "var(--font-body)",
+              fontWeight: 700,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              color: "var(--text-muted)",
+            }}>
+              Expertise
+            </span>
+          </div>
+          <h2 style={{
+            fontFamily: "var(--font-display)",
+            fontSize: "var(--t-h2)",
+            fontWeight: 400,
+            lineHeight: 1.14,
+            letterSpacing: "-0.01em",
+            color: "var(--text)",
+            marginBottom: "var(--s-4)",
+            maxWidth: "24ch",
+          }}>
+            Residential and commercial work, handled by the same team.
+          </h2>
+          <p style={{
+            fontSize: "var(--t-body-lg)",
+            lineHeight: 1.35,
+            color: "var(--text-muted)",
+            maxWidth: "64ch",
+            marginBottom: "var(--s-7)",
+          }}>
+            Practices, retailers, investors, and homeowners get the same process: a clear scope, a single point of contact, and our own crews on site.
+          </p>
+          <div className="expertise-grid">
+            {EXPERTISE.map((e) => (
+              <Link key={e.href} href={e.href} className="expertise-card">
+                <h3 style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: "var(--t-h3)",
+                  fontWeight: 400,
+                  lineHeight: 1.25,
+                  color: "var(--text)",
+                  marginBottom: "var(--s-3)",
+                }}>
+                  {e.name}
+                </h3>
+                <p style={{ fontSize: "var(--t-body)", lineHeight: 1.45, color: "var(--text-muted)", margin: "0 0 var(--s-4)" }}>
+                  {e.body}
+                </p>
+                <span className="card-arrow" style={{ fontSize: "var(--t-small)", fontWeight: 700, color: "var(--text)", transition: "color var(--dur) var(--ease)" }}>
+                  Learn more &rarr;
+                </span>
+              </Link>
+            ))}
+            <Link href="/services/expertise" className="expertise-card" style={{ background: "var(--surface-alt)" }}>
+                <h3 style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: "var(--t-h3)",
+                  fontWeight: 400,
+                  lineHeight: 1.25,
+                  color: "var(--text)",
+                  marginBottom: "var(--s-3)",
+                }}>
+                  All expertise
+                </h3>
+                <p style={{ fontSize: "var(--t-body)", lineHeight: 1.45, color: "var(--text-muted)", margin: "0 0 var(--s-4)" }}>
+                  See every project type we take on.
+                </p>
+                <span className="card-arrow" style={{ fontSize: "var(--t-small)", fontWeight: 700, color: "var(--text)", transition: "color var(--dur) var(--ease)" }}>
+                  View all &rarr;
+                </span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Markets ── */}
+      <section style={{ background: "var(--surface-ink)", borderBottom: "1px solid var(--line-invert)" }}>
+        <div style={{ maxWidth: "var(--container)", margin: "0 auto", padding: "var(--s-9) var(--gutter)" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "var(--s-3)", marginBottom: "var(--s-5)" }}>
+            <div style={{ width: 32, height: 2, background: "var(--red)", flexShrink: 0 }} />
+            <span style={{
+              fontSize: "var(--t-label)",
+              fontFamily: "var(--font-body)",
+              fontWeight: 700,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              color: "var(--text-invert-muted)",
+            }}>
+              Markets
+            </span>
+          </div>
+          <h2 style={{
+            fontFamily: "var(--font-display)",
+            fontSize: "var(--t-h2)",
+            fontWeight: 400,
+            lineHeight: 1.14,
+            letterSpacing: "-0.01em",
+            color: "var(--text-invert)",
+            marginBottom: "var(--s-4)",
+            maxWidth: "26ch",
+          }}>
+            Across South Orange County, from Lake Forest to San Clemente.
+          </h2>
+          <p style={{
+            fontSize: "var(--t-body-lg)",
+            lineHeight: 1.35,
+            color: "var(--text-invert-muted)",
+            maxWidth: "64ch",
+            marginBottom: "var(--s-7)",
+          }}>
+            Every city and planned community has its own planning documents, coastal or historic review, and association rules. Our market guides cover what to check before a project begins.
+          </p>
+          <div className="markets-list">
+            {MARKETS.map(([name, slug]) => (
+              <Link key={slug} href={`/projects/markets/${slug}`}>{name}</Link>
+            ))}
+          </div>
+          <div style={{ marginTop: "var(--s-7)" }}>
+            <Link href="/projects/markets" style={{
+              fontSize: "var(--t-label)",
+              fontFamily: "var(--font-body)",
+              fontWeight: 700,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              color: "var(--text-invert)",
+              textDecoration: "none",
+              borderBottom: "1px solid var(--red)",
+              paddingBottom: 2,
+            }}>
+              View all market guides
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* ── Featured article ── */}
       <section style={{ background: "var(--surface-alt)", borderBottom: "1px solid var(--line)" }}>
@@ -301,7 +497,7 @@ export default function HomePage() {
                   textTransform: "uppercase",
                   color: "var(--text-muted)",
                 }}>
-                  Shop by project
+                  Design center
                 </span>
               </div>
               <h2 style={{
@@ -312,7 +508,7 @@ export default function HomePage() {
                 letterSpacing: "-0.01em",
                 color: "var(--text)",
               }}>
-                What are you working on?
+                Browse materials by space.
               </h2>
             </div>
             <Link href="/shop" style={{
@@ -365,7 +561,7 @@ export default function HomePage() {
               textTransform: "uppercase",
               color: "var(--text-muted)",
             }}>
-              How it works
+              Our approach
             </span>
           </div>
           <h2 style={{
@@ -377,7 +573,7 @@ export default function HomePage() {
             color: "var(--text)",
             marginBottom: "var(--s-4)",
           }}>
-            One team handles every phase, from design through the final walkthrough.
+            One team handles every phase, from pre-construction through warranty.
           </h2>
           <p style={{
             fontSize: "var(--t-body-lg)",
@@ -386,12 +582,12 @@ export default function HomePage() {
             maxWidth: "68ch",
             marginBottom: "var(--s-7)",
           }}>
-            The same people who help you choose materials in the showroom are accountable for the finished room.
+            The people who plan and design the project are accountable for how it is built and delivered.
           </p>
 
           <div className="process-grid">
-            {PROCESS.map((phase) => (
-              <div key={phase.name} style={{
+            {APPROACH.map((phase) => (
+              <Link key={phase.name} href={phase.href} className="process-card" style={{
                 padding: "var(--s-6)",
                 borderRight: "1px solid var(--line)",
                 borderBottom: "1px solid var(--line)",
@@ -414,7 +610,7 @@ export default function HomePage() {
                 }}>
                   {phase.body}
                 </p>
-              </div>
+              </Link>
             ))}
           </div>
 
@@ -432,7 +628,7 @@ export default function HomePage() {
               textDecoration: "none",
               borderRadius: "var(--radius)",
             }}>
-              Start my project
+              Start a project
             </Link>
           </div>
         </div>
