@@ -1,6 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Market guides were briefly live under /projects/markets before moving
+  // to Services > Markets.
+  async redirects() {
+    return [
+      { source: "/projects/markets", destination: "/services/markets", permanent: true },
+      { source: "/projects/markets/:slug", destination: "/services/markets/:slug", permanent: true },
+    ];
+  },
   experimental: {
     serverActions: {
       // Render runs Next.js on localhost:10000 behind a reverse proxy.

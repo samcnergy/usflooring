@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { MARKETS } from "./(public)/projects/markets/marketsData";
+import { MARKETS } from "./(public)/services/markets/marketsData";
 
 const BASE = "https://usfloordesign.com";
 const NOW = new Date("2026-09-03");
@@ -13,8 +13,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/showroom`, lastModified: NOW, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/shop`, lastModified: NOW, changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE}/projects`, lastModified: NOW, changeFrequency: "monthly", priority: 0.8 },
-    { url: `${BASE}/projects/markets`, lastModified: MARKETS_UPDATED, changeFrequency: "monthly", priority: 0.7 },
-    ...MARKETS.map((m) => ({ url: `${BASE}/projects/markets/${m.slug}`, lastModified: MARKETS_UPDATED, changeFrequency: "monthly" as const, priority: 0.7 })),
+    { url: `${BASE}/services/markets`, lastModified: MARKETS_UPDATED, changeFrequency: "monthly", priority: 0.7 },
+    ...MARKETS.map((m) => ({ url: `${BASE}/services/markets/${m.slug}`, lastModified: MARKETS_UPDATED, changeFrequency: "monthly" as const, priority: 0.7 })),
     { url: `${BASE}/faq`, lastModified: NOW, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE}/blog`, lastModified: NOW, changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE}/blog/2027-interior-design-trends`, lastModified: NOW, changeFrequency: "yearly", priority: 0.7 },

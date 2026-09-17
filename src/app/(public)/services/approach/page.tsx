@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export const metadata = {
   title: "Our Approach | US Floor Design Center",
-  description: "A clear path from idea to completion. Our in-house design and project management teams bring over 20 years of experience to every project.",
+  description: "A clear path from idea to completion. Our in-house design and project management teams bring 30 years of experience to every project.",
 };
 
 const STEPS = [
@@ -70,7 +70,7 @@ export default function ApproachPage() {
                 A successful project takes more than the right materials. It takes good decisions at the right time, a realistic plan, and people who stay accountable for the details.
               </p>
               <p style={{ fontSize: "var(--t-body-lg)", color: "var(--text-muted)", lineHeight: 1.55, margin: 0 }}>
-                At US Floor Design Center, our in-house design and project management teams bring over 20 years of experience to that work. We help you define the project, make selections, coordinate approvals and execution, and finish with a careful handoff. Our goal is to move your project forward efficiently while keeping cost and quality in view.
+                At US Floor Design Center, our in-house design and project management teams bring 30 years of experience to that work. We help you define the project, make selections, coordinate approvals and execution, and finish with a careful handoff. Our goal is to move your project forward efficiently while keeping cost and quality in view.
               </p>
             </div>
 

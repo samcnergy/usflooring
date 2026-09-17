@@ -1,4 +1,4 @@
-// South Orange County market pages (Our Work > Markets).
+// South Orange County market pages (Services > Markets).
 // Population: 2020 U.S. Census (April 1, 2020 count).
 // Median household income: 2020-2024 American Community Survey 5-year estimate,
 // in 2024 dollars, as shown by Census QuickFacts.

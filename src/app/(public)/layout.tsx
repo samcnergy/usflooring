@@ -45,6 +45,7 @@ const FOOTER_COLS = [
       { href: "/services#design", label: "Design" },
       { href: "/services#remodel", label: "Remodel" },
       { href: "/services#delivery", label: "Delivery" },
+      { href: "/services/markets", label: "Markets" },
       { href: "/warranty", label: "Warranty" },
     ],
   },
@@ -53,7 +54,6 @@ const FOOTER_COLS = [
     links: [
       { href: "/shop", label: "Browse materials" },
       { href: "/projects", label: "Projects" },
-      { href: "/projects/markets", label: "Markets" },
       { href: "/showroom", label: "Showroom" },
       { href: "/academy", label: "Academy" },
       { href: "/blog", label: "Blog" },

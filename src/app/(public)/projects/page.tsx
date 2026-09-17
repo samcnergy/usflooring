@@ -230,28 +230,6 @@ export default function ProjectsPage() {
         </div>
       </div>
 
-      {/* Markets */}
-      <div style={{ background: "var(--surface)", borderBottom: "1px solid var(--line)" }}>
-        <div className="projects-container">
-          <div className="projects-header-grid" style={{ padding: "56px 0" }}>
-            <div>
-              <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 12 }}>Markets</div>
-              <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 32, color: "var(--text)", lineHeight: 1.25, margin: 0, maxWidth: "22ch" }}>
-                Planning notes for 13 South Orange County communities.
-              </h2>
-            </div>
-            <div>
-              <p style={{ fontSize: 15, color: "var(--text-muted)", lineHeight: 1.45, margin: "0 0 18px", maxWidth: "48ch" }}>
-                What sets each area apart, what to verify with the city, county, or association before a project, and where to find the public sources.
-              </p>
-              <Link href="/projects/markets" style={{ fontSize: 14, fontWeight: 500, color: "var(--red)", textDecoration: "none" }}>
-                Browse markets &rarr;
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Design Discovery Package */}
       <div style={{ background: "var(--surface-ink)" }}>
         <div className="projects-container">

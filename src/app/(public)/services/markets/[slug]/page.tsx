@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: m.metaTitle,
     description: m.metaDescription,
-    alternates: { canonical: `/projects/markets/${m.slug}` },
+    alternates: { canonical: `/services/markets/${m.slug}` },
   };
 }
 
@@ -119,9 +119,9 @@ export default async function MarketPage({ params }: { params: Promise<{ slug: s
       <div style={{ borderBottom: "1px solid var(--line)", background: "var(--surface-alt)" }}>
         <div style={{ maxWidth: "var(--container)", margin: "0 auto", padding: "0 var(--gutter)" }}>
           <nav aria-label="Breadcrumb" style={{ padding: "var(--s-4) 0 0", fontSize: 13, color: "var(--text-muted)", display: "flex", gap: 8, flexWrap: "wrap" }}>
-            <Link href="/projects" style={{ color: "inherit", textDecoration: "none" }}>Our Work</Link>
+            <Link href="/services" style={{ color: "inherit", textDecoration: "none" }}>Services</Link>
             <span>/</span>
-            <Link href="/projects/markets" style={{ color: "inherit", textDecoration: "none" }}>Markets</Link>
+            <Link href="/services/markets" style={{ color: "inherit", textDecoration: "none" }}>Markets</Link>
             <span>/</span>
             <span style={{ color: "var(--text)" }}>{m.name}</span>
           </nav>
@@ -284,7 +284,7 @@ export default async function MarketPage({ params }: { params: Promise<{ slug: s
           <h2 style={{ ...label, marginBottom: "var(--s-5)" }}>More South Orange County markets</h2>
           <div className="mkt-others">
             {others.map((o) => (
-              <Link key={o.slug} href={`/projects/markets/${o.slug}`} style={{ fontSize: "var(--t-body)", color: "var(--text)", textDecoration: "none", lineHeight: 1.4 }}>
+              <Link key={o.slug} href={`/services/markets/${o.slug}`} style={{ fontSize: "var(--t-body)", color: "var(--text)", textDecoration: "none", lineHeight: 1.4 }}>
                 {o.name}
               </Link>
             ))}

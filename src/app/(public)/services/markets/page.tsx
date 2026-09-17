@@ -4,7 +4,7 @@ import { MARKETS } from "./marketsData";
 export const metadata = {
   title: "South Orange County Markets",
   description: "Local planning notes for 13 South Orange County communities, from Rancho Santa Margarita to San Clemente: area character, what to verify before a project, and sources.",
-  alternates: { canonical: "/projects/markets" },
+  alternates: { canonical: "/services/markets" },
 };
 
 export default function MarketsIndexPage() {
@@ -23,7 +23,7 @@ export default function MarketsIndexPage() {
       <div style={{ borderBottom: "1px solid var(--line)", background: "var(--surface-alt)" }}>
         <div style={{ maxWidth: "var(--container)", margin: "0 auto", padding: "0 var(--gutter)" }}>
           <nav aria-label="Breadcrumb" style={{ padding: "var(--s-4) 0 0", fontSize: 13, color: "var(--text-muted)", display: "flex", gap: 8 }}>
-            <Link href="/projects" style={{ color: "inherit", textDecoration: "none" }}>Our Work</Link>
+            <Link href="/services" style={{ color: "inherit", textDecoration: "none" }}>Services</Link>
             <span>/</span>
             <span style={{ color: "var(--text)" }}>Markets</span>
           </nav>
@@ -53,7 +53,7 @@ export default function MarketsIndexPage() {
         <div style={{ maxWidth: "var(--container)", margin: "0 auto", padding: "var(--s-8) var(--gutter) var(--s-9)" }}>
           <div className="mkt-grid">
             {MARKETS.map((m) => (
-              <Link key={m.slug} href={`/projects/markets/${m.slug}`} className="mkt-card">
+              <Link key={m.slug} href={`/services/markets/${m.slug}`} className="mkt-card">
                 <span style={{ fontSize: "var(--t-label)", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--text-muted)" }}>
                   {m.kind}
                 </span>

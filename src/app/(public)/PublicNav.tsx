@@ -35,33 +35,26 @@ const SERVICES_COLS = [
       { label: "Windows and Doors", href: "/services/expertise/windows-and-doors" },
     ],
   },
-];
-
-const WORK_MARKETS = [
-  { label: "Rancho Santa Margarita", href: "/projects/markets/rancho-santa-margarita" },
-  { label: "Coto de Caza",           href: "/projects/markets/coto-de-caza" },
-  { label: "San Juan Capistrano",    href: "/projects/markets/san-juan-capistrano" },
-  { label: "San Clemente",           href: "/projects/markets/san-clemente" },
-  { label: "Lake Forest",            href: "/projects/markets/lake-forest" },
-  { label: "Laguna Niguel",          href: "/projects/markets/laguna-niguel" },
-  { label: "Laguna Hills",           href: "/projects/markets/laguna-hills" },
-  { label: "Laguna Beach",           href: "/projects/markets/laguna-beach" },
-  { label: "Aliso Viejo",            href: "/projects/markets/aliso-viejo" },
-  { label: "Mission Viejo",          href: "/projects/markets/mission-viejo" },
-  { label: "Dana Point",             href: "/projects/markets/dana-point" },
-  { label: "Ladera Ranch",           href: "/projects/markets/ladera-ranch" },
-  { label: "Rancho Mission Viejo",   href: "/projects/markets/rancho-mission-viejo" },
-];
-
-const WORK_PROJECTS = [
-  { label: "Rancho Santa Margarita kitchen", href: "/projects#rsm-kitchen-2024" },
-  { label: "Mission Viejo primary bath",     href: "/projects#mv-primary-bath-2024" },
-];
-
-const WORK_COLS = [
-  { key: "markets",  heading: "Markets",  links: WORK_MARKETS, viewAllHref: "/projects/markets", viewAllLabel: "View all markets", columns: 2 },
-  { key: "services", heading: "Services", links: SERVICES_COLS.find((c) => c.key === "expertise")?.links ?? [], viewAllHref: "/services", viewAllLabel: "View all services", columns: 1 },
-  { key: "projects", heading: "Projects", links: WORK_PROJECTS, viewAllHref: "/projects", viewAllLabel: "View all projects", columns: 1 },
+  {
+    key: "markets",
+    heading: "Markets",
+    viewAllHref: "/services/markets",
+    links: [
+      { label: "Rancho Santa Margarita", href: "/services/markets/rancho-santa-margarita" },
+      { label: "Coto de Caza",           href: "/services/markets/coto-de-caza" },
+      { label: "San Juan Capistrano",    href: "/services/markets/san-juan-capistrano" },
+      { label: "San Clemente",           href: "/services/markets/san-clemente" },
+      { label: "Lake Forest",            href: "/services/markets/lake-forest" },
+      { label: "Laguna Niguel",          href: "/services/markets/laguna-niguel" },
+      { label: "Laguna Hills",           href: "/services/markets/laguna-hills" },
+      { label: "Laguna Beach",           href: "/services/markets/laguna-beach" },
+      { label: "Aliso Viejo",            href: "/services/markets/aliso-viejo" },
+      { label: "Mission Viejo",          href: "/services/markets/mission-viejo" },
+      { label: "Dana Point",             href: "/services/markets/dana-point" },
+      { label: "Ladera Ranch",           href: "/services/markets/ladera-ranch" },
+      { label: "Rancho Mission Viejo",   href: "/services/markets/rancho-mission-viejo" },
+    ],
+  },
 ];
 
 const INSIGHT_TILES = [
@@ -78,95 +71,13 @@ const ABOUT_TILES = [
   { label: "Social Responsibility",href: "/social-responsibility", desc: "How we give back to Orange County." },
 ];
 
-type MenuKey = "work" | "services" | "insight" | "about";
+type MenuKey = "services" | "insight" | "about";
 
 const TRIGGER_ITEMS: { label: string; key: MenuKey }[] = [
-  { label: "Our Work",  key: "work" },
   { label: "Services",  key: "services" },
   { label: "Insight",   key: "insight" },
   { label: "About Us",  key: "about" },
 ];
-
-// ── Our Work panel ─────────────────────────────────────────────────────────
-
-function WorkPanel() {
-  return (
-    <div
-      style={{
-        maxWidth: "var(--container)",
-        margin: "0 auto",
-        padding: "var(--s-6) var(--gutter) var(--s-7)",
-        display: "grid",
-        gridTemplateColumns: "240px 1.6fr 1fr 1fr",
-        gap: "var(--s-7)",
-        alignItems: "start",
-      }}
-    >
-      {/* Intro */}
-      <div style={{ paddingRight: "var(--s-6)", borderRight: "1px solid var(--line)" }}>
-        <p style={{
-          fontSize: "var(--t-label)",
-          fontFamily: "var(--font-body)",
-          fontWeight: 700,
-          letterSpacing: "0.08em",
-          textTransform: "uppercase",
-          color: "var(--text-muted)",
-          marginBottom: "var(--s-3)",
-        }}>
-          Our Work
-        </p>
-        <p style={{
-          fontFamily: "var(--font-display)",
-          fontSize: "var(--t-body-lg)",
-          color: "var(--text)",
-          lineHeight: 1.35,
-          marginBottom: "var(--s-3)",
-        }}>
-          Design-build across South Orange County.
-        </p>
-        <p style={{
-          fontSize: "var(--t-small)",
-          color: "var(--text-muted)",
-          lineHeight: 1.5,
-          marginBottom: "var(--s-5)",
-        }}>
-          Where we work, what we do, and the projects that show how we do it.
-        </p>
-        <Link href="/projects" className="pub-nav-btn" style={{ fontSize: "var(--t-label)", padding: "10px 18px" }}>
-          Our Projects
-        </Link>
-      </div>
-
-      {WORK_COLS.map((col) => (
-        <div key={col.key}>
-          <p style={{
-            fontSize: "var(--t-label)",
-            fontFamily: "var(--font-body)",
-            fontWeight: 700,
-            letterSpacing: "0.08em",
-            textTransform: "uppercase",
-            color: "var(--text-muted)",
-            marginBottom: "var(--s-3)",
-            paddingBottom: "var(--s-3)",
-            borderBottom: "1px solid var(--line)",
-          }}>
-            {col.heading}
-          </p>
-          <div style={{ columns: col.columns, columnGap: "var(--s-6)" }}>
-            {col.links.map((link) => (
-              <Link key={link.href} href={link.href} className="mega-link">
-                {link.label}
-              </Link>
-            ))}
-          </div>
-          <Link href={col.viewAllHref} className="mega-view-all" style={{ marginTop: "var(--s-4)", display: "inline-block" }}>
-            {col.viewAllLabel}
-          </Link>
-        </div>
-      ))}
-    </div>
-  );
-}
 
 // ── Component ──────────────────────────────────────────────────────────────
 
@@ -234,13 +145,11 @@ export default function PublicNav() {
   const transparent = isHome && !scrolled && !menuOpen && !openMenu;
 
   // Active-state helpers
-  const isWorkActive      = pathname.startsWith("/projects");
   const isServicesActive  = pathname.startsWith("/services");
   const isInsightActive   = ["/blog", "/podcast", "/academy", "/digital-innovations"].some(p => pathname === p || pathname.startsWith(p + "/"));
   const isAboutActive     = ["/investors", "/leadership", "/our-brand", "/social-responsibility", "/about"].some(p => pathname === p || pathname.startsWith(p + "/"));
 
   function activeFor(key: MenuKey) {
-    if (key === "work")     return isWorkActive;
     if (key === "services") return isServicesActive;
     if (key === "insight")  return isInsightActive;
     if (key === "about")    return isAboutActive;
@@ -281,7 +190,7 @@ export default function PublicNav() {
             lineHeight: 1.5,
             marginBottom: "var(--s-5)",
           }}>
-            Design, coordination, and delivery for kitchens, bathrooms, and every surface in between.
+            Design, coordination, and delivery for homes, medical offices, retail spaces, and investment properties.
           </p>
           <Link href="/services" className="pub-nav-btn" style={{ fontSize: "var(--t-label)", padding: "10px 18px" }}>
             All Services
@@ -686,6 +595,15 @@ export default function PublicNav() {
               Home
             </Link>
 
+            {/* Plain link: Our Work */}
+            <Link
+              href="/projects"
+              className={`pub-nav-link${pathname.startsWith("/projects") ? " active" : ""}`}
+              style={{ color: "var(--text)" }}
+            >
+              Our Work
+            </Link>
+
             {/* Mega-menu triggers */}
             {TRIGGER_ITEMS.map(({ label, key }) => (
               <button
@@ -729,7 +647,6 @@ export default function PublicNav() {
             onMouseEnter={cancelClose}
             onMouseLeave={startClose}
           >
-            {openMenu === "work" && <WorkPanel />}
             {openMenu === "services" && <ServicesPanel />}
             {openMenu === "insight" && (
               <TilePanel
@@ -767,36 +684,13 @@ export default function PublicNav() {
           Home
         </Link>
 
-        {/* Accordion: Our Work */}
-        <button
-          className={`pub-mob-section-btn${mobileSection === "work" ? " open" : ""}`}
-          onClick={() => setMobileSection((s) => (s === "work" ? null : "work"))}
-          aria-expanded={mobileSection === "work"}
+        <Link
+          href="/projects"
+          className="pub-nav-drawer-link"
+          style={{ color: pathname.startsWith("/projects") ? "var(--red)" : "var(--text)" }}
         >
           Our Work
-          <span className="pub-mob-section-chevron">›</span>
-        </button>
-        {mobileSection === "work" && (
-          <div className="pub-mob-section-body">
-            {WORK_COLS.map((col) => (
-              <div key={col.key}>
-                <p className="pub-mob-col-heading">{col.heading}</p>
-                {col.links.map((link) => (
-                  <Link key={link.href} href={link.href} className="pub-mob-sublink">
-                    {link.label}
-                  </Link>
-                ))}
-                <Link
-                  href={col.viewAllHref}
-                  className="pub-mob-sublink"
-                  style={{ color: "var(--red)", fontWeight: 600, marginTop: "var(--s-1)" }}
-                >
-                  {col.viewAllLabel}
-                </Link>
-              </div>
-            ))}
-          </div>
-        )}
+        </Link>
 
         {/* Accordion: Services */}
         <button

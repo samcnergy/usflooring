@@ -397,11 +397,11 @@ export default function HomePage() {
           </p>
           <div className="markets-list">
             {MARKETS.map(([name, slug]) => (
-              <Link key={slug} href={`/projects/markets/${slug}`}>{name}</Link>
+              <Link key={slug} href={`/services/markets/${slug}`}>{name}</Link>
             ))}
           </div>
           <div style={{ marginTop: "var(--s-7)" }}>
-            <Link href="/projects/markets" style={{
+            <Link href="/services/markets" style={{
               fontSize: "var(--t-label)",
               fontFamily: "var(--font-body)",
               fontWeight: 700,
