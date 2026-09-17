@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Our Brand | US Floor Design Center",
+  title: "Our Brand",
   description: "Our identity, values, and design principles.",
 };
 

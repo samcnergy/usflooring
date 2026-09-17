@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Leadership | US Floor Design Center",
+  title: "Leadership",
   description: "The team behind US Floor Design Center.",
 };
 

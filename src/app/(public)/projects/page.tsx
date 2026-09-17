@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Projects | US Floor Design Center",
+  title: "Projects",
   description: "Real kitchens and bathrooms designed and built by our team in Orange County. See the before, the process, and the finished result.",
 };
 

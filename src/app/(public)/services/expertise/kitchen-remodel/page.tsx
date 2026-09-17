@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Kitchen Remodel | US Floor Design Center",
+  title: "Kitchen Remodel",
   description: "Flooring and finish services for kitchen remodels in Orange County.",
 };
 

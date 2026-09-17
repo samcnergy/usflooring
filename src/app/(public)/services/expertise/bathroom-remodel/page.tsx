@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Bathroom Remodel | US Floor Design Center",
+  title: "Bathroom Remodel",
   description: "Tile, stone, and surface selections for bathroom remodels in Orange County.",
 };
 

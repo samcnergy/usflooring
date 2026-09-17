@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Our Approach | US Floor Design Center",
+  title: "Our Approach",
   description: "A clear path from idea to completion. Our in-house design and project management teams bring 30 years of experience to every project.",
 };
 

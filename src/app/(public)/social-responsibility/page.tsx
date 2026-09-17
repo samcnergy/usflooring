@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Social Responsibility | US Floor Design Center",
+  title: "Social Responsibility",
   description: "How we give back to Orange County.",
 };
 

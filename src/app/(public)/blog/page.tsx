@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 export const metadata = {
-  title: "Blog | US Floor Design Center",
+  title: "Blog",
   description: "Countertop care guides, design trends and homeowner resources from US Floor Design Center in Rancho Santa Margarita, Orange County.",
 };
 

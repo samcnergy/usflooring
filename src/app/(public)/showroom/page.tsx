@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Showroom | US Floor Design Center",
+  title: "Showroom",
   description: "Visit our Orange County showroom in Rancho Santa Margarita. See cabinets, countertops, flooring, tile, and fixtures in person before you decide.",
 };
 

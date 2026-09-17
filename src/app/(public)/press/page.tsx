@@ -2,7 +2,7 @@ import Link from "next/link";
 import BoilerplatePanels from "./BoilerplatePanels";
 
 export const metadata = {
-  title: "Press and Media | US Floor Design Center",
+  title: "Press and Media",
   description:
     "Logos, company facts, approved photography and press contact for US Floor Design Center, a design and build showroom in Rancho Santa Margarita, California.",
 };

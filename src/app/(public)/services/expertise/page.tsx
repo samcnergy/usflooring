@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Expertise | US Floor Design Center",
+  title: "Expertise",
   description: "Specialized flooring and finish services across medical offices, retail, kitchens, bathrooms, and more.",
 };
 

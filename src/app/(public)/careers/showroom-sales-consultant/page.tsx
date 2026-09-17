@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import ApplicationForm from "../ApplicationForm";
 
 export const metadata: Metadata = {
-  title: "Showroom Sales Consultant | US Floor Design Center",
+  title: "Showroom Sales Consultant",
   description:
     "Full-time sales role in Rancho Santa Margarita. First point of contact for every client, from initial visit through project completion. No flooring experience needed, we train.",
 };

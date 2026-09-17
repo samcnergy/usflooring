@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Project Management | US Floor Design Center",
+  title: "Project Management",
   description: "One team keeping the details connected. Our project management team coordinates and gives you a clear point of contact throughout the work.",
 };
 

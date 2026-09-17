@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Warranty | US Floor Design Center",
+  title: "Warranty",
   description: "Our written warranty covers labor for 12 months and materials at the manufacturer warranty level. Plain language. No surprises.",
 };
 

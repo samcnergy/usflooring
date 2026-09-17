@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 export const metadata = {
-  title: "2027 Interior Design Trends | US Floor Design Center",
+  title: "2027 Interior Design Trends",
   description: "Discover the 2027 interior design trends shaping Orange County homes - from natural wood kitchens and tactile tile to wellness baths and collected interiors.",
 };
 

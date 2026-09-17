@@ -4,7 +4,7 @@ import { FAQ_ITEMS } from "./faqData";
 import InvestorForm from "./InvestorForm";
 
 export const metadata = {
-  title: "Real Estate Investor Renovation Services | US Floor Design Center",
+  title: "Real Estate Investor Renovation Services",
   description:
     "We price the renovation before you buy. Feasibility studies, fixed construction costs, and in-house build for property investors in Orange County.",
 };

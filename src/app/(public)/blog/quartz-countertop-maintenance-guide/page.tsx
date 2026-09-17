@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 export const metadata = {
-  title: "Quartz Countertop Maintenance Guide | US Floor Design Center",
+  title: "Quartz Countertop Maintenance Guide",
   description: "Learn how to clean quartz countertops, prevent heat damage, remove residue and protect the finish without unnecessary sealing or polish.",
 };
 

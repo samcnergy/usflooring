@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 export const metadata = {
-  title: "Natural Stone Countertop Care and Maintenance | US Floor Design Center",
+  title: "Natural Stone Countertop Care and Maintenance",
   description: "Learn how to clean, seal and protect granite, marble, quartzite and other natural stone countertops - and how to recognize stains versus etching.",
 };
 

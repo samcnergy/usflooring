@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Design | US Floor Design Center",
+  title: "Design",
   description: "Good design should look right, work well, and fit the realities of the project. Our in-house design team helps you bring those needs together.",
 };
 

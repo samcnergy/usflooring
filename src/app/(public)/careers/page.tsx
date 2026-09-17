@@ -3,7 +3,7 @@ import Link from "next/link";
 import ApplicationForm from "./ApplicationForm";
 
 export const metadata: Metadata = {
-  title: "Careers | US Floor Design Center",
+  title: "Careers",
   description:
     "Open roles at a design and build showroom in Rancho Santa Margarita. No flooring experience required. We train.",
 };

@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "About | US Floor Design Center",
+  title: "About",
   description: "US Floor Design Center is a 30-year-old design-build studio in Rancho Santa Margarita, Orange County. Kitchen remodeling, bathroom remodeling, flooring, tile, cabinets, and countertops.",
 };
 

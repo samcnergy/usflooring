@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Medical Offices | US Floor Design Center",
+  title: "Medical Offices",
   description: "Flooring and finish solutions for medical and healthcare office environments.",
 };
 

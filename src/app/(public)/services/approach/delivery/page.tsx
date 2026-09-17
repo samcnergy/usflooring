@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Delivery | US Floor Design Center",
+  title: "Delivery",
   description: "From approved plan to finished project. We coordinate materials, the work included in your project, and the final handoff.",
 };
 

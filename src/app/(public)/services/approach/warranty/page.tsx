@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Warranty | US Floor Design Center",
+  title: "Warranty",
   description: "Support after the project is complete. Our team is here if you have a concern after completion and will help you understand the next step.",
 };
 

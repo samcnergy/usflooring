@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Windows and Doors | US Floor Design Center",
+  title: "Windows and Doors",
   description: "Window and door replacement services for Orange County homeowners.",
 };
 

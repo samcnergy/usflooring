@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Backyard | US Floor Design Center",
+  title: "Backyard",
   description: "Outdoor flooring and surface solutions for Southern California backyards.",
 };
 

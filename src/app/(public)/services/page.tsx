@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Services | US Floor Design Center",
+  title: "Services",
   description: "Design, remodel, delivery, and warranty - one team from first conversation to finished project. Orange County kitchen and bath specialists.",
 };
 

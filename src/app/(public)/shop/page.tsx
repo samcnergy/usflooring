@@ -8,7 +8,7 @@ import { STYLE_PRESETS } from "./stylePresets";
 export { STYLE_PRESETS };
 
 export const metadata = {
-  title: "Shop Materials | US Floor Design Center",
+  title: "Shop Materials",
   description: "Browse flooring, tile, countertops, cabinets, and fixtures. See real materials in our showroom.",
 };
 

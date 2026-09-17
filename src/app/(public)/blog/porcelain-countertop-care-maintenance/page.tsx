@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 export const metadata = {
-  title: "How to Care for Porcelain Countertops | US Floor Design Center",
+  title: "How to Care for Porcelain Countertops",
   description: "Learn how to clean and protect porcelain countertops, remove common messes, prevent chips and preserve the finish with this homeowner guide.",
 };
 

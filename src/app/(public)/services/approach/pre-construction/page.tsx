@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Pre-construction | US Floor Design Center",
+  title: "Pre-construction",
   description: "Plan the work before the work begins. Our pre-construction process turns an idea into a project that can be priced, scheduled, and carried out.",
 };
 

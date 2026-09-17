@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "HOA Approval | US Floor Design Center",
+  title: "HOA Approval",
   description: "Help navigating the HOA approval process. We organize the project information needed for the application and coordinate responses to project-related questions.",
 };
 

@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Retail Buildout | US Floor Design Center",
+  title: "Retail Buildout",
   description: "Flooring and finish services for retail spaces and commercial buildouts.",
 };
 

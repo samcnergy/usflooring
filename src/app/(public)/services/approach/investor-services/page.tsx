@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Investor Services | US Floor Design Center",
+  title: "Investor Services",
   description: "Flooring and finish services for real estate investors in Orange County.",
 };
 
