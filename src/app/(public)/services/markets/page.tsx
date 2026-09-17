@@ -23,7 +23,7 @@ export default function MarketsIndexPage() {
       <div style={{ borderBottom: "1px solid var(--line)", background: "var(--surface-alt)" }}>
         <div style={{ maxWidth: "var(--container)", margin: "0 auto", padding: "0 var(--gutter)" }}>
           <nav aria-label="Breadcrumb" style={{ padding: "var(--s-4) 0 0", fontSize: 13, color: "var(--text-muted)", display: "flex", gap: 8 }}>
-            <Link href="/projects" style={{ color: "inherit", textDecoration: "none" }}>Our Work</Link>
+            <span>Our Work</span>
             <span>/</span>
             <span style={{ color: "var(--text)" }}>Markets</span>
           </nav>

@@ -8,7 +8,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 // Main menu: About Us ▾ · Our Work ▾ · Insight ▾ · Investors · Login
 
 type NavLink = { label: string; href: string };
-type NavColumn = { key: string; heading: string; links: NavLink[]; viewAll?: NavLink; columns?: number };
+type NavColumn = { key: string; heading: string; links: NavLink[]; viewAll?: NavLink };
 type MenuKey = "about" | "work" | "insight";
 
 const ABOUT_COLS: NavColumn[] = [
@@ -19,14 +19,30 @@ const ABOUT_COLS: NavColumn[] = [
       { label: "Leadership",            href: "/leadership" },
       { label: "Our Brand",             href: "/our-brand" },
       { label: "Social Responsibility", href: "/social-responsibility" },
+      { label: "Projects",              href: "/projects" },
     ],
+    viewAll: { label: "View all About Us", href: "/about" },
   },
 ];
 
 const WORK_COLS: NavColumn[] = [
   {
-    key: "services",
-    heading: "Services",
+    key: "approach",
+    heading: "Approach",
+    links: [
+      { label: "Pre-construction",   href: "/services/approach/pre-construction" },
+      { label: "Design",             href: "/services/approach/design" },
+      { label: "Project Management", href: "/services/approach/project-management" },
+      { label: "Delivery",           href: "/services/approach/delivery" },
+      { label: "Warranty",           href: "/services/approach/warranty" },
+      { label: "Investor Services",  href: "/services/approach/investor-services" },
+      { label: "HOA Approval",       href: "/services/approach/hoa-approval" },
+    ],
+    viewAll: { label: "View all Approach", href: "/services/approach" },
+  },
+  {
+    key: "expertise",
+    heading: "Expertise",
     links: [
       { label: "Medical Offices",   href: "/services/expertise/medical-offices" },
       { label: "Retail Buildout",   href: "/services/expertise/retail-buildout" },
@@ -36,12 +52,11 @@ const WORK_COLS: NavColumn[] = [
       { label: "Backyard",          href: "/services/expertise/backyard" },
       { label: "Windows and Doors", href: "/services/expertise/windows-and-doors" },
     ],
-    viewAll: { label: "View all services", href: "/services" },
+    viewAll: { label: "View all Expertise", href: "/services/expertise" },
   },
   {
     key: "markets",
     heading: "Markets",
-    columns: 2,
     links: [
       { label: "Rancho Santa Margarita", href: "/services/markets/rancho-santa-margarita" },
       { label: "Coto de Caza",           href: "/services/markets/coto-de-caza" },
@@ -57,16 +72,7 @@ const WORK_COLS: NavColumn[] = [
       { label: "Ladera Ranch",           href: "/services/markets/ladera-ranch" },
       { label: "Rancho Mission Viejo",   href: "/services/markets/rancho-mission-viejo" },
     ],
-    viewAll: { label: "View all markets", href: "/services/markets" },
-  },
-  {
-    key: "projects",
-    heading: "Projects",
-    links: [
-      { label: "Rancho Santa Margarita kitchen", href: "/projects#rsm-kitchen-2024" },
-      { label: "Mission Viejo primary bath",     href: "/projects#mv-primary-bath-2024" },
-    ],
-    viewAll: { label: "View all projects", href: "/projects" },
+    viewAll: { label: "View all Markets", href: "/services/markets" },
   },
 ];
 
@@ -84,8 +90,8 @@ const INSIGHT_COLS: NavColumn[] = [
 ];
 
 const MENUS: { key: MenuKey; label: string; cols: NavColumn[]; paths: string[] }[] = [
-  { key: "about",   label: "About Us", cols: ABOUT_COLS,   paths: ["/about", "/leadership", "/our-brand", "/social-responsibility"] },
-  { key: "work",    label: "Our Work", cols: WORK_COLS,    paths: ["/projects", "/services"] },
+  { key: "about",   label: "About Us", cols: ABOUT_COLS,   paths: ["/about", "/leadership", "/our-brand", "/social-responsibility", "/projects"] },
+  { key: "work",    label: "Our Work", cols: WORK_COLS,    paths: ["/services"] },
   { key: "insight", label: "Insight",  cols: INSIGHT_COLS, paths: ["/blog", "/podcast", "/academy", "/digital-innovations"] },
 ];
 
@@ -107,15 +113,16 @@ function MenuPanel({ cols }: { cols: NavColumn[] }) {
         maxWidth: "var(--container)",
         margin: "0 auto",
         padding: "var(--s-6) var(--gutter) var(--s-7)",
-        display: "flex",
-        gap: "var(--s-9)",
-        alignItems: "flex-start",
+        display: "grid",
+        gridTemplateColumns: "repeat(3, 1fr)",
+        gap: "var(--s-7)",
+        alignItems: "start",
       }}
     >
       {cols.map((col) => (
-        <div key={col.key} style={{ minWidth: 200 }}>
+        <div key={col.key}>
           <p className="mega-heading">{col.heading}</p>
-          <div style={{ columns: col.columns ?? 1, columnGap: "var(--s-7)" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "var(--s-1)" }}>
             {col.links.map((link) => (
               <Link key={link.href} href={link.href} className="mega-link">
                 {link.label}
@@ -124,7 +131,7 @@ function MenuPanel({ cols }: { cols: NavColumn[] }) {
           </div>
           {col.viewAll && (
             <Link href={col.viewAll.href} className="mega-view-all">
-              {col.viewAll.label} &rarr;
+              {col.viewAll.label}
             </Link>
           )}
         </div>
@@ -385,26 +392,30 @@ export default function PublicNav() {
         }
         .mega-link {
           display: block;
-          font-size: var(--t-body);
+          font-size: var(--t-small);
           font-family: var(--font-body);
-          color: var(--text);
+          color: var(--text-muted);
           text-decoration: none;
           line-height: 1.45;
           padding: 5px 0;
-          break-inside: avoid;
           transition: color var(--dur) var(--ease);
         }
-        .mega-link:hover { color: var(--red); }
+        .mega-link:hover { color: var(--text); }
         .mega-view-all {
           display: inline-block;
           margin-top: var(--s-4);
-          font-size: var(--t-small);
+          font-size: var(--t-label);
           font-family: var(--font-body);
           font-weight: 700;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
           text-decoration: none;
-          color: var(--red);
+          color: var(--text-muted);
+          border: 1px solid var(--line);
+          padding: 6px 14px;
+          transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease);
         }
-        .mega-view-all:hover { color: var(--red-deep); }
+        .mega-view-all:hover { color: var(--text); border-color: var(--text); }
 
         /* ── Breakpoints ── */
         @media (max-width: 860px) {
